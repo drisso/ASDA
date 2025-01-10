@@ -2,9 +2,11 @@ project:
   type: book
 
 book:
-  title: "ASDA"
-  author: "Norah Jones"
-  date: "1/10/2025"
+  title: "Advanced Statistics and Data Analysis"
+  author: 
+    name: "Davide Risso"
+    affiliation: "Department of Statistical Sciences, University of Padova"
+  date: last-modified
   chapters:
     - index.qmd
     - intro.qmd

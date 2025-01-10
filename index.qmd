@@ -1,9 +1,18 @@
-# Preface {.unnumbered}
+# Introduction {.unnumbered}
 
-This is a Quarto book.
+This is the companion website of the "Advanced Statistics and Data Analysis" course, taught within the ["Quantitative and Computational Biosciences" Master's program](https://www.unipd.it/en/educational-offer/second-cycle-degree/science?tipo=LM&scuola=SC&ordinamento=2024&key=SC2804&cg=science) at the [University of Padova](https://www.unipd.it/).
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+## Organization of this website
 
-```{r}
-1 + 1
-```
+This website is organized as a book. Each class topic is treated in a different
+chapter (see the navigation bar).
+
+In each Chapter, you will find the slides presented in class and the code used
+for the practicals.
+
+## Work in progress
+
+The book is a work in progress as we move through the first edition of this class.
+Please, open issues and contribute pull requests at https://github.com/drisso/ASDA
+if you find typos or mistakes or if something is missing.
+
