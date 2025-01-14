@@ -4,15 +4,34 @@ This is the companion website of the "Advanced Statistics and Data Analysis" cou
 
 ## Organization of this website
 
-This website is organized as a book. Each class topic is treated in a different
-chapter (see the navigation bar).
+This website is organized as a book. Each class topic is treated in a different chapter.
 
-In each Chapter, you will find the slides presented in class and the code used
-for the practicals.
+In each Chapter, you will find the slides presented in class and the code used for the practicals.
+
+You can use the navigation bar to navigate by topic or the Timeline section below to see the topics in the same order they were presented in class.
+
+## Timeline
+
+| Date      | Topic                                | Type    |
+|-----------|--------------------------------------|---------|
+| 24/2/2025 | Intro to course and statistics recap | Lecture |
+| 24/2/2025 | The Normal Linear Model (part 1)     | Lecture |
+| ...       |                                      |         |
+
+## Suggested reading materials
+
+### R resources
+
+-   [R for Data Science book](https://r4ds.had.co.nz/)
+-   [Tidyverse Skills for Data Science in R](https://www.coursera.org/specializations/tidyverse-data-science-r)
+-   [The ggplot2 book](https://ggplot2-book.org/)
+-   [Happy Git with R](https://happygitwithr.com/)
+-   [Advanced R](https://adv-r.hadley.nz/)
+
+### Statistics
+
+-   [Modern Statistics for Modern Biology](https://www.huber.embl.de/msmb/)
 
 ## Work in progress
 
-The book is a work in progress as we move through the first edition of this class.
-Please, open issues and contribute pull requests at https://github.com/drisso/ASDA
-if you find typos or mistakes or if something is missing.
-
+The book is a work in progress as we move through the first edition of this class. Please, open issues and contribute pull requests at https://github.com/drisso/ASDA if you find typos or mistakes or if something is missing.
