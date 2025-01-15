@@ -1,5 +1,4 @@
 # Introduction
 
-## Lecture slides
+[Lecture Slides](slides/01_intro.rjs.html)
 
-{{< revealjs "slides/01_intro.html" >}}
