@@ -2,9 +2,7 @@
 title: "Course Introduction"
 subtitle: "Advanced Statistics and Data Analysis"
 author: "Davide Risso"
-format: 
-    revealjs:
-        output-ext: rjs.html
+format: revealjs
 ---
 
 ## Getting up
