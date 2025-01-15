@@ -17,4 +17,11 @@ format:
   html:
     theme: cosmo
 
+webr: 
+  show-startup-message: false
+  packages: ['ggplot2', 'dplyr']
+  
+filters:
+  - webr
+  
 

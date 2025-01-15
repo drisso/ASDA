@@ -4,3 +4,44 @@
 
 {{< revealjs "slides/01_intro.html" >}}
 
+## Exercises
+
+- Create a scatter-plot of petal length and petal width
+
+```{webr-r}
+head(iris)
+```
+
+- Calculate the correlation between these two variables
+
+```{webr-r}
+head(iris)
+```
+
+- Calculate the correlation only for the setosa species
+
+```{webr-r}
+head(iris)
+```
+
+- Fit a linear model using petal width as a response variable and petal length and species as covariates
+
+```{webr-r}
+head(iris)
+```
+
+## A look ahead
+
+```{webr-r}
+library(ggplot2)
+library(dplyr)
+
+ggplot(iris, aes(Petal.Length, Petal.Width, colour = Species)) +
+    geom_point()
+```
+
+```{webr-r}
+iris |> filter(Species == "setosa") |>
+    ggplot(aes(Petal.Length, Petal.Width)) +
+    geom_point()
+```
