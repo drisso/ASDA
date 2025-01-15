@@ -4,41 +4,59 @@
     "href": "index.html",
     "title": "Advanced Statistics and Data Analysis",
     "section": "",
-    "text": "Introduction\nThis is the companion website of the “Advanced Statistics and Data Analysis” course, taught within the “Quantitative and Computational Biosciences” Master’s program at the University of Padova."
+    "text": "Introduction\nThis is the companion website of the “Advanced Statistics and Data Analysis” course, taught within the “Quantitative and Computational Biosciences” Master’s program at the University of Padova.",
+    "crumbs": [
+      "Introduction"
+    ]
   },
   {
     "objectID": "index.html#organization-of-this-website",
     "href": "index.html#organization-of-this-website",
     "title": "Advanced Statistics and Data Analysis",
     "section": "Organization of this website",
-    "text": "Organization of this website\nThis website is organized as a book. Each class topic is treated in a different chapter (see the navigation bar).\nIn each Chapter, you will find the slides presented in class and the code used for the practicals."
+    "text": "Organization of this website\nThis website is organized as a book. Each class topic is treated in a different chapter.\nIn each Chapter, you will find the slides presented in class and the code used for the practicals.\nYou can use the navigation bar to navigate by topic or the Timeline section below to see the topics in the same order they were presented in class.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#timeline",
+    "href": "index.html#timeline",
+    "title": "Advanced Statistics and Data Analysis",
+    "section": "Timeline",
+    "text": "Timeline\n\n\n\nDate\nTopic\nType\n\n\n\n\n24/2/2025\nIntro to course and statistics recap\nLecture\n\n\n24/2/2025\nThe Normal Linear Model (part 1)\nLecture\n\n\n…",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#suggested-reading-materials",
+    "href": "index.html#suggested-reading-materials",
+    "title": "Advanced Statistics and Data Analysis",
+    "section": "Suggested reading materials",
+    "text": "Suggested reading materials\n\nR resources\n\nR for Data Science book\nTidyverse Skills for Data Science in R\nThe ggplot2 book\nHappy Git with R\nAdvanced R\n\n\n\nStatistics\n\nModern Statistics for Modern Biology",
+    "crumbs": [
+      "Introduction"
+    ]
   },
   {
     "objectID": "index.html#work-in-progress",
     "href": "index.html#work-in-progress",
     "title": "Advanced Statistics and Data Analysis",
     "section": "Work in progress",
-    "text": "Work in progress\nThe book is a work in progress as we move through the first edition of this class. Please, open issues and contribute pull requests at https://github.com/drisso/ASDA if you find typos or mistakes or if something is missing."
+    "text": "Work in progress\nThe book is a work in progress as we move through the first edition of this class. Please, open issues and contribute pull requests at https://github.com/drisso/ASDA if you find typos or mistakes or if something is missing.",
+    "crumbs": [
+      "Introduction"
+    ]
   },
   {
     "objectID": "intro.html",
     "href": "intro.html",
     "title": "1  Introduction",
     "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
-  },
-  {
-    "objectID": "summary.html",
-    "href": "summary.html",
-    "title": "2  Summary",
-    "section": "",
-    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2"
-  },
-  {
-    "objectID": "references.html",
-    "href": "references.html",
-    "title": "References",
-    "section": "",
-    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
+    "text": "Lecture Slides",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
   }
 ]
