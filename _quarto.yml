@@ -19,7 +19,4 @@ format:
   pdf:
     documentclass: scrreprt
 
-filters:
-  - coatless-quarto/embedio
-  
 
