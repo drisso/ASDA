@@ -58,5 +58,25 @@
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Course Introduction</span>"
     ]
+  },
+  {
+    "objectID": "intro.html#exercises",
+    "href": "intro.html#exercises",
+    "title": "1  Course Introduction",
+    "section": "1.2 Exercises",
+    "text": "1.2 Exercises\n\nCreate a scatter-plot of petal length and petal width\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nCalculate the correlation between these two variables\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nCalculate the correlation only for the setosa species\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nFit a linear model using petal width as a response variable and petal length and species as covariates\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Course Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#a-look-ahead",
+    "href": "intro.html#a-look-ahead",
+    "title": "1  Course Introduction",
+    "section": "1.3 A look ahead",
+    "text": "1.3 A look ahead\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Course Introduction</span>"
+    ]
   }
 ]
