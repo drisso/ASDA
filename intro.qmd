@@ -1,15 +1,6 @@
-# Introduction
+# Course Introduction
 
-<style>
-.slide-deck {
-    border: 3px solid #dee2e6;
-    width: 100%;
-    height: 475px;
-}
-</style>
+## Lecture Slides
 
-<div>
-```{=html}
-<iframe class="slide-deck" src="./slides/01_intro.html"></iframe>
-```
-</div>
+{{< revealjs "slides/01_intro.html" >}}
+
