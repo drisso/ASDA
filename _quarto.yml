@@ -10,6 +10,7 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
+    - dataviz.qmd
 
 bibliography: references.bib
 
@@ -24,4 +25,5 @@ webr:
 filters:
   - webr
   
-
+execute:
+  echo: true
