@@ -105,15 +105,27 @@ Although this syntax may seem overly complicated for such small examples, it's e
 
 ```{r pipe6}
 ## nested functions
+set.seed(1547)
 plot(density(rnorm(mean(rnorm(1, mean=10)))))
 
 ## pipe
+set.seed(1547)
 rnorm(1, mean=10) |>
   mean() |>
   rnorm() |>
   density() |>
   plot()
 ```
+
+::: {.callout-important}
+# Exercise
+
+Use both the nested syntax and the pipe operator to carry out the following analysis:
+
+- Use the `rnorm()` function to generate 100 data points
+- Store the data into a matrix with 2 columns and 50 rows
+- Compute the mean of the two columns with the function `colMeans()`
+:::
 
 ### dplyr verbs
 
