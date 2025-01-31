@@ -1,5 +1,5 @@
 ---
-title: "Data Visualization"
+title: "Data Wrangling and Visualization"
 execute:
   echo: true
   warning: false
@@ -210,6 +210,18 @@ Some other useful functions defined in the dplyr package are the following.
 * `transmute`: a mutate that drops existing variables.
 * `do`: perform arbitrary operations.
 
+::: {.callout-important}
+# Exercise
+
+Use the dplyr verbs to answer the following questions.
+
+
+1. What were the top 5 most populous countries in Asia in 1952? And in 2007?
+2. What is the average GDP of European countries in 1982?
+3. What was the minimum and maximum population of Italy across the study years?
+4. [advanced] What is the average increase in per capita GDP per continent between 1952 and 2007?
+:::
+
 ### Plotting tidy data: the `ggplot2` package
 
 Although base R has a plotting system, there are addon packages that define other
@@ -357,6 +369,35 @@ gap <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) 
 gap
 ```
 
+Finally, if we want to visualize the distribution of life expectancy, we can do that by using histograms, boxplots, violin plots or ridgeline plots.
+
+```{r distributions}
+ggplot(gapminder, aes(x=lifeExp)) +
+    geom_histogram(fill = "dodgerblue")
+
+ggplot(gapminder, aes(x=continent, y=lifeExp, fill=continent)) +
+    geom_boxplot()
+
+ggplot(gapminder, aes(x=continent, y=lifeExp, fill=continent)) +
+    geom_violin()
+
+library(ggridges)
+ggplot(gapminder, aes(y=continent, x=lifeExp, fill=continent)) +
+    geom_density_ridges()
+```
+
+::: {.callout-important}
+# Exercise
+
+Use ggplot to produce the following graphs.
+
+
+1. Visualize the distribution of life expectancy as a histogram + a density line (hint: geom_density).
+2. Use facets and the geometry of your choice to visualize the distribution of life expectancy for each continent and each year.
+3. Reproduce the ridgeline plot above, changing the colors to be those stored in the `continent_colors` variable.
+4. Create a scatterplot of life expectancy vs. GDP per capita across all years and continents, using 2d density (`geom_density_2d`) or hexagonal binning (`geom_hex`) to avoid overplotting.
+5. Create a scatterplotof life expectancy vs. GDP per capita in 2007, with the point size proportional to population, color-coded by country, faceted by continent, adding text labels (hint: remove legend with `theme(legend.position = "none")`).
+:::
 
 ## Further reading
 
