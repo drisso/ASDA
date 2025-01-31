@@ -1,0 +1,337 @@
+---
+title: "Data Wrangling and Visualization (part 2)"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< revealjs "slides/02_dataviz.html" >}}
+
+## Lab: tidy data in R
+
+### What's not covered (i.e., prerequisites)
+
+Basic R syntax is not covered in this lab, as we assume that you are already familiar with it. Most of the concepts in this first lab should be accessible to peolple with minimal exposure to R (Googling what you don't remember is allowed -- and encouraged!).
+
+If you need help getting started with R, this is a good and free tutorial:
+https://swcarpentry.github.io/r-novice-gapminder/
+
+### What's covered (i.e., outline)
+
+In this second lab, we will cover how to:
+
+* import the data into R
+* clean the data and transform them into _tidy data_
+* work with more complex data structures
+
+### Import and export the data
+
+There are several functions to import the data into R depending on the format in
+which the data live outside of R. First, we will assume that the data exist in a
+standard text format, such as tab-delimited or comma-separated. We will briefly
+mention some packages that can be used to import data in MS Excel, Matlab, and
+other non-standard formats.
+
+Base R has many useful functions for the import of flat data tables,
+`read.table` and `read.cvs` among others. However, we will use the `readr` package
+here and in particular we will illustrate the `read_csv`, `read_tsv` and `read_delim`
+functions. These functions are faster and offer more flexibility compared to the
+base R counterparts. However, sometimes using `read.table` can be useful, for 
+instance when one wants to use `row.names`.
+
+#### Read the data into R
+
+Often the data come in the form of csv files (comma-separated values).
+Excel spreadsheet can also be saved to csv files, making it a useful format
+to read into R data generated with Excel.
+
+Another popular format is tsv files (tab-separated values). This is for instance
+how the gapminder data has been saved to file in the gapminder package.
+
+Finally, `read_delim` can be used to read files whose fields are separated by
+any character (most commonly a space) which need to be specified in the `delim`
+argument.
+
+Here, we will illustrate the use of `read_tsv` since the other two functions are
+very similar.
+
+First, we need a string that describes the location on disk of the file that we want to
+import in R. Note that the string will change depending on your OS.
+
+```{r readin}
+#| message: true
+
+library(readr)
+gap_tsv <- system.file("extdata/gapminder.tsv", package = "gapminder")
+gap_tsv
+
+gap <- read_tsv(gap_tsv)
+gap
+```
+
+Note how the `read_tsv` function printed a message with the type that it inferred
+from each of the columns.
+
+#### Write the data to file
+
+Similarly to `read_tsv` and `read_csv`, the functions `write_tsv` and `write_csv`
+can be used to write the R tables to a file on disk. 
+
+Note that writing flat tables to csv or tsv files is the easiest and most reproducible approach.
+For complex data structures, say an histogram or a clustering tree, one can use
+the function `save` to save a binary R representation of the object on a `.rda` file.
+Similarly, the function `load` will read `.rda` files back into R.
+
+#### Additional resources for data import/export
+
+Sometimes you may need to import data from different formats, e.g., because your
+collaborator has the data in a MS Excel file or because you are continuing in R
+an analysis started with SPSS, Stata, or SAS.
+
+Fortunately, R has many packages that can be used for data import/export:
+
+* `haven` can be used to read SPSS, Stata, and SAS files.
+* `readxl` to read excel files (both .xls and .xlsx).
+* `DBI` to import data from a variety of databases (advanced).
+* `jsonlite` to import json files
+* `xml2` to import XML files.
+
+### Tidy the data: the `tidyr` package
+
+Often, a large amount of time is spent on "cleaning" the data, in what is sometimes
+referred to _data wrangling_.
+
+This is because often the data are plagued by missing or implausible values,
+either because of technical issues with the data collection or because of human error.
+Moreover, data are often recorded in a way that is useful for storing them, but
+not ideal for analyzing them.
+
+The objective of data wrangling is to take a messy dataset and make it _tidy_, so
+that it becomes easier to work with.
+
+#### What are tidy data?
+
+The concept of tidy data was introduced by Hadley Wickham in his seminal paper.
+
+There are three fundamental rules which make a dataset tidy:
+
+1. Each variable must have its own column.
+2. Each observation must have its own row.
+3. Each value must have its own cell.
+
+The advantage of tidy data is both conceptual and practical: it allows you to
+have consistency between datasets and to use tools designed for this data structure.
+Moreover, because R works extremely well with vectorized operation it is very
+efficient to operate on the columns of a data frame.
+
+#### Examples of tidy and untidy data
+
+To illustrate the concept of tidy data, we can use the examples in the [EDAWR package](https://github.com/rstudio/EDAWR). First we need to download and install it
+from Github with the `devtools` package.
+
+```{r, eval=FALSE}
+library(remotes)
+install_github("rstudio/EDAWR")
+```
+
+::: {.panel-tabset}
+
+## storms
+
+```{r}
+library(EDAWR)
+storms
+```
+
+## cases
+
+```{r}
+cases
+```
+
+## pollution
+
+```{r}
+pollution
+```
+:::
+
+::: {.callout-important}
+# Exercise
+
+Take some time to list and describe the variables present in each datasets.
+Which of these datasets is tidy? 
+:::
+
+Note that somebody's tidy data is someone else's untidy data. For instance in the 
+`pollution` example, one could argue that the two variables in addition to city are:
+particle size, and particle amount. In this case the dataset is tidy. 
+But another argument is that the variables are: amount of small
+particles and amount of large particles. In this case the dataset is untidy.
+
+For this reason, I actually prefer another terminology: long data and wide data.
+The pollution dataset is stored in long format, while the cases dataset is stored
+in wide format.
+
+To switch between long and wide format, the `tidyr` package provide two extremely
+useful functions: `piveot_longer()` and `pivot_wider()`.
+
+#### Make your data "tall": `pivot_longer()`
+
+The function `pivot_longer()` can be used to transform the data from wide to tall.
+
+The `cases` data frame is in wide form. If we want to make it tall, we can use 
+the following command.
+
+```{r}
+library(tidyr)
+pivot_longer(cases, names_to = "year", values_to = "n", cols = 2:4)
+```
+
+The `names_to` and `values_to` arguments are simply the names of the new columns that will
+have the variable values. The `cols` argument specify the columns that contain
+the data and that should be transformed.
+
+#### Make your data "wide": `pivot_wider()`
+
+Analogously, the `pivot_wider()` function let us go back to wide data from tall data.
+
+If we `pivot_wider` a table that we previously `pivot_longer`ed, we should return to the
+original data representation.
+
+```{r}
+cases
+pivot_longer(cases, names_to = "year", values_to = "n", cols = 2:4)  %>%
+  pivot_wider(., names_from = "year", values_from = "n")
+```
+
+As we mentioned, sometimes the wide format is the tidy format. This could be
+the case for the `pollution` data, which we can transform in the following way.
+
+```{r}
+pivot_wider(pollution, names_from = "size", values_from = "amount")
+```
+
+Additional functions useful to transform the data are the `separate()` and 
+`unite()` functions. You can find out what they do as an exercize.
+
+::: {.callout-important}
+# Exercise
+
+Explore the dataset `airquality`:
+
+- What are the variables? What are the observations?
+- Transform it into a taller dataset, so that it will look like this:
+```{r}
+#| echo: false
+
+airquality %>%
+  pivot_longer(c(Ozone, Solar.R, Wind, Temp), 
+               names_to = "variable", 
+               values_to = "value")
+```
+- Starting from the created dataset use `pivot_wider` to turn it back to the original
+:::
+
+#### Joining tables
+
+In the tidy data framework, each table has one row per observational unit and
+one column per variable. But what if our analysis involves multiple observational
+unit types? In that case, there might be one table per observational unit types
+and you might need to _join_ tables to perform certain data analyses.
+
+The `dplyr` package contains several _join_ functions. See `?inner_join` for a 
+full list. Here, we will cover only the inner and full joins, with the other 
+operations left for homework exercises.
+
+To illustrate joins, we will use the `songs` and `artists` datasets available in
+the `EDAWR` package. As you can see the observational units are quite different
+in the two tables, but nonetheless we might need both sets of variables in a 
+single analysis.
+
+```{r}
+songs
+artists
+```
+
+The inner join only returns those observations that are present in both datasets.
+You can think of it as a "intersection."
+
+```{r}
+library(dplyr)
+inner_join(songs, artists, by = "name")
+```
+
+Coversely, the full join returns all observations that are present in either 
+dataset. You can think of it as a "union."
+
+```{r}
+full_join(songs, artists, by = "name")
+```
+
+Finally, the left and right join keep the left or right observations, respectively.
+
+```{r}
+left_join(songs, artists)
+
+right_join(songs, artists)
+```
+
+Note how we can imply the "by" argument if we want to use all the common variable names between the two tables.
+
+::: {.callout-important}
+# Exercise
+
+Load the `nycflights13` package to explore the four datasets `flights`, `airlines`, `weather`, and `planes`.
+
+- Join the two tables in a way that each flight contains the names of the airline
+- Join the resulting table with the weather information
+- Join the resulting table with the airplane information
+- Use tidyverse functions to extract the complete information (including weather and airplane info) of UA1545 flight departed on Jan 1st 2013.
+- Plot departure delay versus wind speed: is there a relation between these variables? (Hint: avoid overplotting)
+:::
+
+### The "tidyverse" vs. "base R"
+
+As you look at examples or find answers to your questions online, you will notice
+that people refer to the set of packages that includes `dplyr`, `tidyr`, and `ggplot2`
+as the `tidyverse`. You will often see people asking for a "tidyverse" way of 
+doing something or for a "base R" way of doing something.
+
+There is no right or wrong way to achieve something in R, but considerations about code readability and efficiency may be important depending on the application.
+
+
+## Howemork [^1]
+
+Health policy in the United States is complicated, and several forms of healthcare coverage exist, including both coverage by federal goverment-led healthcare policy, and by private insurance companies. Before making any inference about the relationship between health condition and health policy, it is important for us to have a general idea about healthcare economics in the United States. Thus, we are interested in getting sense of healthcare coverage and healthcare spending across States. More specifically, the questions are:
+
+1. Is there a relationship between healthcare coverage and healthcare spending in the United States?
+2. How does the spending distribution change across geographic regions in the United States?
+3. Does the relationship between healthcare coverage and healthcare spending in the United States change from 2013 to 2014?
+
+### Guided solution
+
+1. Read-in the data: use the `read_csv` function (`readr` package) to read the `healthcare-coverage.cvs` and the `healthcare-spending.csv` files (found at https://github.com/opencasestudies/ocs-healthexpenditure).
+
+2. Load the state information found in the `state` datasets (`datasets` package). Note that you need to manually add information about the District of Columbia.
+
+3. Add the abbreviation and the region of each state to the coverage dataset.
+
+4. Join the coverage and spending datasets.
+
+5. Use ggplot to produce a scatterplot of the proportion of coverage by state vs. the spending per capita. Color code the points by region and add state abbreviations as labels. Use facet to stratify the analysis by type of coverage.
+
+6. Use ggplot to create a boxplot of spending per capita stratified by region.
+
+7. Repeat the graph in point 5 but faceting by year, in addition to coverage type. Hint: use the `facet_grid()` function.
+
+## Further reading
+
+-   Claus O. Wilke. [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/index.html)
+-   S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 3](https://www.huber.embl.de/msmb/03-chap.html)
+-   Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks and Roger D. Peng [Tidyverse Skills for Data Science](https://jhudatascience.org/tidyversecourse/)
+
+[^1]: This homework is one of the [Open Case Studies](https://www.opencasestudies.org/). Please try to solve this yourself before looking at the solution there.
