@@ -1,0 +1,987 @@
+---
+title: "Linear regression"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    beamer:
+        aspectratio: 169
+        include-in-header: template.tex
+---
+
+
+# Linear Algebra
+
+## Linear Algebra
+
+Linear algebra, also called matrix algebra, and its mathematical notation greatly facilitates the understanding of the concepts behind the linear models.
+
+Here, we spend some time to introduce / review key concepts of linear algebra, with particular focus on matrix operations and matrix notation.
+
+We will also see how to perform matrix operations in R.
+
+## Matrix Notation
+
+Linear algebra was created to solve systems of linear equations, e.g.
+
+\begin{align*}
+a + b + c &= 6\\
+3a - 2b + x &= 2\\
+2a + b - c &=1
+\end{align*}
+
+which becomes, in matrix notation,
+
+$$
+\begin{bmatrix}
+1 & 1 & 1 \\
+3 & -2 & 1 \\
+2 & 1 & -1 
+\end{bmatrix}
+\begin{bmatrix}
+a \\
+b \\
+c 
+\end{bmatrix}
+=
+\begin{bmatrix}
+6 \\
+2 \\
+1 
+\end{bmatrix}
+$$
+
+## Matrix Notation
+
+The system is solved by
+
+$$
+\begin{bmatrix}
+a \\
+b \\
+c 
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 1 & 1 \\
+3 & -2 & 1 \\
+2 & 1 & -1 
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+6 \\
+2 \\
+1 
+\end{bmatrix}
+$$
+
+where the $-1$ denotes the inverse of the matrix.
+
+We can borrow this notation to solve linear models in statistics.
+
+## Vectors, matrices, and scalars
+
+In most of the previous lectures we focused on _scalar quantities_ (numbers).
+
+We did use some vectors, e.g., when dealing with the $n$ observations in a sample or with the parameter $\theta = (\mu, \sigma^2)$ of the normal model.
+
+Here, we will use vectors as special cases of matrices, with one column, e.g.
+$$
+Y = 
+\begin{bmatrix}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_n
+\end{bmatrix}
+$$
+
+This means that all the operations defined for matrices will be applicable to vectors as well.
+
+## Vectors, matrices, and scalars
+
+We can write matrices by either concatenating vectors or by explicitly writing their elements.
+
+$$
+X = [X1 \, X_2] =
+\begin{bmatrix}
+X_{1,1} & X_{1, 2}\\
+X_{2,1} & X_{2, 2}\\
+\vdots & \vdots\\
+X_{n,1} & X_{n,2}
+\end{bmatrix}
+$$
+
+## Vectors, matrices, and scalars
+
+We already know how to create these objects in R
+
+\footnotesize
+```{r, echo=TRUE}
+x1 <- c(1, 4, 6)
+x2 <- c(7, 7, 2)
+cbind(x1, x2)
+matrix(data = c(1, 4, 6, 7, 7, 2), nrow = 3, ncol = 2)
+```
+
+## Matrix operations
+
+Here, we review some of the operations that can be performed on matrices, both in mathematical terms and in R.
+
+- Multiplication by a scalar
+- Transposition
+- Matrix multiplication
+- Inverse
+
+## Multiplication by a scalar
+
+This is the simplest operation: each element of the matrix is multiplied by the scalar.
+
+If
+$$
+X =
+\begin{bmatrix}
+X_{1,1} & \ldots & X_{1, p}\\
+X_{2,1} & \ldots &X_{2, p}\\
+\ldots & \ldots &\ldots\\
+X_{n,1} & \ldots & X_{n,p}
+\end{bmatrix}
+$$
+then
+$$
+a \, X =
+\begin{bmatrix}
+a X_{1,1} & \ldots & a X_{1, p}\\
+a X_{2,1} & \ldots &a X_{2, p}\\
+\vdots & \ddots &\vdots\\
+a X_{n,1} & \ldots & a X_{n,p}
+\end{bmatrix}
+$$
+
+## Multiplication by a scalar
+
+R automatically recognize a scalar and a matrix and "does the right thing."
+
+\footnotesize
+```{r, echo=TRUE}
+a <- 2
+x <- matrix(data = c(1, 4, 6, 7, 7, 2), nrow = 3, ncol = 2)
+x
+a * x
+```
+
+## The transpose
+
+Transposition is a simple operation that simply changes columns to rows. We use $\top$ sign to denote the transposed of a matrix.
+
+
+$$
+X^\top =
+\begin{bmatrix}
+X_{1,1} & \ldots & X_{n, 1}\\
+X_{1,2} & \ldots &X_{n, 2}\\
+\vdots & \ddots &\vdots\\
+X_{1,p} & \ldots & X_{n,p}
+\end{bmatrix}
+$$
+
+## The transpose
+
+In R, we can use the `t()` operator to transpose a matrix.
+
+```{r, echo=TRUE}
+t(x)
+```
+
+## Matrix multiplication
+
+If $A$ is an $n \times m$ matrix and $B$ is an $m \times p$ matrix, their matrix product $X = AB$ is an $n \times p$ matrix, in which each row of $A$ is multiplied by each column of $B$ and summed.
+
+In more details, the element $x_{ij} = \sum_{k=1}^m a_{i,k} b_{k,j}$.
+
+In order to multiply two matrices, the number of columns of the first matrix needs to be the same as the number of rows of the second matrix.
+
+In R, we can use the `%*%` operator.
+
+## Matrix multiplication
+
+```{r, echo=TRUE}
+y <- matrix(c(5, 6, 7, 2), ncol=2, nrow=2)
+x %*% y
+```
+
+## Properties of matrix multiplication
+
+In general, the matrix multiplication operator is
+
+1. Not commutative: $A \, B \neq B \, A$.
+2. Distributive over matrix addition: $A(B+C) = AB + AC$.
+3. Compatible with scalar multiplication: $a(AB) = (aA)B$
+4. Transposition: $(AB)^\top = B^\top A^\top$.
+
+## The identity matrix
+
+For scalars we have the number $1$, a number such that $1 x = x$ for any $x$.
+
+The analogous for matrices, is the _identity matrix_
+$$
+I = 
+\begin{bmatrix}
+1 & 0 & 0 & \ldots & 0 & 0\\
+0 & 1 & 0 & \ldots & 0 & 0\\
+0 & 0 & 1 & \ldots & 0 & 0\\
+\vdots & \vdots & \vdots & \ddots & \vdots & \vdots\\
+0 & 0 & 0 & \ldots & 1 & 0\\
+0 & 0 & 0 & \ldots & 0 & 1
+\end{bmatrix}
+$$
+
+By definition, for any matrix $X$, $X \, I = X$.
+
+In R we can use the function `diag()`.
+
+## The identity matrix
+
+\footnotesize
+```{r, echo=TRUE}
+x %*% diag(2)
+diag(3) %*% x
+```
+
+## The inverse
+
+A matrix is called _square_ if it has the same number of rows and columns.
+
+The inverse of a square matrix $X$, denoted by $X^{-1}$ is the matrix that when multiplied by $X$ returns the identity matrix.
+
+$$
+X \, X^{-1} = I.
+$$
+
+Note that not all matrices have a defined inverse.
+
+We will see later how this plays a role for linear models. 
+
+If the inverse exists, it can be computed using the `solve()` function in R. Note that the `solve()` function is numerically unstable and should be used with caution.
+
+## The inverse
+
+\footnotesize
+```{r, echo=TRUE}
+y
+solve(y)
+y %*% solve(y)
+```
+
+## Using matrix algebra in statistics
+
+Why do we need linear algebra and matrix notation in statistics?
+
+Linear algebra is a very convenient and compact mathematical way of formalizing many of the concepts of statistics, especially with regards to linear models.
+
+Let's focus on a couple of simple examples.
+
+## Example: The mean
+
+Assume that we have a vector $X$ that contains the data for a sample of $n$ observations. We can use matrix notation to denote the sample mean of that vector.
+
+Define a $n \times 1$ matrix $\mathbf{1} = [1 \, \ldots \, 1]^\top$.
+
+We can compute the mean simply as $\frac{1}{n} \mathbf{1}^\top X$.
+
+$$
+\frac{1}{n} \mathbf{1}^\top X = \frac{1}{n} [1 \, \ldots \, 1]
+\begin{bmatrix}
+X_1\\
+\vdots\\
+X_n
+\end{bmatrix}
+= \frac{1}{n} \sum_{i=1}^n X_i = \bar{X}.
+$$
+
+## Example: The mean
+
+```{r, echo=TRUE}
+n <- 10
+x <- rnorm(n)
+mean(x)
+A <- rep(1, n)
+1/n * t(A) %*% x
+```
+
+## Example: The variance
+
+The same is true for the variance: We can simply multiply the centered matrix by its transpose to compute it.
+
+$$
+R = X - \bar{X} = 
+\begin{bmatrix}
+X_1 - \bar{X}\\
+\vdots\\
+X_n - \bar{X}
+\end{bmatrix}
+$$
+
+Then,
+$$
+\frac{1}{n-1} R^\top R = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2.
+$$
+
+## Example: The variance
+
+```{r, echo=TRUE}
+var(x)
+r <- x - mean(x)
+1/(n-1) * t(r) %*% r
+```
+
+## The `crossprod` function
+
+The operation $X^\top Y$ is so important in statistics that R has a shortcut function for it, the `crossprod()` function.
+
+\footnotesize
+```{r, echo=TRUE}
+A <- matrix(rnorm(4), nrow=2, ncol=2)
+B <- matrix(rnorm(4), nrow=2, ncol=2)
+t(A) %*% B
+crossprod(A, B)
+```
+
+## The `crossprod` function
+
+The `crossprod` function can be used to compute the variance.
+
+```{r, echo=TRUE}
+var(x)
+crossprod(r)/(n-1)
+```
+
+Note that `crossprod(r)` is a further shortcut for `crossprod(r, r)`.
+
+## The linear regression model
+
+We are now ready to use linear algebra for the linear regression model that we have seen in the previous lecture.
+
+$$
+Y_i = \beta_0 + \beta_1 x_{i1} + \ldots +\beta_p x_{ip} + \varepsilon_i\,\,\,i=1,\ldots,n
+$$
+
+## The linear regression model
+
+In this case, the matrix notation is particularly
+useful. $$Y=\left( \begin{array}{l}
+                                   Y_1 \\
+                                   Y_2 \\
+                                   \ldots \\
+                                   Y_n \\
+                                  \end{array}\right)\,\,\,\,\,\,\,\,\,\,\,\,
+    X=\left( \begin{array}{llll}
+                                   1 & x_{11} & \ldots & x_{1p}\\
+                                   1 & x_{21} & \ldots & x_{2p}\\
+                                   1 & \ldots&\ldots & \ldots\\
+                                   1 & x_{n1} & \ldots & x_{np}\\
+                                  \end{array}\right)\,\,\,\,\,\,\,\,\,\,\,\,
+    \varepsilon=\left( \begin{array}{l}
+                                   \varepsilon_1 \\
+                                   \varepsilon_2 \\
+                                   \ldots \\
+                                   \varepsilon_n \\
+                                  \end{array}\right)$$
+$$\beta=\left( \begin{array}{l}
+                                   \beta_0 \\
+                                   \beta_1 \\
+                                   \ldots \\
+                                   \beta_p \\
+                                  \end{array}\right)$$ and the model can
+be written as $Y = X\beta + \varepsilon$.
+
+Note that the vector $\beta$ contains $\beta_0$! Hence, the first column of the matrix $X$ needs to be a vector of $1$'s.
+
+HERE CHANGE THE NEXT SLIDES WITH THOSE FROM Part-D.
+
+## The least-square regression
+
+The least-square equation also becomes simpler:
+
+$$
+(Y - X\beta)^\top (Y - X\beta)
+$$
+
+The derivative in matrix notation is
+$$
+2 X^\top (Y - X\beta) = 0
+$$
+which leads to
+$$
+X^\top X \beta = X^\top Y
+$$
+and
+$$
+\hat\beta = (X^\top X)^{-1}X^\top Y
+$$
+
+## An example: The father-son data
+
+In the 19th century Francis Galton collected _paired height data_ from fathers and sons. 
+
+His hypothesis was that height was inherited and he wanted to see whether it was supported by the data.
+
+What follows is a figure from Galton's original analysis.
+
+## An example: The father-son data
+
+\centering
+
+```{r}
+knitr::include_graphics("galton.jpg")
+```
+
+## An example: The father-son data
+
+Galton observed that although children of tall parents were generally tall, they were less so, on average, than their parents. Similarly, children of short parents tended to be short, but less so than their parents.
+
+Galton called this phenomenon _regression to the mean_, thus originating the term _regression_.
+
+We now know that this is related to the _slope_ of the regression line.
+
+Let's look at the data.
+
+## An example: The father-son data
+
+```{r}
+library(UsingR)
+data(father.son)
+plot(father.son$fheight, father.son$sheight, xlab="Father's height", ylab="Son's height",
+     pch=20)
+```
+
+## An example: The father-son data
+
+\footnotesize
+```{r, echo=TRUE}
+x <- father.son$fheight
+y <- father.son$sheight
+
+X <- cbind(1, x, deparse.level = 0)
+head(X)
+
+betahat <- solve(t(X) %*% X) %*% t(X) %*% y
+betahat
+```
+
+## An example: The father-son data
+
+Let's check that these are the same values that we would get without matrix algebra.
+
+\footnotesize
+```{r, echo=TRUE}
+beta <- sum((y - mean(y)) * (x - mean(x)))/(sum((x - mean(x))^2))
+alpha <- mean(y) - beta * mean(x)
+alpha
+beta
+```
+
+## An example: The father-son data
+
+```{r}
+library(UsingR)
+plot(father.son$fheight, father.son$sheight, xlab="Father's height", ylab="Son's height",
+     pch=20)
+abline(a = betahat[1], b = betahat[2], col=2, lwd=2)
+abline(0, 1, lwd=2, lty=2)
+legend("topleft", c("Regression line", "Identity line"), lwd=2, lty=1:2, col=2:1)
+```
+
+## R: the `lm()` function
+
+As usually is the case, R has a convenient function that we can use, which is called `lm()` for linear model.
+
+We will see more about it later, but for now, you can see how we can use it to compute the values of $\beta$.
+
+Note that we use the formula syntax to indicate that we have a response variable that is a function of the covariate.
+
+## R: the `lm()` function
+
+```{r, echo=TRUE}
+lm(y ~ x)
+```
+
+# The Linear Model
+
+## Regression as a statistical model
+
+Up until now, we have only defined the regression line as a mathematical entity that we can compute starting from a vector $Y$ and a matrix $X$.
+
+However, in inferential statistics, both $Y$ and $X$ are random variables, and what we observe are the values of our random sample from the population.
+
+This means that what we want to _infer_ the true relationship between the covariates and the response in the population starting from the relationship that we observe in the sample.
+
+In other words, there is a _true parameter_ $\beta$ in the population, and we need to _estimate_ it with the values of our sample.
+
+In the context of inference, regression is often referred to as _the linear model_.
+
+## The linear model
+
+Given a set of $n$ independent observations, and $p$ covariates, with $n > p$, the linear model is defined, in matrix notation, as
+$$
+Y = X \beta + \varepsilon,
+$$
+where
+
+- $Y$ is a $n \times 1$ vector containing the response variable.
+- $X$ is a $n \times p$ matrix of covariates, called the _design matrix_.
+- $\beta$ is a $p \times 1$ vector of regression parameters.
+- $\varepsilon$ is a $n \times 1$ vector of random errors.
+
+## The linear model
+
+As with all the statistical models, it is always a good idea to identify the observed / unobserved quantities, as well as the random / fixed quantities.
+
+In this case,
+
+- $X$ and $Y$ are _observed random variables_.
+- $\varepsilon$ is an _unobserved random variable_.
+- $\beta$ is a set of _unknown parameters_ that we will need to estimate.
+
+In some books, $X$ is not considered a random variable, but a fixed quantity. In this course, we will consider it random, but we will _condition_ our analysis to the observed values of $X$.
+
+For practical purposes, we do not care about the random variation of $X$.
+
+## A note on linearity
+
+The term _linear_ in the linear model refers to the linearity of the model _with respect to the parameter_ $\beta$.
+
+It does not imply that we have linearity in $X$ and $X$ may contain non-linear transformation of the data. For instance the following models are valid linear models.
+
+$$
+Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \varepsilon
+$$
+
+$$
+Y = \beta_0 + \beta_1 \log X + \varepsilon
+$$
+
+## A note on the design matrix
+
+Remember that in order to estimate $\beta$ we need to compute the inverse of the design matrix $X$.
+
+This means that $X$ needs to be invertible. To insure that, we need the design matrix to be of _full rank_ or of rank $p$.
+
+The rank of a matrix is essentially the number of columns that are linearly independent.
+
+Hence, to ensure that we can compute $\hat\beta$, we need all the columns of $X$ to be linearly independent.
+
+This is often referred to as the _non collinearity_ condition.
+
+## Assumptions
+
+As with all the statistical models, we need some assumptions.
+
+1. There is a linear relation between $Y$ and $X$.
+2. The error terms $\varepsilon$ are i.i.d. with mean 0 and constant variance:
+    - $E[\varepsilon] = 0$;
+    - $Var(\varepsilon) = \sigma^2$ (homoscedasticity).
+3. The error terms $\varepsilon$ are independent of $X$: $\varepsilon \independent X$.
+
+## Conditional Expectation
+
+As a consequence of these assumptions, we can see that the conditional expectation of $Y$ is
+
+$$
+E[Y | X] = X\beta.
+$$
+
+# Ordinary Least Squares
+
+## Ordinary Least Squares
+
+We do not observe the true parameter $\beta$ and we need to estimate it from the data.
+
+Luckily, we already know how to estimate $\beta$, as the value that minimizes the sum of the squares of the differences between $Y$ and $X\beta$.
+
+$$
+\hat \beta = (X^\top X)^{-1} X^\top Y
+$$
+is called the _ordinary least squares_ (OLS) estimator.
+
+## The OLS estimator is conditionally unbiased
+
+We will prove that $\hat\beta$ is conditionally unbiased, i.e.,
+$$
+E[\hat \beta | X] = \beta.
+$$
+
+## The OLS estimator is conditionally unbiased
+
+\begin{align*}
+\hat\beta &= (X^\top X)^{-1} X^\top (X\beta + \varepsilon)\\
+  &= (X^\top X)^{-1} X^\top X\beta + (X^\top X)^{-1} X^\top \varepsilon\\
+  &= \beta + (X^\top X)^{-1} X^\top \varepsilon.
+\end{align*}
+
+Hence,
+$$
+\hat\beta = \beta + \eta \quad \text{where} \quad \eta = (X^\top X)^{-1} X^\top \varepsilon.
+$$
+
+## The OLS estimator is conditionally unbiased
+
+To show that $E[\hat \beta | X] = \beta$, we need to show that $E[\eta | X] = 0$.
+
+$$
+E[\eta | X] = (X^\top X)^{-1} X^\top E[\varepsilon | X].
+$$
+
+Since $\varepsilon \independent X$, conditioning on $X$ does not influence the distribution of $\varepsilon$, and we know by assumption that $E[\varepsilon] = 0$. Hence,
+$$
+E[\hat\beta | X] = \beta.
+$$
+
+## Standard Error of the OLS estimator
+
+As it is true in general for estimation, it is not enough to have a _point estimate_ of the regression parameter, but we want to know what is the _distribution_ of the estimator.
+
+First, we need to compute the standard errors of $\hat\beta$.
+
+In order to do that we have to remember the assumptions of the linear model, especially those related to the error term $\varepsilon$.
+
+We denote with $\Sigma$ the variance/covariance matrix of the error term. In particular,
+$$
+\Sigma_{i,j} = Cov(\varepsilon_i, \varepsilon_j) = 
+\begin{cases}
+\sigma^2 & i=j\\
+0 & i \neq j
+\end{cases}
+$$
+
+Hence, we can write
+$$
+\Sigma = \sigma^2 I.
+$$
+
+## Standard Error of the OLS estimator
+
+As a consequence, the conditional variance of $Y$ is
+$$
+Var(Y | X) = Var(X\beta + \epsilon| X) = Var(\epsilon) = \sigma^2 I
+$$
+
+## Variance of a linear combinations
+
+In matrix notation, the variance of a linear combination $AY$ can be computed as
+$$
+Var(AY) = A Var(Y) A^\top
+$$
+
+Since $\hat\beta$ is a linear combination of $Y$, we can use the same rule to compute its variance.
+
+## Standard Error of the OLS estimator
+
+\begin{align*}
+Var(\hat\beta | X) &= Var((X^\top X)^{-1} X^\top Y | X)\\
+  &= (X^\top X)^{-1} X^\top Var(Y | X) ((X^\top X)^{-1} X^\top)^\top.
+\end{align*}
+
+Note that:
+
+- $X^\top X$ is symmetric;
+- if $A$ is symmetric $A^\top = A$;
+- $(AB)^\top = B^\top A^\top$.
+- $(A^\top)^\top = A$.
+
+Hence,
+$$
+((X^\top X)^{-1} X^\top)^\top = X (X^\top X)^{-1}
+$$
+
+## Standard Error of the OLS estimator
+
+Therefore,
+
+\begin{align*}
+Var(\hat\beta | X) &= (X^\top X)^{-1} X^\top Var(Y|X) X (X^\top X)^{-1} \\
+  &= (X^\top X)^{-1} X^\top \sigma^2 I X (X^\top X)^{-1}\\
+  &= \sigma^2 (X^\top X)^{-1} X^\top X (X^\top X)^{-1}\\
+  &= \sigma^2 (X^\top X)^{-1}.
+\end{align*}
+
+Hence, the diagonal of the square root of this matrix contains the standard errors of $\beta$.
+
+## How to estimate $\sigma^2$?
+
+If we could observe $\varepsilon$, we could simply estimate $\sigma^2$ by
+$$
+\hat\sigma^2 = \frac{1}{n} \sum_{i=1}^n \varepsilon_i^2.
+$$
+
+Since we do not observe $\varepsilon$, we can use the residuals $e = Y - X\hat\beta$.
+
+We also need to correct for the degrees of freedom (more on this later), to get our estimator:
+$$
+\hat\sigma^2 = \frac{1}{n-p} \sum_{i=1}^n e_i^2.
+$$
+
+This estimator is _conditionally unbiased_, i.e.,
+$$
+E[\hat\sigma^2 | X] = \sigma^2.
+$$
+
+## A note on $n-p$
+
+The fact that we divide by $n-p$ derives from the proof that $\hat\sigma^2$ is unbiased.
+
+This proof is quite complicated mathematically, so we will skip it for now.
+
+However, it derives from the geometric interpretation of regression, which we will see if we have time at the end of the course.
+
+For now, notice that because we assumed that $n > p$, we do not have problems in estimating $\sigma^2$.
+
+Also, note the similarity with the usual estimator of the variance: Here, instead of $n - 1$ we use $n-p$, because we have $p$ parameters, and hence $n-p$ degrees of freedom.
+
+## A note on the assumptions
+
+Note which assumptions we _did not need_ to get to these results.
+
+1. We did not assume normality!
+2. We did not assume independence of the columns of X, just non-collinearity.
+
+These results ensure that linear models can be applied in a lot of different settings, without requiring too stringent assumptions.
+
+## Example: The father-son data
+
+\footnotesize
+```{r, echo=TRUE}
+n <- length(y)
+p <- NCOL(X)
+e <- y - X %*% betahat
+
+## sigma^2 estimator
+(sigma2 <- 1/(n - p) * sum(e^2))
+
+## standard error of bethat
+(var <- sigma2 * solve(crossprod(X)))
+```
+
+## Example: The father-son data
+
+\footnotesize
+```{r, echo=TRUE}
+fit <- lm(y ~ x)
+summary(fit)$coefficients
+betahat
+sqrt(diag(var))
+```
+
+# The Normal Linear Model
+
+## Normality assumption
+
+Remember that for now, we did not make any assumptions about the distribution of the data.
+
+Indeed, the assumptions of the linear model that we have made so far are:
+
+1. There is a linear relation between $Y$ and $X$; with $X$ full-rank and $p < n$.
+2. The error terms $\varepsilon$ are i.i.d. with mean 0 and constant variance:
+    - $E[\varepsilon] = 0$;
+    - $Var(\varepsilon) = \sigma^2$ (homoscedasticity).
+3. The error terms $\varepsilon$ are independent of $X$: $\varepsilon \independent X$.
+
+For the next results to hold, we need to restrict our model to the following assumption:
+$$
+\varepsilon_i \overset{iid}{\sim} N(0, \sigma^2).
+$$
+
+## Normality assumption
+
+In matrix notation, we can write the distibution of $\varepsilon$ as a multivariate normal distribution:
+$$
+\varepsilon \sim N(0, \sigma^2I),
+$$
+
+where by $0$ here we mean the vector of $n$ elements equal to zero.
+
+
+## Normality assumption
+
+We need the normality assumption in order to make inference on the coefficients of the model, i.e., to create confidence intervals and test hypotheses on the parameter $\beta$.
+
+The main results that we will see are the $t$-test and the $F$-test.
+
+## The distribution of $\hat\beta$
+
+Conditioned on the values of $X$, $Y$ is a linear combination of $\varepsilon$, hence:
+$$
+Y | X \sim N(X\beta, \sigma^2I).
+$$
+
+Moreover, $\hat\beta$ is a linear combination of $Y$, hence:
+$$
+\hat\beta | X \sim N(\beta, \sigma^2 (X^\top X)^{-1}).
+$$
+
+## Hypothesis testing in linear models
+
+It is natural to ask whether the observed value of $\beta$ is just due to the random variation in our sample or if in the true population there is indeed an association between the covariates $X$ and the response $Y$.
+
+In statistical terms, this translate in the set of hypotheses:
+$$
+H_0: \beta_k = 0 \quad \quad H_1: \beta_k \neq 0,
+$$
+where $\beta_k$ is the $k$-th component of $\beta$, corresponding to the $k$-th covariate.
+
+## Hypothesis testing in linear models
+
+Thanks to the normality assumption, under the null hypothesis, the statistic
+$$
+t = \frac{\hat\beta_k}{\sqrt{Var(\hat\beta_k)}}
+$$
+is _distributed as a Student's t_ with $n - p$ degrees of freedom.
+
+## Statistical significance
+
+This is nothing more than a $t$-test and we have already seen how to compute the $p$-value of this test starting from the Student's $t$ distribution.
+
+As with any hypothesis testing, we compare the p-value with a pre-specified significance level $\alpha$ and we reject the null hypothesis if $p < \alpha$.
+
+## Example: The father-son data
+
+```{r}
+library(UsingR)
+data(father.son)
+x <- father.son$fheight
+y <- father.son$sheight
+```
+
+\tiny
+```{r, echo=TRUE}
+fit <- lm(y ~ x)
+summary(fit)
+```
+
+## Example: The father-son data
+
+\footnotesize
+```{r, echo=TRUE}
+n <- length(y)
+p <- 2
+
+t <- 0.51409/0.02705
+1 - pt(t, df = n - p)
+```
+
+## What if the data are not normal?
+
+If the data are not normal, we can still estimate $\beta$ and its standard error, _as long as the errors are independent and homoschedastic_.
+
+Without the normality assumption, $t$ will not be distributed as a Student's $t$, so we cannot compute an exact p-value.
+
+However, if $n - p$ is large the _Central Limit Theorem_ tells us that $t$ will be _approximately_ distributed as a Student's $t$.
+
+If $n$ is small, we can still use the _bootstrap_ to compute the null distribution of $t$ and get an _approximate_ $p$-value.
+
+## Interpretation of the coefficients
+
+We have seen how to estimate the values of $\beta$ and how to test for their significance.
+
+But it's important not to get lost in the mathematical details and lose the focus on the scientific question. 
+
+It is important to be able to correctly interpret the values of the parameters and the p-values.
+
+## Interpretation of the coefficients
+
+Let's start from the simple case where we only have one covariate:
+$$
+Y = \beta_0 + \beta_1 X_1 + \varepsilon
+$$
+
+In this case, $\beta_1$ represents the difference in the expected value of $Y$ for each one-unit difference in $X_1$.
+
+If $\beta_1$ is _significantly different from zero_ then we can infer that the association between $Y$ and $X_1$ is true for the whole population.
+
+As with any test, it is dangerous to focus only on the p-value, one can have a very small, yet significant effect! (cf. significance vs. importance)
+
+## Interpretation of the coefficients
+
+If we have more than one covariate:
+$$
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p + \varepsilon
+$$
+
+$\beta_1$ represents the difference in the expected value of $Y$ for each one-unit difference in $X_1$, _if all the other covariates remain constant_.
+
+Importantly, the p-value for the test of significance of each $\beta_k$ is valid only in the context of the tested model. If we remove one covariate, $\beta$ (and its $p$-values) will change!
+
+## Example: Baby's birth weight
+
+A child's weight at birth may depend on many variables, including the gestation period, the height and weight of the mother and of the father.
+
+We can fit a linear model to explore these relationships.
+
+## Example: Baby's birth weight
+
+```{r}
+babies_sub <- babies %>%
+  filter(gestation < 350 & age < 99 & ht < 99 & wt1 < 999 & dage < 99 & dht < 99 & dwt < 999)
+```
+
+\tiny
+```{r, echo=TRUE}
+fit <- lm(wt ~ gestation + wt1 + ht + dht + dwt, data = babies_sub)
+summary(fit)
+```
+
+## The F-test
+
+For now we have seen how to test for the marginal hypotheses that each $\beta_k$ is equal to zero.
+
+What if we want to test a group of variables at the same time?
+
+We can test the hypothesis that the last $p_0$ components of $\beta$ are $0$, i.e.:
+$$
+H_0: \beta_k = 0, \text{for all } k = p - p0 + 1, \ldots, p
+$$
+against
+$$
+H_1: \beta_k \neq 0, \text{for at least one } k = p - p0 + 1, \ldots, p
+$$
+
+The strategy is to compute a test statistic, called the $F$-statistic, that compares the _full model_ (with all the covariates) to a _reduced model_ where the selected coefficients are fixed at 0.
+
+## The F-test
+
+To compute the test statistic we need to:
+
+1. _Fit the full model_. Compute the OLS estimate $\hat\beta$ and its standard error.
+2. _Fit the reduced model_ that satisfies the null hypothesis.
+
+You can think of the reduced model as a new regression model in which we _drop the last_ $p_0$ _columns_ of $X$.
+
+The test statistic is
+$$
+F = \frac{(||X\hat\beta||^2 - ||X\hat\beta^{(r)}||^2)/p_0}{||e||^2/(n-p)},
+$$
+where $||\cdot||$ is the norm, $\hat\beta^{(r)}$ is the OLS estimator of the reduced model and $e$ are the residuals of the full model.
+
+## The F-test
+
+Under the null hypothesis, the statistic $F$ is distributed as a _Fisher's F distribution_, with $p_0$ and $n-p$ degrees of freedom.
+
+In R, we can compute the quantiles and the CDF of the F distribution using `qf()` and `pf()`, respectively.
+
+## The F-test
+
+The F-test is used in several ways in a typical analysis: the first way is to compare the _full model_ (with all the covariates), with the _null model_ that includes only the intercept.
+
+This is what is reported in the output of the summary of `lm` in R and it tests the null hypothesis that all the coefficients are equal to 0.
+
+We must be careful with the interpretation of this F-test, as _its p-value is valid only if the model is correctly specified_, and we generally do not know it.
+
+Another, more useful, way the F-test can be used is to _test a group of covariates_. For instance, we might test whether the height and weight of the father have any effect on the birth weight of the baby.
+
+## Example: Baby's birth weight
+
+\footnotesize
+```{r, echo=TRUE}
+fit <- lm(wt ~ gestation + wt1 + ht + dht + dwt, data = babies_sub)
+fit0 <- lm(wt ~ gestation + wt1 + ht, data = babies_sub)
+anova(fit0, fit)
+```
+

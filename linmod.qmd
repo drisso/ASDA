@@ -1,0 +1,22 @@
+---
+title: "Introduction to statistical modeling"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+### Intro to statistical modeling
+
+{{< pdf "slides/03_statmod.pdf" >}}
+
+### Intro to linear models
+
+Here, adapt lecture lm2 from biostats1.
+
+## Further reading
+
+-   S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 2](https://www.huber.embl.de/msmb/02-chap.html)
+

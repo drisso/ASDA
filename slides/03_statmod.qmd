@@ -1,0 +1,167 @@
+---
+title: "Statistical Modeling"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    beamer:
+        aspectratio: 169
+        include-in-header: template.tex
+---
+
+# What is statistics
+
+## What is statistics
+
+::: {.callout-important appearance="minimal"}
+Statistics is the *art of making numerical conjectures* about puzzling
+questions.
+
+Freedman et al., 1978.
+:::
+
+. . .
+
+::: {.callout-important appearance="minimal"}
+The objective of statistics is to make *inferences* (predictions,
+decisions) *about a population* based on information contained in a
+sample.
+
+Mendenhall, 1987.
+:::
+
+## What are statistical models {.incremental}
+
+-   Statistical models are sets of equations involving **random
+    variables**
+-   Statistical models involve **distributional assumptions**
+-   Given a **question** and a body of **data** statistical models can
+    be used to provide **answers** along with **measures of
+    uncertainty**.
+
+## What are statistical models
+
+![Statistical Models](img/datastat.png)
+
+## Three key concepts: question, model, uncertainty
+
+::: {.callout-important appearance="minimal"}
+
+Far better an **approximate answer to the right question**, which is
+often vague, than an **exact answer to the wrong question**, which
+can always be made precise.
+
+John W. Tukey, 1962.
+:::
+
+. . .
+
+::: {.callout-important appearance="minimal"}
+
+All models are wrong, but some are useful.
+
+George E. P. Box, 1987.
+:::
+
+# Statistical Inference
+
+## Statistical Inference
+
+Statistical inference is the process of **learning some properties of the population** starting **from a sample** drawn from this population.
+
+For instance, we may be interested in learning about the survival
+outcome of cancer patients, but we cannot measure the whole population.
+
+We can however measure the survival of a **random sample** of the
+population and then **infer** or generalize the results to the entire
+population.
+
+## Statistical Inference
+
+There are some terms that we need to define.
+
+-   The *data generating distribution* is the *unknown* probability
+    distribution that generates the data.
+-   The *empirical distribution* is the *observable* distribution of the
+    data in the sample.
+
+We are usually interested in a *function* of the data generating
+distribution. This is often referred to as *parameter* (or the parameter
+of interest).
+
+We use the sample to estimate the parameter of interest, using a
+function of the empirical distribution, referred to as *estimator*.
+
+## Statistical Inference
+
+![Statistical Inference](img/inference.png)
+
+
+## Statistical Inference
+
+- *Parameter*: unknown object of interest.
+
+- *Estimator*: data-driven guess at the value of the parameter.
+
+In terms of mathematical notation, we often use Greek letters to refer
+to parameters and we use the same letter with the "hat" notation to
+refer to their estimate.
+
+For instance, we denote with $\hat{\theta}$ the estimator of the
+parameter $\theta$.
+
+Sometimes, you will find the notation $\hat{\theta}_n$, when we want to
+emphasize that we are using a sample of $n$ observations to estimate the
+parameter.
+
+## Example: Blood pressure in healthy individuals
+
+Let's assume that we want to estimate the average blood pressure of
+healthy individuals in the United States.
+
+Let's assume that we have access to blood pressure measurements for a
+random sample of the population (more on this later!).
+
+- **What is the parameter of interest?**
+
+- **How can we estimate the parameter using the data in our sample?**
+
+## More on the data generating distribution
+
+The data generating distribution is unknown.
+
+In **nonparametric statistics** we aim at estimating this distribution
+from the empirical distribution of the sample, without making any
+assumptions on the shape of the distribution.
+
+However, it is often easier to make **some assumptions** about the data
+generating distribution. These assumptions are sometimes based on domain
+knowledge or on mathematical convenience.
+
+One commonly used strategy is to assume a **family of distributions** for
+the data generating distribution, for instance the *Gaussian
+distribution*.
+
+## Probability
+
+In order to make inference from a **random** sample to the whole
+population, we need some notion of **randomness**. To study randomness we
+need the concept of **probability**.
+
+Hence, probability is one of the foundation of statistical inference.
+
+However, probability is only a tool and statistics deals with _how to model observed data_ using a probabilistic model.
+
+## The art of statistical modeling
+
+- _Start with the data_: exploratory data analysis.
+- _Make probabilistic assumptions_: choose a distribution.
+- _Make inference_: estimate the parameters of the distribution.
+
+# Maximum Likelihood Estimation
+
+## A simple example
+
+Add Poisson and Binomial examples from MSMB
+
+
+
