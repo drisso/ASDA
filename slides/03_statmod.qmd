@@ -6,6 +6,12 @@ format:
     beamer:
         aspectratio: 169
         include-in-header: template.tex
+        toc: true
+
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
 ---
 
 # What is statistics
@@ -161,7 +167,8 @@ However, probability is only a tool and statistics deals with _how to model obse
 
 ## A simple example
 
-Add Poisson and Binomial examples from MSMB
+Add Poisson and Binomial examples from MSMB.
 
+Find an easy way to define random variables.
 
-
+Find an easy way to talk about conditional probability

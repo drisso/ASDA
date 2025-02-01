@@ -6,6 +6,12 @@ format:
     beamer:
         aspectratio: 169
         include-in-header: template.tex
+        toc: true
+
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
 ---
 
 
@@ -114,7 +120,6 @@ $$
 
 We already know how to create these objects in R
 
-\footnotesize
 ```{r, echo=TRUE}
 x1 <- c(1, 4, 6)
 x2 <- c(7, 7, 2)
@@ -160,7 +165,6 @@ $$
 
 R automatically recognize a scalar and a matrix and "does the right thing."
 
-\footnotesize
 ```{r, echo=TRUE}
 a <- 2
 x <- matrix(data = c(1, 4, 6, 7, 7, 2), nrow = 3, ncol = 2)
@@ -240,7 +244,6 @@ In R we can use the function `diag()`.
 
 ## The identity matrix
 
-\footnotesize
 ```{r, echo=TRUE}
 x %*% diag(2)
 diag(3) %*% x
@@ -264,7 +267,6 @@ If the inverse exists, it can be computed using the `solve()` function in R. Not
 
 ## The inverse
 
-\footnotesize
 ```{r, echo=TRUE}
 y
 solve(y)
@@ -337,7 +339,6 @@ r <- x - mean(x)
 
 The operation $X^\top Y$ is so important in statistics that R has a shortcut function for it, the `crossprod()` function.
 
-\footnotesize
 ```{r, echo=TRUE}
 A <- matrix(rnorm(4), nrow=2, ncol=2)
 B <- matrix(rnorm(4), nrow=2, ncol=2)
@@ -356,17 +357,246 @@ crossprod(r)/(n-1)
 
 Note that `crossprod(r)` is a further shortcut for `crossprod(r, r)`.
 
-## The linear regression model
+# Least-squares regression
 
-We are now ready to use linear algebra for the linear regression model that we have seen in the previous lecture.
+## Least-Squares Regression
 
+If we want to measure the linear association between two continuous variables, we can use the _correlation coefficient_.
+
+An alternative way to look at the association between two variables is to _determine the best line that describe their relationship_. 
+
+What do we mean by "best"? In the context of regression, "best" means the line that minimizes _the sum of squared distances_.
+
+## A simple example
+
+```{r}
+x <- rnorm(100)
+y <- 1 + .5 * x + rnorm(100, sd=0.5)
+
+plot(y ~ x)
+```
+
+## A simple example
+
+```{r}
+fit <- lm(y~x)
+plot(y ~ x)
+abline(a = fit$coefficients[1], b = fit$coefficients[2], col=2, lwd=2)
+segments(x[1], y[1], x[1], predict(fit)[1], col=4, lwd=2, lty=2)
+```
+
+## A simple example
+
+```{r}
+plot(y ~ x)
+abline(a = fit$coefficients[1], b = fit$coefficients[2], col=2, lwd=2)
+segments(x[1], y[1], x[1], predict(fit)[1], col=4, lwd=2, lty=2)
+segments(x[2], y[2], x[2], predict(fit)[2], col=4, lwd=2, lty=2)
+```
+
+## A simple example
+
+```{r}
+plot(y ~ x)
+abline(a = fit$coefficients[1], b = fit$coefficients[2], col=2, lwd=2)
+segments(x[1], y[1], x[1], predict(fit)[1], col=4, lwd=2, lty=2)
+segments(x[2], y[2], x[2], predict(fit)[2], col=4, lwd=2, lty=2)
+segments(x[3], y[3], x[3], predict(fit)[3], col=4, lwd=2, lty=2)
+```
+
+## A simple example
+
+```{r}
+plot(y ~ x)
+abline(a = fit$coefficients[1], b = fit$coefficients[2], col=2, lwd=2)
+for(i in 1:10) {
+  segments(x[i], y[i], x[i], predict(fit)[i], col=4, lwd=2, lty=2)
+}
+```
+
+## A simple example
+
+```{r}
+plot(y ~ x)
+abline(a = fit$coefficients[1], b = fit$coefficients[2], col=2, lwd=2)
+for(i in 1:length(x)) {
+  segments(x[i], y[i], x[i], predict(fit)[i], col=4, lwd=2, lty=2)
+}
+```
+
+## Least-Squares Regression
+
+Mathematically, we can describe the linear relation between the two quantities $x$ and $y$ as
+$$
+\hat{y} = \alpha + \beta x.
+$$
+
+Finding the best line corresponds to minimize the _sum of squared distances_ between the values of $y$ and the values of $\alpha + \beta x$, i.e.
+$$
+\min_{\alpha, \beta} \sum_{i=1}^n (y_i - (\alpha + \beta x_i))^2.
+$$
+
+## Least-Squares Regression
+
+To minimize this quantity, as usual, we compute the partial derivatives.
+
+\begin{align*}
+\frac{\partial}{\partial \alpha} &= -2 \sum_{i=1}^n (y_i - \alpha - \beta x_i) = 0,\\
+\frac{\partial}{\partial \beta} &= -2 \sum_{i=1}^n (y_i - \alpha - \beta x_i) (x_i) = 0,\\
+\end{align*}
+
+We can show that
+\begin{align*}
+\alpha &= \bar{y} - \beta \bar{x},\\
+\beta &= \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2}.
+\end{align*}
+
+## Least-Squares Regression
+
+The line
+$$
+\hat{y} = \alpha + \beta x
+$$
+is called the _least-squares regression_ line.
+
+For any pair ($x_i$, $y_i$), $\hat{y}_i$ is called the _fitted value_ (or predicted value).
+
+$\alpha$ is called the _intercept_ and $\beta$ the _slope_.
+
+The quantities $y_i - \hat{y}_i$ are called the _residuals_.
+
+## Least-Squares Regression
+
+By definition of least-square regression, _the sum of the residuals is equal to zero_.
+
+As a consequence, _the mean of the fitted values is equal to the mean of the observed values_.
+
+\begin{align*}
+\bar{\hat{y}} &= \frac{1}{n} \sum_{i=1}^n \hat{y}_i \\
+  &= \frac{1}{n} \sum_{i=1}^n \hat{y}_i - \bar{y} + \bar{y} \\
+  &= \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) + \bar{y} = \bar{y}.
+\end{align*}
+
+## Relation between correlation and regression
+
+Although correlation and regression can be both used to measure linear relationship between variables, there is a major difference between the two techniques.
+
+In correlation, $x$ and $y$ have the same role, and correlation is a symmetric operator, i.e.
+$$
+cor(x, y) = cor(y, x).
+$$
+
+In linear regression, we use the values of $x$ to "explain" the values of $y$. 
+
+$y$ is called _dependent variable_ or _response variable_.
+
+$x$ is called _independent variable_, _explanatory variable_ or _covariate_.
+
+## Variance Explained
+
+Our goal is to use the values of $x$ to explain the values of $y$, so a natural question is to ask what proportion of variance is explained by the model.
+
+The proportion of variance explained is called the $R^2$ or _R-squared coefficient_, and it is equal to the square of the Pearson correlation coefficient.
+
+## Proportion of Variance Explained
+
+The R-squared coefficient can be used as a diagnostic for the regression model. 
+
+A large value of R-squared means that the linear model is doing a good job at explaining $y$ using the values of $x$.
+
+A small value of R-squared means that the linear model is failing to explain the values of $y$ using the values of $x$. This may be because there is no strong relation between $x$ and $y$ or because the relation is not linear.
+
+## Why regression?
+
+Compared to correlation, regression offers the following advantages.
+
+- The values of $x$ can be used to predict $y$.
+- The analysis is not limited to linear association, but includes polynomial dependencies.
+- The analysis is not limited to two variables and regression can be used to study the effects of many covariates on the response.
+
+## Multiple Regression
+
+The ideas of linear regression can be applied in the case where we have more than one covariate.
+
+Instead of fitting the line $\hat{y} = \alpha + \beta x$, we can consider the more general form
+$$
+\hat{y} = \alpha + \beta_1 x_1 + \ldots + \beta_p x_p,
+$$
+where $p$ is the number of covariates and $x_1, \ldots, x_p$ are $p$ variables.
+
+For symmetry, the intercept $\alpha$ is often denoted with $\beta_0$.
+
+## Example: Cherry trees
+
+```{r, echo=TRUE}
+head(trees)
+```
+
+## Example: Cherry trees
+
+```{r}
+pairs(trees)
+```
+
+## Regression as a statistical model
+
+Up until now, we have only defined the regression line as a mathematical entity that we can compute starting from a vector $y$ and a vector $x$.
+
+However, in inferential statistics, both $Y$ and $X$ are random variables, and what we observe are the values of our random sample from the population.
+
+This means that what we want to _infer_ the true relationship between $X$ and $Y$ in the population starting from the relationship that we observe in the sample.
+
+In other words, there is a _true parameter_ $\beta$ in the population, and we need to _estimate_ it with the values of our sample.
+
+In the context of inference, regression is often referred to as _the linear model_.
+
+## Linear Models: simple linear regression
+
+Suppose that, on $n$ cases, we observe a continuous response $y_i$ and
+one explanatory variable $x_{i}$.
+
+A simple linear model postulates that
+the observations are realizations of independent rv’s $Y_i$ such that:
+$$
+E(Y_i | X_i = x_i)= \beta_0  +  \beta_1 x_{i}, \,\,\,i=1,\,\,\,\ldots,n.
+$$
+Therefore, observations are realizations of independent rv’s whose
+averages lie on the straight line $\beta_0 +  \beta_1 x$.
+
+## Simple linear regression
+
+Another way to look at this is:
+$$
+Y_i = \beta_0 + \beta_1 x_{i} + \varepsilon_i\,\,\,i=1,\ldots,n,
+$$
+where $\varepsilon_i$ are random errors with mean 0. Often, it is
+assumed that the variance of the error terms, for all $i=1,\ldots,n$, is
+the same, i.e., errors are _homoschedastic_.
+
+## Interpretation of slope
+
+Consider two subjects:
+
+- A has covariate value $x_{A}$
+
+- B has covariate value $x_{B}=x_{A}+1$
+
+The expected difference in the response of the two subjects is:
+$$
+E(Y_B) - E(Y_A) = \beta_0  + \beta_1 (x_{A}+1) - \beta_0  - \beta_1 x_{A}=\beta_1,
+$$
+i.e., $\beta_1$ is the effect of a one unit increase in $x.$
+
+## Multiple linear regression
+
+In multiple linear regression, rather than one predictor, we have more than one, $p$, say.
 $$
 Y_i = \beta_0 + \beta_1 x_{i1} + \ldots +\beta_p x_{ip} + \varepsilon_i\,\,\,i=1,\ldots,n
 $$
 
-## The linear regression model
+## Multiple linear regression
 
-In this case, the matrix notation is particularly
+With multiple linear regression, the matrix notation is particularly
 useful. $$Y=\left( \begin{array}{l}
                                    Y_1 \\
                                    Y_2 \\
@@ -393,132 +623,29 @@ $$\beta=\left( \begin{array}{l}
                                   \end{array}\right)$$ and the model can
 be written as $Y = X\beta + \varepsilon$.
 
-Note that the vector $\beta$ contains $\beta_0$! Hence, the first column of the matrix $X$ needs to be a vector of $1$'s.
+## Interpretation of parameters
 
-HERE CHANGE THE NEXT SLIDES WITH THOSE FROM Part-D.
+Consider two subjects:
 
-## The least-square regression
+- A has covariate values $x_{A1},x_{A2}, \ldots, x_{Ap}$
 
-The least-square equation also becomes simpler:
+- B has covariate values $x_{A1},x_{A2}+1, \ldots, x_{Ap}$
 
+Expected difference in the response of the two subjects:
 $$
-(Y - X\beta)^\top (Y - X\beta)
-$$
+\begin{aligned}
+E(Y_B) - E(Y_A) &=&\beta_0 + \beta_1 x_{A1} + \beta_2 (x_{A2}+1)+ \ldots + \beta_p x_{Ap}+\\
+&& - \beta_0 - \beta_1 x_{A1} - \beta_2 x_{A2}- \ldots - \beta_p x_{Ap}\\
+&=&\beta_2,\end{aligned}
+$$ 
+i.e., $\beta_2$ is the effect of a one unit
+increase in $x_2$ for fixed level of the other predictors.
 
-The derivative in matrix notation is
-$$
-2 X^\top (Y - X\beta) = 0
-$$
-which leads to
-$$
-X^\top X \beta = X^\top Y
-$$
-and
-$$
-\hat\beta = (X^\top X)^{-1}X^\top Y
-$$
+Coefficients $\beta_1, \ldots, \beta_p$ are called (partial) regression
+coefficients because they \`\`allow" for the (partial) effect of other
+variables.
 
-## An example: The father-son data
-
-In the 19th century Francis Galton collected _paired height data_ from fathers and sons. 
-
-His hypothesis was that height was inherited and he wanted to see whether it was supported by the data.
-
-What follows is a figure from Galton's original analysis.
-
-## An example: The father-son data
-
-\centering
-
-```{r}
-knitr::include_graphics("galton.jpg")
-```
-
-## An example: The father-son data
-
-Galton observed that although children of tall parents were generally tall, they were less so, on average, than their parents. Similarly, children of short parents tended to be short, but less so than their parents.
-
-Galton called this phenomenon _regression to the mean_, thus originating the term _regression_.
-
-We now know that this is related to the _slope_ of the regression line.
-
-Let's look at the data.
-
-## An example: The father-son data
-
-```{r}
-library(UsingR)
-data(father.son)
-plot(father.son$fheight, father.son$sheight, xlab="Father's height", ylab="Son's height",
-     pch=20)
-```
-
-## An example: The father-son data
-
-\footnotesize
-```{r, echo=TRUE}
-x <- father.son$fheight
-y <- father.son$sheight
-
-X <- cbind(1, x, deparse.level = 0)
-head(X)
-
-betahat <- solve(t(X) %*% X) %*% t(X) %*% y
-betahat
-```
-
-## An example: The father-son data
-
-Let's check that these are the same values that we would get without matrix algebra.
-
-\footnotesize
-```{r, echo=TRUE}
-beta <- sum((y - mean(y)) * (x - mean(x)))/(sum((x - mean(x))^2))
-alpha <- mean(y) - beta * mean(x)
-alpha
-beta
-```
-
-## An example: The father-son data
-
-```{r}
-library(UsingR)
-plot(father.son$fheight, father.son$sheight, xlab="Father's height", ylab="Son's height",
-     pch=20)
-abline(a = betahat[1], b = betahat[2], col=2, lwd=2)
-abline(0, 1, lwd=2, lty=2)
-legend("topleft", c("Regression line", "Identity line"), lwd=2, lty=1:2, col=2:1)
-```
-
-## R: the `lm()` function
-
-As usually is the case, R has a convenient function that we can use, which is called `lm()` for linear model.
-
-We will see more about it later, but for now, you can see how we can use it to compute the values of $\beta$.
-
-Note that we use the formula syntax to indicate that we have a response variable that is a function of the covariate.
-
-## R: the `lm()` function
-
-```{r, echo=TRUE}
-lm(y ~ x)
-```
-
-# The Linear Model
-
-## Regression as a statistical model
-
-Up until now, we have only defined the regression line as a mathematical entity that we can compute starting from a vector $Y$ and a matrix $X$.
-
-However, in inferential statistics, both $Y$ and $X$ are random variables, and what we observe are the values of our random sample from the population.
-
-This means that what we want to _infer_ the true relationship between the covariates and the response in the population starting from the relationship that we observe in the sample.
-
-In other words, there is a _true parameter_ $\beta$ in the population, and we need to _estimate_ it with the values of our sample.
-
-In the context of inference, regression is often referred to as _the linear model_.
-
-## The linear model
+## The linear model (in matrix notation)
 
 Given a set of $n$ independent observations, and $p$ covariates, with $n > p$, the linear model is defined, in matrix notation, as
 $$
@@ -561,13 +688,13 @@ $$
 
 ## A note on the design matrix
 
-Remember that in order to estimate $\beta$ we need to compute the inverse of the design matrix $X$.
+We will see that in order to estimate $\beta$ we need to compute the inverse of the design matrix $X$.
 
 This means that $X$ needs to be invertible. To insure that, we need the design matrix to be of _full rank_ or of rank $p$.
 
 The rank of a matrix is essentially the number of columns that are linearly independent.
 
-Hence, to ensure that we can compute $\hat\beta$, we need all the columns of $X$ to be linearly independent.
+Hence, to ensure that we can compute $\hat\beta$, we will need all the columns of $X$ to be linearly independent.
 
 This is often referred to as the _non collinearity_ condition.
 
@@ -589,24 +716,206 @@ $$
 E[Y | X] = X\beta.
 $$
 
+## Why fitting linear models
+
+<span>**Explanation**</span>
+
+Here the idea is the that system under study really is (approximately)
+linear, and we are interested in the coefficients per se. For example,
+governments have linear models of the economy and use them to
+understand the effects of policy (e.g. tax, interest rate) changes. It
+is often of particular interest to find a minimal set of explanatory
+variables.
+
+<span>**Prediction**</span>
+
+Here a model is a convenient means to create predictions for new
+cases.The only interest is in the quality of the predictions.
+
+## To solve now
+
+1.  Fitting the model: how do we estimate $(\beta, \sigma^2)$?
+
+    -   Least squares
+    -   Other methods
+
+2.  Inference: what can we say about $\beta$ (rarely, about $\sigma^2$)
+    based on the $n$ observations?
+
+
 # Ordinary Least Squares
 
 ## Ordinary Least Squares
 
 We do not observe the true parameter $\beta$ and we need to estimate it from the data.
 
-Luckily, we already know how to estimate $\beta$, as the value that minimizes the sum of the squares of the differences between $Y$ and $X\beta$.
+Luckily, we already know how to estimate $\beta$, as the value that minimizes the _sum of the squares of the differences between $Y$ and $X\beta$._
 
 $$
-\hat \beta = (X^\top X)^{-1} X^\top Y
+\sum_{i=1}^n\left( y_i - \beta_0 - \beta_1 x_{i}\right)^2.
+$$
+
+The value $\beta^\top=(\beta_0, \beta_1)$ such that:
+$$
+\hat\beta= \mbox{argmin}_{_\beta}\sum_{i=1}^n\left( y_i - \beta_0 - \beta_1 x_{i}\right)^2
 $$
 is called the _ordinary least squares_ (OLS) estimator.
 
-## The OLS estimator is conditionally unbiased
+## Least squares: simple regression
 
-We will prove that $\hat\beta$ is conditionally unbiased, i.e.,
+In the simple linear model
+$Y_i = \beta_0  +  \beta_1 x_{i} + \varepsilon_i,\,\,\,i=1,\ldots,n,$
+minimization of the residuals sum of squares
+$$
+\sum_{i=1}^n\left( y_i - \beta_0 - \beta_1 x_{i}\right)^2
+$$
+yields:
+
+1.  $\hat\beta_0 = \bar y - \hat\beta_1 \bar x$;
+
+2.  $\hat\beta_1 = \displaystyle\frac{\sum_{i=1}^n(y_i - \bar y)(x_i -\bar x)}{\sum_{i=1}^n(x_i -\bar x)^2}= \frac{Cov(y,x)}{Var(x)}$.
+
+## Least squares: simple linear regression (cntd)
+
+From the previous results, we get that estimated values $\hat y_i$ can be
+computed as 
+$$
+\hat y_i = \hat\beta_0 + \hat\beta_1 x_{i}.
+$$
+The quantities $e_i=y_i - \hat y_i, i=1,\ldots,n$, i.e., the differences
+between observed and estimated values, are called
+<span>*residuals*</span>.
+
+To estimate the variance of the random terms, it seems natural to consider
+the variability of the residuals. An unbiased estimator for $\sigma^2$ is
+given by 
+$$
+s^2=\displaystyle\frac{\sum(y_i - \hat y_i)^2}{n-2}.
+$$
+
+## Example: cherry tree
+
+For the Cherry tree data, assume to model the volume ($y$) of the trees
+as a function of girth ($x$) with the simple linear model
+$$
+Y_i=\beta_0+ \beta_1 x_i+\varepsilon_i\,, i=1, \ldots, 31.
+$$
+We have $\bar x= 13.25,$ $\bar y = 24.20 ,$ $Var(x)= 9.847914,$
+$Var(y)=270.2028,$ $Cov(y,x)=49.89.$
+
+From previous expressions, we have:
+$$
+\hat\beta^\top= (\hat\beta_0,\hat\beta_1)=(-36.943, 5.066).
+$$
+
+Simple algebra shows that:
+$$
+\sum(y_i - \hat y_i)^2=\sum(y_i - \bar y)^2 - \hat\beta_1 \sum(x_i - \bar x)^2.
+$$
+From previous result, we have $s^2= 18.07950.$
+
+## Least squares: multiple regression
+
+In the multiple linear regression model
+$$
+Y_i = \beta_0 + \beta_1 x_{i1} + \ldots +\beta_p x_{ip} + \varepsilon_i,\,\,\,i=1,\ldots,n
+$$
+minimization of the residuals sum of squares
+$$
+\sum_{i=1}^n\left( y_i - \beta_0 - \beta_1 x_{i1} - \ldots -\beta_p x_{ip}\right)^2=(y-X\beta)^\top(y-X\beta)
+$$
+yields: 
+$$
+\hat\beta=(X^\top X)^{-1}X^\top y.
+$$
+From this we get:
+$$
+\hat y = X\hat\beta,
+$$ 
+
+$$
+e=y - \hat y,
+$$
+
+$$
+s^2=e^\top e/(n-p)=(y - \hat y)^\top(y - \hat y)/(n-p).
+$$
+
+## OLS estimate: derivation
+
+The least-square equation is easier in matrix notation:
+
+$$
+(Y - X\beta)^\top (Y - X\beta)
+$$
+
+The derivative in matrix notation is
+$$
+2 X^\top (Y - X\beta) = 0
+$$
+which leads to
+$$
+X^\top X \beta = X^\top Y
+$$
+and
+$$
+\hat\beta = (X^\top X)^{-1}X^\top Y
+$$
+
+## Example: cherry tree
+
+For the Cherry tree data, assume to model the volume ($y$) of the trees
+as a function of girth ($x_1$) and height ($x_2$) with the linear model
+$Y_i=\beta_0+ \beta_1 x_{i1}+ \beta_2 x_{i2}+\varepsilon_i\,,\,\,\, i=1, \ldots, 31.$
+
+We have $$y=\left( \begin{array}{r}
+                                   10.3 \\
+                                   10.3 \\
+                                   \ldots \\
+                                   77.0 \\
+                                  \end{array}\right),\,\,\,\,\,\,\,\,\,\,\,\,
+    X=\left( \begin{array}{rrr}
+                                  1 & 8.3  & 70\\
+                                   1 & 8.6  & 65\\
+                                   \ldots&\ldots & \ldots\\
+                                   1 &20.6&  87 \\
+                                  \end{array}\right).$$
+
+## Example: cherry tree
+
+This yields $$X^\top X=\left( \begin{array}{rrr}
+               31.0 &  410.70  & 2356.0\\
+             410.7&  5736.55 & 31524.7\\
+           2356.0& 31524.70 &180274.0\\
+                                 \end{array}\right),\,\,\,\,\,\,\,\,\,\,\,\,
+    X^\top y=\left( \begin{array}{r}
+       935.30\\
+       13887.86\\
+      72962.60\\
+                                  \end{array}\right),$$
+
+$$\hat\beta=\left( \begin{array}{r}
+                                   \hat\beta_1 \\
+                                   \hat\beta_2 \\
+                                   \hat\beta_3 \\
+                                  \end{array}\right)=(X^\top X)^{-1}X^\top y= \left( \begin{array}{r}
+ -57.9876589\\
+        4.7081605\\
+       0.3392512\\
+                                   \end{array}\right).$$
+
+## Why least squares?
+
+We can prove that $\hat\beta$ is conditionally unbiased, i.e.,
 $$
 E[\hat \beta | X] = \beta.
+$$
+
+
+The variance of the OLS estimator is
+
+$$
+Var(\hat\beta | X) = \sigma^2 (X^\top X)^{-1}.
 $$
 
 ## The OLS estimator is conditionally unbiased
@@ -745,30 +1054,20 @@ Note which assumptions we _did not need_ to get to these results.
 
 These results ensure that linear models can be applied in a lot of different settings, without requiring too stringent assumptions.
 
-## Example: The father-son data
+## R: the `lm()` function
 
-\footnotesize
+As usually is the case, R has a convenient function that we can use, which is called `lm()` for linear model.
+
+We will see more about it later, but for now, you can see how we can use it to compute the values of $\beta$.
+
+Note that we use the formula syntax to indicate that we have a response variable that is a function of the covariates.
+
+## R: the `lm()` function
+
 ```{r, echo=TRUE}
-n <- length(y)
-p <- NCOL(X)
-e <- y - X %*% betahat
-
-## sigma^2 estimator
-(sigma2 <- 1/(n - p) * sum(e^2))
-
-## standard error of bethat
-(var <- sigma2 * solve(crossprod(X)))
+lm(Volume ~ Girth + Height, data=trees)
 ```
 
-## Example: The father-son data
-
-\footnotesize
-```{r, echo=TRUE}
-fit <- lm(y ~ x)
-summary(fit)$coefficients
-betahat
-sqrt(diag(var))
-```
 
 # The Normal Linear Model
 
@@ -791,197 +1090,183 @@ $$
 
 ## Normality assumption
 
-In matrix notation, we can write the distibution of $\varepsilon$ as a multivariate normal distribution:
-$$
-\varepsilon \sim N(0, \sigma^2I),
-$$
-
-where by $0$ here we mean the vector of $n$ elements equal to zero.
-
-
-## Normality assumption
-
 We need the normality assumption in order to make inference on the coefficients of the model, i.e., to create confidence intervals and test hypotheses on the parameter $\beta$.
 
 The main results that we will see are the $t$-test and the $F$-test.
 
-## The distribution of $\hat\beta$
+## Simple regression
 
-Conditioned on the values of $X$, $Y$ is a linear combination of $\varepsilon$, hence:
+In the simple linear model
 $$
-Y | X \sim N(X\beta, \sigma^2I).
+Y_i = \beta_0  +  \beta_1 x_{i} + \varepsilon_i\,\,\,i=1,\ldots,n,
+$$
+with independent $\varepsilon_i \sim N(0, \sigma^2),$ we have:
+
+1.  $\hat\beta_0\sim N\left(\beta_0, \sigma^2(\frac{1}{n}+\displaystyle\frac{\bar x^2}{\sum(x_i-\bar x)^2})\right)$;
+
+2.  $\hat\beta_1\sim N\left(\beta_1, \displaystyle\frac{\sigma^2}{\sum(x_i-\bar x)^2}\right)$;
+
+3.  $(n-2)s^2/\sigma^2\sim \chi^2_{n-2}$;
+
+## Simple regression
+
+From the previous results, it is easy to see that the rv
+$$
+Z_j=\frac{\hat\beta_j-\beta_j}{\sqrt{V(\hat\beta_j)}}  \sim N(0,1),\,\,\,j=1,2.
+$$
+As $V(\hat\beta_j)$ involves $\sigma^2,$ this quantity might need to be
+estimated. If the sample unbiased variance $s^2$ is used to estimate
+$\sigma^2,$ then
+$$
+T_j = \frac{\hat\beta_j-\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}}  \sim t_{n-2},\,\,\,j=1,2.
+$$
+This allows to make inference (CI and tests) on the parameters $\beta.$
+
+## Example: cherry tree
+
+For the Cherry tree data, we have:
+$$
+\hat\beta_0=-36.943, \,\,\ \sqrt{\hat{V}(\hat\beta_0)}=3.3651,
+$$
+and
+$$
+\hat\beta_1=5.066,  \,\,\  \sqrt{\hat{V}(\hat\beta_1)}= 0.2474.
 $$
 
-Moreover, $\hat\beta$ is a linear combination of $Y$, hence:
+Want to test $H_0: \beta_1 = 0.$ Under $H_0,$ we have
 $$
-\hat\beta | X \sim N(\beta, \sigma^2 (X^\top X)^{-1}).
+T_1 = \frac{\hat\beta_1-0}{0.2474} \sim t_{n-2}.
+$$
+The observed value for $T_1$ is $t_1^{obs}= 20.48$ and
+$p = P(|T_1| > t_1^{obs}|\beta_1 = 0) \approx 0.$ Such small
+value of $p$ testifies strong evidence against the null-hypothesis.
+
+A 95$\%$ exact confidence interval for $\beta_1$ is given by:
+$$
+\hat\beta_1 \pm t_{n-2, 1-\alpha/2} \sqrt{\hat{V}(\hat\beta_1)}=(4.55991, 5.57189).
 $$
 
-## Hypothesis testing in linear models
+## Testing $H_0 : \beta_1 = 0$
 
-It is natural to ask whether the observed value of $\beta$ is just due to the random variation in our sample or if in the true population there is indeed an association between the covariates $X$ and the response $Y$.
+Consider again the hypothesis $H_0 : \beta_1 = 0.$ Testing such
+hypothesis is equivalent to comparing two models, a "full" and a
+"reduced" model.
 
-In statistical terms, this translate in the set of hypotheses:
+-   Full: $Y_i = \beta_0  +  \beta_1 x_{i}  + \varepsilon_i$
+
+-   Reduced: $Y_i = \beta_0   + \varepsilon_i$
+
+## Testing $H_0 : \beta_1 = 0$
+
+Under $H_0$, 
 $$
-H_0: \beta_k = 0 \quad \quad H_1: \beta_k \neq 0,
+(n-2)s^2_F=e^\top_Fe_F \sim \sigma^2 \chi^2_{n-2}
 $$
-where $\beta_k$ is the $k$-th component of $\beta$, corresponding to the $k$-th covariate.
 
-## Hypothesis testing in linear models
-
-Thanks to the normality assumption, under the null hypothesis, the statistic
 $$
-t = \frac{\hat\beta_k}{\sqrt{Var(\hat\beta_k)}}
+(n-1)s^2_R=e^\top_Re_R \sim \sigma^2 \chi^2_{n-1}
 $$
-is _distributed as a Student's t_ with $n - p$ degrees of freedom.
 
-## Statistical significance
+$$
+e^\top_Re_R - e^\top_Fe_F \sim \sigma^2 \chi^2_{1}
+$$
 
-This is nothing more than a $t$-test and we have already seen how to compute the $p$-value of this test starting from the Student's $t$ distribution.
+$$
+F = \frac{(e^\top_Re_R - e^\top_Fe_F)/1}{e^\top_Fe_F/(n-2)} \sim F_{1, n-2}
+$$
 
-As with any hypothesis testing, we compare the p-value with a pre-specified significance level $\alpha$ and we reject the null hypothesis if $p < \alpha$.
+Reject $H_0$ at level $\alpha$ if $F^{obs} > F_{1, n-2; 1-\alpha}.$ Note
+that, in this case, $F=T_1^2.$
 
-## Example: The father-son data
+## In the general model
 
-```{r}
-library(UsingR)
-data(father.son)
-x <- father.son$fheight
-y <- father.son$sheight
-```
+Previous results extend to the general model with $p$ regressors. It can
+be proved that:
+
+-   $\hat\beta \sim N_p(\beta, \sigma^2(X^\top X)^{-1})$;
+
+-   $(n-p)s^2/\sigma^2 \sim \chi^2_{n-p}$;
+
+-   $\hat\beta$ and $s^2$ are independent rv.
+
+We have, for $j=1,\ldots,p$
+
+1.  $\hat\beta_j\sim N(\beta_j, \sigma^2[(X^\top X)^{-1}]_{jj})$;
+
+2.  $Z_j=\frac{\hat\beta_j-\beta_j}{\sqrt{V(\hat\beta_j)}}  \sim N(0,1)$;
+
+3.  $T_j = \frac{\hat\beta_j-\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}}  \sim t_{n-p}.$
+
+## Testing $H_0 : \beta_j = 0$
+
+Can be tested with a t-test:
+$$
+T_j = \frac{\hat\beta_j-\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}}  \sim t_{n-p}.
+$$
+
+Equivalently, using the comparison of models idea, we can use:
+$$
+F = \frac{(e^\top_Re_R - e^\top_Fe_F)/1}{e^\top_Fe_F/(n-p)} \sim F_{1, n-p}
+$$
+Reject $H_0$ at level $\alpha$ if $F^{obs} > F_{1, n-3; 1-\alpha}.$
+
+Note that, in this case, $F=T_j^2.$
+
+## Overall goodness of fit
+
+Consider the model
+$$
+Y_i = \beta_0  +  \beta_1 x_{i1} +\beta_2 x_{i2} + \varepsilon_i.
+$$
+
+Want to test the overall goodness of fit 
+$$
+H_0: \beta_1 =\beta_2 = 0.
+$$
+
+Two models
+
+-   Full:
+    $Y_i = \beta_0  +  \beta_1 x_{i1} +\beta_2 x_{i2} + \varepsilon_i$
+
+-   Reduced: $Y_i = \beta_0 + \varepsilon_i$
+
+F-statistic, under $H_0$ (details similar as before):
+$$
+F = \frac{(e^\top_Re_R - e^\top_Fe_F)/2}{e^\top_Fe_F/(n-3)} \sim F_{2, n-3}
+$$
+Reject $H_0$ at level $\alpha$ if $F^{obs} > F_{2, n-3; 1-\alpha}.$
+
+## Example: cherry trees
 
 \tiny
 ```{r, echo=TRUE}
-fit <- lm(y ~ x)
+data(trees)
+fit <- lm(Volume ~ Girth + Height, data=trees)
 summary(fit)
 ```
 
-## Example: The father-son data
+## Dropping subsets
 
-\footnotesize
-```{r, echo=TRUE}
-n <- length(y)
-p <- 2
-
-t <- 0.51409/0.02705
-1 - pt(t, df = n - p)
-```
-
-## What if the data are not normal?
-
-If the data are not normal, we can still estimate $\beta$ and its standard error, _as long as the errors are independent and homoschedastic_.
-
-Without the normality assumption, $t$ will not be distributed as a Student's $t$, so we cannot compute an exact p-value.
-
-However, if $n - p$ is large the _Central Limit Theorem_ tells us that $t$ will be _approximately_ distributed as a Student's $t$.
-
-If $n$ is small, we can still use the _bootstrap_ to compute the null distribution of $t$ and get an _approximate_ $p$-value.
-
-## Interpretation of the coefficients
-
-We have seen how to estimate the values of $\beta$ and how to test for their significance.
-
-But it's important not to get lost in the mathematical details and lose the focus on the scientific question. 
-
-It is important to be able to correctly interpret the values of the parameters and the p-values.
-
-## Interpretation of the coefficients
-
-Let's start from the simple case where we only have one covariate:
+Suppose we have the model
 $$
-Y = \beta_0 + \beta_1 X_1 + \varepsilon
+Y_i = \beta_0 +\beta_1 x_{i1} + \ldots + \beta_p x_{ip} + \varepsilon_i\,\,\,i=1,\ldots,n,
 $$
-
-In this case, $\beta_1$ represents the difference in the expected value of $Y$ for each one-unit difference in $X_1$.
-
-If $\beta_1$ is _significantly different from zero_ then we can infer that the association between $Y$ and $X_1$ is true for the whole population.
-
-As with any test, it is dangerous to focus only on the p-value, one can have a very small, yet significant effect! (cf. significance vs. importance)
-
-## Interpretation of the coefficients
-
-If we have more than one covariate:
+and we want to test whether we can simplify the model by dropping $k$
+variables, i.e. want to test
 $$
-Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p + \varepsilon
+H_0 : \beta_{j_{_1}} = \beta_{j_{_2}} = \ldots = \beta_{j_{_k}} = 0
 $$
+Two models
 
-$\beta_1$ represents the difference in the expected value of $Y$ for each one-unit difference in $X_1$, _if all the other covariates remain constant_.
+-   Full: above
 
-Importantly, the p-value for the test of significance of each $\beta_k$ is valid only in the context of the tested model. If we remove one covariate, $\beta$ (and its $p$-values) will change!
+-   Reduced: model with the $k$ columns
+    $x_{j_{_1}}, x_{j_{_2}}, \ldots, x_{j_{_k}}$ omitted from the
+    design matrix.
 
-## Example: Baby's birth weight
-
-A child's weight at birth may depend on many variables, including the gestation period, the height and weight of the mother and of the father.
-
-We can fit a linear model to explore these relationships.
-
-## Example: Baby's birth weight
-
-```{r}
-babies_sub <- babies %>%
-  filter(gestation < 350 & age < 99 & ht < 99 & wt1 < 999 & dage < 99 & dht < 99 & dwt < 999)
-```
-
-\tiny
-```{r, echo=TRUE}
-fit <- lm(wt ~ gestation + wt1 + ht + dht + dwt, data = babies_sub)
-summary(fit)
-```
-
-## The F-test
-
-For now we have seen how to test for the marginal hypotheses that each $\beta_k$ is equal to zero.
-
-What if we want to test a group of variables at the same time?
-
-We can test the hypothesis that the last $p_0$ components of $\beta$ are $0$, i.e.:
+F-statistic, under $H_0$ (details similar as before):
 $$
-H_0: \beta_k = 0, \text{for all } k = p - p0 + 1, \ldots, p
+F = \frac{(e^\top_Re_R - e^\top_Fe_F)/(p-k)}{e^\top_Fe_F/(n-p)} \sim F_{p-k, n-p}.
 $$
-against
-$$
-H_1: \beta_k \neq 0, \text{for at least one } k = p - p0 + 1, \ldots, p
-$$
-
-The strategy is to compute a test statistic, called the $F$-statistic, that compares the _full model_ (with all the covariates) to a _reduced model_ where the selected coefficients are fixed at 0.
-
-## The F-test
-
-To compute the test statistic we need to:
-
-1. _Fit the full model_. Compute the OLS estimate $\hat\beta$ and its standard error.
-2. _Fit the reduced model_ that satisfies the null hypothesis.
-
-You can think of the reduced model as a new regression model in which we _drop the last_ $p_0$ _columns_ of $X$.
-
-The test statistic is
-$$
-F = \frac{(||X\hat\beta||^2 - ||X\hat\beta^{(r)}||^2)/p_0}{||e||^2/(n-p)},
-$$
-where $||\cdot||$ is the norm, $\hat\beta^{(r)}$ is the OLS estimator of the reduced model and $e$ are the residuals of the full model.
-
-## The F-test
-
-Under the null hypothesis, the statistic $F$ is distributed as a _Fisher's F distribution_, with $p_0$ and $n-p$ degrees of freedom.
-
-In R, we can compute the quantiles and the CDF of the F distribution using `qf()` and `pf()`, respectively.
-
-## The F-test
-
-The F-test is used in several ways in a typical analysis: the first way is to compare the _full model_ (with all the covariates), with the _null model_ that includes only the intercept.
-
-This is what is reported in the output of the summary of `lm` in R and it tests the null hypothesis that all the coefficients are equal to 0.
-
-We must be careful with the interpretation of this F-test, as _its p-value is valid only if the model is correctly specified_, and we generally do not know it.
-
-Another, more useful, way the F-test can be used is to _test a group of covariates_. For instance, we might test whether the height and weight of the father have any effect on the birth weight of the baby.
-
-## Example: Baby's birth weight
-
-\footnotesize
-```{r, echo=TRUE}
-fit <- lm(wt ~ gestation + wt1 + ht + dht + dwt, data = babies_sub)
-fit0 <- lm(wt ~ gestation + wt1 + ht, data = babies_sub)
-anova(fit0, fit)
-```
-
+Reject $H_0$ at level $\alpha$ if $F^{obs} > F_{p-k, n-p; 1-\alpha}.$
