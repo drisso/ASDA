@@ -14,7 +14,8 @@ knitr:
         fig-align: center
 ---
 
-# The t-test is a linear model
-
 # ANOVA is a linear model
 
+# The t-test is a linear model
+
+Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).

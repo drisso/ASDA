@@ -147,6 +147,8 @@ One commonly used strategy is to assume a **family of distributions** for
 the data generating distribution, for instance the *Gaussian
 distribution*.
 
+# Probability
+
 ## Probability
 
 In order to make inference from a **random** sample to the whole
@@ -157,18 +159,222 @@ Hence, probability is one of the foundation of statistical inference.
 
 However, probability is only a tool and statistics deals with _how to model observed data_ using a probabilistic model.
 
+## What is a probability measure?
+
+Answering this question properly would require a semester-long course.
+
+However, for our purpose, we are only interested in probability as a measure that
+quantifies the randomness of an event. E.g., the probability of obtaining "heads"
+when tossing a coin.
+
+Remember that:
+
+1. The probability of an event is a number between 0 and 1.
+2. The sum of the probabilities of all possible events is 1.
+3. The probability of the union of two disjoint events is the sum of their probabilities.
+
+## Central concept
+
+The central concept in probability is the **probability
+space**, which is assumed to have three components.
+
+-   A *sample space* $S$, i.e., a universe of “possible”
+    outcomes for the experiment in question.
+
+-   A designated collection of “observable” subsets, called
+    *events*, of the sample space.
+
+-   A *probability measure*, a function that assigns real
+    numbers, called probabilities, to events.
+
+## Example
+
+A fair coin is tossed twice. What is the probability of observing
+exactly one Head?
+
+The sample space is $S=\{HH,HT,TH,TT\}.$ Because the coin is fair, each
+of the four outcomes in $S$ is equally likely. Let $A$ denote the event
+that exactly one Head is observed. Then, $A = \{HT, TH\},$ and
+$$P(A) = \frac{\#(A)}{\#(S)} = \frac{2}{4} = 0.5.$$
+
+## Conditional Probability
+
+A fair coin is tossed twice. Suppose that we toss the coins once and we observe Tail. What is _now_ the probability of observing exactly one Head?
+
+We denote with $B$ the event that we observed (that the first toss is Tail), and with $A$ the event that exactly one Head is observed. 
+
+As before, $A = \{HT, TH\}$, but we have $B = \{TH, TT\},$ so the only event in $A$ that is compatible with $B$ is $\{TH\}$.
+
+We hence computed the _conditional probability_ of the event 
+$$
+P(A | B) = \frac{\#(A \cap B)}{\#(S \cap B)} = \frac{1}{2} = 0.5.
+$$
+
+What would be the conditional probability if the first coin was Head?
+
+## Conditional Probability
+
+<span>*If $A$ and $B$ are events, and $P(B) > 0$, the conditional
+probability of $A$ given $B$ is*</span>
+$$P(A|B) = \frac{P(A\cap B)}{P(B)} .$$ The same equality can be written
+as: $$P(A|B) P(B)= P(A\cap B).$$
+
+## Example: COVID-19 test (Thanks to Laura Ventura!)
+
+Suppose that we perform a test to check whether we have contracted COVID-19. The possible
+observable outcomes are two: we have contracted the
+virus $(D),$ or we have not $(H)$.
+
+From the latest statistical analyses, we can estimate the *prevalence*
+of the disease in the population, $P(D)$, i.e.,
+the probability that an individual selected at random from the population is infected.
+
+## Diagnostic Test
+
+A test is designed to detect the presence of the SARS-CoV-2 virus in the nose and throat. This test also has two possible outcomes: positive for the presence of viral RNA $(+),$ negative for the presence of viral RNA $(-)$.
+
+Because diagnostic procedures undergo extensive evaluation before they
+are approved for general use, we
+have a fairly precise notion of the probabilities of a *false
+positive*, i.e., the probability of obtaining a positive test
+result given that the patient is not infected, and a *false
+negative*, i.e., the probability of obtaining a negative test
+results given that the patient is infected.
+
+These probabilities are conditional probabilities: the probability of a
+false positive is $P(+|H),$ and the probability of a false negative is
+$P(-|D)$.
+
+## Predictive Value of the Test
+
+The gold standard test for COVID-19 has a false positive and false negative rate of about $5\%$.
+
+Assume that there is a COVID-19 prevalence of about $8\%$ in the Italian population.
+
+Assume $P(D) = .08,$ $P(+|H) = .05$ and $P(-|D) = .05$.
+
+(This implies $P(H) = .92,$ $P(-|H) = .95$ and $P(+|D) = .95$.) What
+is the <span>*predictive*</span> value of the test, i.e., the
+probability that we don't have COVID-19 if the test is negative?
+
+The question asks to compute the quantity $P(H|-).$ By definition, we
+have $$P(H|-) = \frac{P(H\cap -)}{P(-)} = \frac{P(-|H) P(H)}{P(-)}.$$
+
+## Computations
+
+We know that $$P(H \cap -) = P(H) P(-|H) = 0.92 \times 0.95,$$
+$$P(D \cap -) = P(D) P(-|D) = 0.08 \times 0.05,$$
+$$P(H \cap +) = P(H) P(+|H) = 0.92 \times 0.05,$$
+$$P(H \cap -) = P(H) P(-|H) = 0.92 \times 0.95,$$
+$$P(-) = P(D \cap -) + P(H \cap -)=0.08 \times 0.05 + 0.92 \times 0.95.$$
+Therefore,
+$$P(H|-) = \frac{P(H\cap -)}{P(-)} = \frac{0.92 \times 0.95}{0.08 \times 0.05 + 0.92 \times 0.95}=0.995.$$
+
+## Bayes' Theorem
+
+Note that we have just used one of the most important theorems in modern statistics, _Bayes' Theorem_.
+
+The theorem states:
+$$
+P(B | A) = \frac{P(A | B) P(B)}{P(A)}.
+$$
+
+In words, if we know the conditional probability of $A$ given $B$, in addition to the marginal probabilities of the two events, we have a rule to compute the conditional probability of $B$ given $A$.
+
+## Independence
+
+<span>*Two events are independent if the occurrence of either is
+unaffected by the occurrence of the other.*</span>\
+
+Let $A$ and $B$ denote events and assume for the moment that the
+probability of each is strictly positive. If $A$ and $B$ are to be
+regarded as independent, then the occurrence of $A$ is not affected by
+the occurrence of $B$. This can be expressed by writing
+$$P(A|B) = P(A),$$ or, equivalently, $$P(A \cap B) = P(A)P(B).$$
+
+## Random Variables
+
+Informally, a <span>*random variable*</span> is a rule for assigning
+real numbers to experimental outcomes.
+
+By convention, random variables are usually denoted by upper case Roman
+letters near the end of the alphabet, e.g., $X$, $Y$, $Z$.
+
+## Examples
+
+<span>*Example 1.*</span> A coin is tossed once and the occurrence of
+Head is recorded.
+
+We have: $S=\{H,T\}$. It is convenient to assign the real number 1 to
+outcome Head, and the real number 0 to the other outcome, Tail.
+
+A random variable $X$ for this experiment can be defined as the function
+$X: S \longrightarrow R$ such that: $$X(H) = 1,$$ $$X(T) = 0.$$
+
+## Examples
+
+<span>*Example 2.*</span> A coin is tossed twice and the number of Heads
+is recorded.
+
+We have: $S=\{HH,HT,TH,TT\}$. It is often convenient to assign the real
+number 1 to one outcome, Head say, and the real number 0 to the other,
+Tail.
+
+A random variable $X$ for this experiment can be defined as the function
+$X: S \longrightarrow R$ such that: $$X(HH) = 2,$$
+$$X(HT) = X(TH) = 1,$$ $$X(TT) = 0.$$
+
+## Random Variables
+
+A variable is a measurement that describe a characteristic of a set of observations.
+
+A _random variable_ (r.v.) is a variable that measures an intrinsically random process, e.g.
+a coin toss.
+
+Before observing the outcome, we will not know with certainty whether the toss will
+yield "heads" or "tails", but that does not mean that we do not know _anything_
+about the process: we know that _on average_ it will be heads half of the times
+and tails the other half.
+
+If we refer to $X$ as the process of measuring the outcome of a coin toss, we say
+that $X$ is a _random variable_.
+
+## Random Variables and statistical inference
+
+It is somewhat confusing to talk about random variables in the context of statistical
+inference. 
+
+For instance, let's say that we want to describe the height of a certain population. 
+The height of an individual is not a random quantity! We can measure with a certain
+amount of precision the height of any individual.
+
+_What is random is the process of sampling a set of individuals from the population_.
+
+In other words, the randomness comes from the sampling mechanism, not from the 
+quantity that we are measuring: if we repeat the experiment, we will select a different
+sample and we will obtain a different set of measurements.
+
+## Rationale
+
+The primary reason that we construct a random variable, $X$, is to
+replace the probability space that is naturally suggested by the
+experiment in question with a familiar probability space in which the
+possible outcomes are real numbers.
+
+Thus, we replace the original sample space, $S$, with the familiar real
+line, $\mathbb{R}$. To complete the transfer, we must decide which subsets of $\mathbb{R}$
+will be designated as events and we must specify how the probabilities
+of these events are to be calculated.
+
+# Statistical modeling
+
 ## The art of statistical modeling
 
 - _Start with the data_: exploratory data analysis.
 - _Make probabilistic assumptions_: choose a distribution.
 - _Make inference_: estimate the parameters of the distribution.
 
-# Maximum Likelihood Estimation
-
 ## A simple example
 
 Add Poisson and Binomial examples from MSMB.
 
-Find an easy way to define random variables.
-
-Find an easy way to talk about conditional probability
