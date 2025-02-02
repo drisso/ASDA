@@ -1,5 +1,5 @@
 ---
-title: "Introduction to statistical modeling"
+title: "Statistical modeling"
 execute:
   echo: true
   warning: false
@@ -8,15 +8,21 @@ execute:
 
 ## Lecture Slides
 
-### Intro to statistical modeling
+### Statistical modeling
 
 {{< pdf "slides/03_statmod.pdf" >}}
 
-### Intro to linear models
+### Linear models
 
-Here, adapt lecture lm2 from biostats1.
+{{< pdf "slides/04_linreg.pdf" >}}
+
+## Lab: linear models
+
+## Homework [^1]
 
 ## Further reading
 
 -   S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 2](https://www.huber.embl.de/msmb/02-chap.html)
 
+
+[^1]: This homework is one of the [Open Case Studies](https://www.opencasestudies.org/). Please try to solve this yourself before looking at the solution there.

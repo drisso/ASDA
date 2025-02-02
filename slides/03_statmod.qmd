@@ -7,7 +7,7 @@ format:
         aspectratio: 169
         include-in-header: template.tex
         toc: true
-
+        fontsize: 12pt
 knitr:
     opts_chunk:
         out-width: 75%
@@ -39,7 +39,9 @@ Mendenhall, 1987.
 
 -   Statistical models are sets of equations involving **random
     variables**
+    
 -   Statistical models involve **distributional assumptions**
+
 -   Given a **question** and a body of **data** statistical models can
     be used to provide **answers** along with **measures of
     uncertainty**.
@@ -370,11 +372,214 @@ of these events are to be calculated.
 
 ## The art of statistical modeling
 
-- _Start with the data_: exploratory data analysis.
+- _Start with the data_: exploratory data analysis (EDA).
+
 - _Make probabilistic assumptions_: choose a distribution.
+
 - _Make inference_: estimate the parameters of the distribution.
 
 ## A simple example
 
-Add Poisson and Binomial examples from MSMB.
+- When testing certain pharmaceutical compounds, it is important to detect proteins that provoke an allergic reaction. 
+
+- The molecular sites that are responsible for such reactions are called epitopes.
+
+- ELISA assays are used to detect specific epitopes at different positions along a protein.
+
+- The protein is tested at 100 different positions, supposed to be independent.
+
+- We collect data from 50 patients, the reactions are summed at each location.
+
+## Start with the data: EDA
+
+```{r load-data}
+library(ggplot2)
+theme_set(theme_minimal(base_size = 20))
+update_geom_defaults("line", list(linewidth = 1.5))
+update_geom_defaults("vline", list(linewidth = 1.5))
+update_geom_defaults("hline", list(linewidth = 1.5))
+
+set.seed(1830)
+
+load("data/e100.RData")
+
+df <- data.frame(epitope=e100)
+ggplot(df, aes(x = epitope)) +
+    geom_bar(fill = "dodgerblue")
+```
+
+## Make probabilistic assumptions
+
+The Poisson distribution is a good model for counting rare events.
+
+Would its distribution look similar to the one we observe?
+
+First, we need to recall that the Poisson distribution depends on one parameter, namely $\lambda$, which is also the mean (or expected value) of the distribution.
+
+We can visually compare the observed distribution with a Poisson, with different values of $\lambda$.
+
+## Check the goodness of fit
+
+Observed data:
+
+```{r}
+#| echo: true
+
+table(e100)
+```
+
+Simulated Poisson data ($\lambda = 3$):
+
+```{r, echo=TRUE}
+rpois(n = 100, lambda = 3) |>
+    table()
+```
+
+## Check the goodness of fit
+
+It seems that the simulated data have higher counts than our observed data.
+
+We could try $\lambda = 2$:
+
+```{r, echo=TRUE}
+rpois(n = 100, lambda = 2) |>
+    table()
+```
+
+We could continue with all possible values of $\lambda$ and choose the one that _minimizes the differences_ between the observed and simulated data.
+
+## Compute the likelihood function
+
+In other words, we want to compute the _likelihood_ that the data come from the Poisson distribution with a given value of $\lambda$, for any given value.
+
+Since $\lambda \in \mathbb{R}_+$, it is infeasible to try all possible values, and we can use a more elegant approach that uses the known form of the Poisson distribution to compute it.
+
+## Compute the likelihood function
+
+What we want to compute is the probability that a Poisson r.v. with parameter $\lambda$ will take the observed values. In R:
+
+```{r, echo=TRUE}
+dpois(e100, lambda = 3) |>
+    prod()
+```
+
+The function that we just computed is called _the likelihood function_ and can be written as
+$$
+L(\lambda, x) = \prod_{i=1}^n p(x_i),
+$$
+where $p(x_i)$ is the probability mass function of a Poisson r.v.
+
+## Compute the log-likelihood function
+
+For computational reasons, it is convenient to work with the _log-likelihood_, which sums the log of the pdf, and is usually indicated with the lowercase $\ell$.
+
+$$
+\ell(\lambda, x) = \sum_{i=1}^n \log p(x_i).
+$$
+
+In R we can create a function that will compute the log-likelihood for a given value of $\lambda$.
+
+```{r, echo=TRUE}
+loglik <- function(lambda, x = e100) {
+    sum(dpois(x, lambda, log = TRUE))
+}
+```
+
+## Search for the best $\lambda$
+
+```{r}
+#| echo: true
+
+# Define a grid of lambdas
+lambdas = seq(0.05, 0.95, length = 100)
+
+# Compute the log-likelihood
+loglikelihood = vapply(lambdas, loglik, numeric(1))
+
+# Find the value that maximizes the log-likelihood
+lambda_hat <- lambdas[which.max(loglikelihood)]
+df <- data.frame(lambdas, loglikelihood)
+p1 <- ggplot(df, aes(lambdas, loglikelihood)) +
+    geom_line() +
+    geom_vline(xintercept = lambda_hat, col = "red") +
+    geom_hline(yintercept = max(loglikelihood), col="blue")
+lambda_hat
+```
+
+## Search for the best $\lambda$
+
+```{r}
+p1
+```
+
+## Classical statistics
+
+What we have just done is to find a value of the parameter that maximizes the log-likelihood function.
+
+Maths tells us that to find the maximum (or minimum) of a function we can compute its derivative.
+
+In this case, the log-likelihood function is easy to compute from the Poisson pdf:
+
+$$
+p(x) = \frac{1}{x!}\lambda^x e^{-\lambda}.
+$$
+
+Hence
+$$
+\ell(\lambda, x) = \sum_{i=1}^n -\lambda + x_i \log \lambda - \log(x!)
+$$
+
+## Classical statistics
+
+We obtain
+$$
+\ell(\lambda, x) = -n \lambda + \log \lambda \sum_{i=1}^n x_i - c,
+$$
+
+from which we can derive
+$$
+\frac{d \ell}{d\lambda} = -n + \frac{1}{\lambda} \sum_{i=1}^n x_i,
+$$
+
+that leads to
+$$
+\hat{\lambda} = \frac{1}{n} \sum_{i=1}^n x_i.
+$$
+
+Hence, the sample mean.
+
+## Maximum Likelihood Estimation
+
+We have just seen one of the most important procedures of statistical inference: _Maximum Likelihood Estimation_.
+
+We call $\hat{\lambda}$ the _maximum likelihood estimate (MLE)_.
+
+In the case of the Poisson distribution, the MLE is the mean of the sample.
+
+Maximum Likelihood Estimation is a staple of modern statistics. We will see that in more complex models, we do not have a closed form solution for it and we will need to rely on numerical algorithms.
+
+## Another example
+
+Suppose that we take a sample of $n = 120$ males and test them for color blindness.
+
+We can code with $x_i=0$ if subject $i$ is not colorblind, and with $x_i = 1$ if subject $i$ is colorblind.
+
+Suppose that we obtain the data summarized in the following table.
+
+```{r}
+cb <- c(rep(0, 110), rep(1, 10))
+table(cb)
+```
+
+## Another example
+
+- Assume that the data arise from a binomial r.v. with $n=120$ trials and unknown success probability $p$.
+- What is your best guess at the value of $p$? Why?
+- Use the `dbinom` function in R to compute the likelihood for a grid of values of $p$ and determine numerically the MLE.
+- Plot the log-likelihood function.
+- Recall that the binomial pdf is
+$$
+p(x) = \binom{n}{x} p^x (1-p)^x
+$$
+- Compute the log-likelihood and use the derivative to compute the MLE.
 

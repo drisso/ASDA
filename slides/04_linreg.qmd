@@ -7,7 +7,7 @@ format:
         aspectratio: 169
         include-in-header: template.tex
         toc: true
-
+        fontsize: 12pt
 knitr:
     opts_chunk:
         out-width: 75%
@@ -117,6 +117,8 @@ X_{n,1} & X_{n,2}
 $$
 
 ## Vectors, matrices, and scalars
+
+\small
 
 We already know how to create these objects in R
 
@@ -1124,6 +1126,8 @@ This allows to make inference (CI and tests) on the parameters $\beta.$
 
 ## Example: cherry tree
 
+\small 
+
 For the Cherry tree data, we have:
 $$
 \hat\beta_0=-36.943, \,\,\ \sqrt{\hat{V}(\hat\beta_0)}=3.3651,
@@ -1214,6 +1218,8 @@ Note that, in this case, $F=T_j^2.$
 
 ## Overall goodness of fit
 
+\small 
+
 Consider the model
 $$
 Y_i = \beta_0  +  \beta_1 x_{i1} +\beta_2 x_{i2} + \varepsilon_i.
@@ -1239,7 +1245,8 @@ Reject $H_0$ at level $\alpha$ if $F^{obs} > F_{2, n-3; 1-\alpha}.$
 
 ## Example: cherry trees
 
-\tiny
+\scriptsize
+
 ```{r, echo=TRUE}
 data(trees)
 fit <- lm(Volume ~ Girth + Height, data=trees)
@@ -1264,6 +1271,8 @@ Two models
 -   Reduced: model with the $k$ columns
     $x_{j_{_1}}, x_{j_{_2}}, \ldots, x_{j_{_k}}$ omitted from the
     design matrix.
+
+## Dropping subsets
 
 F-statistic, under $H_0$ (details similar as before):
 $$
