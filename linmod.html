@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Davide Risso">
-<meta name="dcterms.date" content="2025-02-02">
 
-<title>Advanced Statistics and Data Analysis</title>
+<title>4&nbsp; Statistical modeling – Advanced Statistics and Data Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./intro.html" rel="next">
+<link href="./dataviz2.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -82,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Introduction</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./linmod.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Statistical modeling</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -109,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
@@ -133,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./linmod.html" class="sidebar-item-text sidebar-link">
+  <a href="./linmod.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Statistical modeling</span></span></a>
   </div>
 </li>
@@ -147,18 +145,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">4.1</span> Lecture Slides</a>
   <ul class="collapse">
-  <li><a href="#organization-of-this-website" id="toc-organization-of-this-website" class="nav-link" data-scroll-target="#organization-of-this-website">Organization of this website</a></li>
-  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline">Timeline</a></li>
-  <li><a href="#suggested-reading-materials" id="toc-suggested-reading-materials" class="nav-link" data-scroll-target="#suggested-reading-materials">Suggested reading materials</a>
-  <ul class="collapse">
-  <li><a href="#r-resources" id="toc-r-resources" class="nav-link" data-scroll-target="#r-resources">R resources</a></li>
-  <li><a href="#statistics" id="toc-statistics" class="nav-link" data-scroll-target="#statistics">Statistics</a></li>
+  <li><a href="#statistical-modeling" id="toc-statistical-modeling" class="nav-link" data-scroll-target="#statistical-modeling"><span class="header-section-number">4.1.1</span> Statistical modeling</a></li>
+  <li><a href="#linear-models" id="toc-linear-models" class="nav-link" data-scroll-target="#linear-models"><span class="header-section-number">4.1.2</span> Linear models</a></li>
   </ul></li>
-  <li><a href="#work-in-progress" id="toc-work-in-progress" class="nav-link" data-scroll-target="#work-in-progress">Work in progress</a></li>
-  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
-  </ul></li>
+  <li><a href="#lab-linear-models" id="toc-lab-linear-models" class="nav-link" data-scroll-target="#lab-linear-models"><span class="header-section-number">4.2</span> Lab: linear models</a></li>
+  <li><a href="#homework-1" id="toc-homework-1" class="nav-link" data-scroll-target="#homework-1"><span class="header-section-number">4.3</span> Homework </a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">4.4</span> Further reading</a></li>
   </ul>
 </nav>
     </div>
@@ -167,33 +161,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Advanced Statistics and Data Analysis</h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Statistical modeling</span></h1>
 </div>
 
 
-<div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Author</div>
-  <div class="quarto-title-meta-heading">Affiliation</div>
-  
-    <div class="quarto-title-meta-contents">
-    <p class="author">Davide Risso </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            Department of Statistical Sciences, University of Padova
-          </p>
-      </div>
-  </div>
 
 <div class="quarto-title-meta">
 
-      
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">February 2, 2025</p>
-    </div>
-  </div>
+    
   
     
   </div>
@@ -203,75 +178,44 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level1 unnumbered">
-<h1 class="unnumbered">Introduction</h1>
-<p>This is the companion website of the “Advanced Statistics and Data Analysis” course, taught within the <a href="https://www.unipd.it/en/educational-offer/second-cycle-degree/science?tipo=LM&amp;scuola=SC&amp;ordinamento=2024&amp;key=SC2804&amp;cg=science">“Quantitative and Computational Biosciences” Master’s program</a> at the <a href="https://www.unipd.it/">University of Padova</a>.</p>
-<section id="organization-of-this-website" class="level2">
-<h2 class="anchored" data-anchor-id="organization-of-this-website">Organization of this website</h2>
-<p>This website is organized as a book. Each class topic is treated in a different chapter.</p>
-<p>In each Chapter, you will find the slides presented in class and the code used for the practicals.</p>
-<p>You can use the navigation bar to navigate by topic or the Timeline section below to see the topics in the same order they were presented in class.</p>
+<section id="lecture-slides" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">4.1</span> Lecture Slides</h2>
+<section id="statistical-modeling" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="statistical-modeling"><span class="header-section-number">4.1.1</span> Statistical modeling</h3>
+  <p><a href="slides/03_statmod.pdf" target="_blank">Download PDF File</a></p>
+   <object data="slides/03_statmod.pdf" type="application/pdf" width="100%" height="600px">
+    <p>Unable to display PDF file. <a href="slides/03_statmod.pdf">Download</a> instead.</p>
+  </object>
+  
 </section>
-<section id="timeline" class="level2">
-<h2 class="anchored" data-anchor-id="timeline">Timeline</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Date</th>
-<th>Topic</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>24/2/2025</td>
-<td>Intro to course and statistics recap</td>
-<td>Lecture</td>
-</tr>
-<tr class="even">
-<td>24/2/2025</td>
-<td>The Normal Linear Model (part 1)</td>
-<td>Lecture</td>
-</tr>
-<tr class="odd">
-<td>…</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<section id="linear-models" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="linear-models"><span class="header-section-number">4.1.2</span> Linear models</h3>
+  <p><a href="slides/04_linreg.pdf" target="_blank">Download PDF File</a></p>
+   <object data="slides/04_linreg.pdf" type="application/pdf" width="100%" height="600px">
+    <p>Unable to display PDF file. <a href="slides/04_linreg.pdf">Download</a> instead.</p>
+  </object>
+  
 </section>
-<section id="suggested-reading-materials" class="level2">
-<h2 class="anchored" data-anchor-id="suggested-reading-materials">Suggested reading materials</h2>
-<section id="r-resources" class="level3">
-<h3 class="anchored" data-anchor-id="r-resources">R resources</h3>
+</section>
+<section id="lab-linear-models" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="lab-linear-models"><span class="header-section-number">4.2</span> Lab: linear models</h2>
+</section>
+<section id="homework-1" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="homework-1"><span class="header-section-number">4.3</span> Homework <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h2>
+</section>
+<section id="further-reading" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">4.4</span> Further reading</h2>
 <ul>
-<li><a href="https://r4ds.had.co.nz/">R for Data Science book</a></li>
-<li><a href="https://www.coursera.org/specializations/tidyverse-data-science-r">Tidyverse Skills for Data Science in R</a></li>
-<li><a href="https://ggplot2-book.org/">The ggplot2 book</a></li>
-<li><a href="https://happygitwithr.com/">Happy Git with R</a></li>
-<li><a href="https://adv-r.hadley.nz/">Advanced R</a></li>
+<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/02-chap.html">Chapter 2</a></li>
 </ul>
-</section>
-<section id="statistics" class="level3">
-<h3 class="anchored" data-anchor-id="statistics">Statistics</h3>
-<ul>
-<li><a href="https://www.huber.embl.de/msmb/">Modern Statistics for Modern Biology</a></li>
-</ul>
-</section>
-</section>
-<section id="work-in-progress" class="level2">
-<h2 class="anchored" data-anchor-id="work-in-progress">Work in progress</h2>
-<p>The book is a work in progress as we move through the first edition of this class. Please, open issues and contribute pull requests at https://github.com/drisso/ASDA if you find typos or mistakes or if something is missing.</p>
-</section>
-<section id="acknowledgments" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
-<p>I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham.</p>
-<p>In the same spirit, I am sharing openly online this course.</p>
-<p>Specific resources that can be used as additional readings are noted in the relevant chapter.</p>
 
 
 </section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>This homework is one of the <a href="https://www.opencasestudies.org/">Open Case Studies</a>. Please try to solve this yourself before looking at the solution there.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
@@ -694,11 +638,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./dataviz2.html" class="pagination-link" aria-label="Data Wrangling and Visualization (part 2)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization (part 2)</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link" aria-label="Course Introduction">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Course Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

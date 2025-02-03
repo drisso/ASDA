@@ -1,0 +1,20 @@
+---
+title: "Nonparametric methods"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    beamer:
+        aspectratio: 169
+        include-in-header: template.tex
+        toc: true
+
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
+---
+
+# Permutations
+
+# Bootstrap
+

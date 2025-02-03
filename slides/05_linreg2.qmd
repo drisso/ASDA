@@ -1,0 +1,21 @@
+---
+title: "Linear regression is (almost) all you need to know"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    beamer:
+        aspectratio: 169
+        include-in-header: template.tex
+        toc: true
+
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
+---
+
+# ANOVA is a linear model
+
+# The t-test is a linear model
+
+Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).

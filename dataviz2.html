@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Data Wrangling and Visualization (part 2) – Advanced Statistics and Data Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./linmod.html" rel="next">
+<link href="./dataviz.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+ 
+  <style>
+  .slide-deck {
+      border: 3px solid #dee2e6;
+      width: 100%;
+  }
+  </style>
+  
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataviz2.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization (part 2)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced Statistics and Data Analysis</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Course Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dataviz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dataviz2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization (part 2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linmod.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Statistical modeling</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">3.1</span> Lecture Slides</a></li>
+  <li><a href="#lab-tidy-data-in-r" id="toc-lab-tidy-data-in-r" class="nav-link" data-scroll-target="#lab-tidy-data-in-r"><span class="header-section-number">3.2</span> Lab: tidy data in R</a>
+  <ul class="collapse">
+  <li><a href="#whats-not-covered-i.e.-prerequisites" id="toc-whats-not-covered-i.e.-prerequisites" class="nav-link" data-scroll-target="#whats-not-covered-i.e.-prerequisites"><span class="header-section-number">3.2.1</span> What’s not covered (i.e., prerequisites)</a></li>
+  <li><a href="#whats-covered-i.e.-outline" id="toc-whats-covered-i.e.-outline" class="nav-link" data-scroll-target="#whats-covered-i.e.-outline"><span class="header-section-number">3.2.2</span> What’s covered (i.e., outline)</a></li>
+  <li><a href="#import-and-export-the-data" id="toc-import-and-export-the-data" class="nav-link" data-scroll-target="#import-and-export-the-data"><span class="header-section-number">3.2.3</span> Import and export the data</a></li>
+  <li><a href="#tidy-the-data-the-tidyr-package" id="toc-tidy-the-data-the-tidyr-package" class="nav-link" data-scroll-target="#tidy-the-data-the-tidyr-package"><span class="header-section-number">3.2.4</span> Tidy the data: the <code>tidyr</code> package</a></li>
+  <li><a href="#the-tidyverse-vs.-base-r" id="toc-the-tidyverse-vs.-base-r" class="nav-link" data-scroll-target="#the-tidyverse-vs.-base-r"><span class="header-section-number">3.2.5</span> The “tidyverse” vs.&nbsp;“base R”</a></li>
+  </ul></li>
+  <li><a href="#howemork-1" id="toc-howemork-1" class="nav-link" data-scroll-target="#howemork-1"><span class="header-section-number">3.3</span> Howemork </a>
+  <ul class="collapse">
+  <li><a href="#guided-solution" id="toc-guided-solution" class="nav-link" data-scroll-target="#guided-solution"><span class="header-section-number">3.3.1</span> Guided solution</a></li>
+  </ul></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">3.4</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization (part 2)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="lecture-slides" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">3.1</span> Lecture Slides</h2>
+    <p><a href="slides/02_dataviz.html" target="_blank">View slides in full screen</a></p>
+       <div>
+      <iframe class="slide-deck" src="slides/02_dataviz.html" height="475px"></iframe>
+    </div>
+  
+</section>
+<section id="lab-tidy-data-in-r" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="lab-tidy-data-in-r"><span class="header-section-number">3.2</span> Lab: tidy data in R</h2>
+<section id="whats-not-covered-i.e.-prerequisites" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="whats-not-covered-i.e.-prerequisites"><span class="header-section-number">3.2.1</span> What’s not covered (i.e., prerequisites)</h3>
+<p>Basic R syntax is not covered in this lab, as we assume that you are already familiar with it. Most of the concepts in this first lab should be accessible to peolple with minimal exposure to R (Googling what you don’t remember is allowed – and encouraged!).</p>
+<p>If you need help getting started with R, this is a good and free tutorial: https://swcarpentry.github.io/r-novice-gapminder/</p>
+</section>
+<section id="whats-covered-i.e.-outline" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="whats-covered-i.e.-outline"><span class="header-section-number">3.2.2</span> What’s covered (i.e., outline)</h3>
+<p>In this second lab, we will cover how to:</p>
+<ul>
+<li>import the data into R</li>
+<li>clean the data and transform them into <em>tidy data</em></li>
+<li>work with more complex data structures</li>
+</ul>
+</section>
+<section id="import-and-export-the-data" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="import-and-export-the-data"><span class="header-section-number">3.2.3</span> Import and export the data</h3>
+<p>There are several functions to import the data into R depending on the format in which the data live outside of R. First, we will assume that the data exist in a standard text format, such as tab-delimited or comma-separated. We will briefly mention some packages that can be used to import data in MS Excel, Matlab, and other non-standard formats.</p>
+<p>Base R has many useful functions for the import of flat data tables, <code>read.table</code> and <code>read.cvs</code> among others. However, we will use the <code>readr</code> package here and in particular we will illustrate the <code>read_csv</code>, <code>read_tsv</code> and <code>read_delim</code> functions. These functions are faster and offer more flexibility compared to the base R counterparts. However, sometimes using <code>read.table</code> can be useful, for instance when one wants to use <code>row.names</code>.</p>
+<section id="read-the-data-into-r" class="level4" data-number="3.2.3.1">
+<h4 data-number="3.2.3.1" class="anchored" data-anchor-id="read-the-data-into-r"><span class="header-section-number">3.2.3.1</span> Read the data into R</h4>
+<p>Often the data come in the form of csv files (comma-separated values). Excel spreadsheet can also be saved to csv files, making it a useful format to read into R data generated with Excel.</p>
+<p>Another popular format is tsv files (tab-separated values). This is for instance how the gapminder data has been saved to file in the gapminder package.</p>
+<p>Finally, <code>read_delim</code> can be used to read files whose fields are separated by any character (most commonly a space) which need to be specified in the <code>delim</code> argument.</p>
+<p>Here, we will illustrate the use of <code>read_tsv</code> since the other two functions are very similar.</p>
+<p>First, we need a string that describes the location on disk of the file that we want to import in R. Note that the string will change depending on your OS.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gap_tsv <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata/gapminder.tsv"</span>, <span class="at">package =</span> <span class="st">"gapminder"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>gap_tsv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/gapminder/extdata/gapminder.tsv"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>gap <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(gap_tsv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1704 Columns: 6
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (2): country, continent
+dbl (4): year, lifeExp, pop, gdpPercap
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,704 × 6
+   country     continent  year lifeExp      pop gdpPercap
+   &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Afghanistan Asia       1952    28.8  8425333      779.
+ 2 Afghanistan Asia       1957    30.3  9240934      821.
+ 3 Afghanistan Asia       1962    32.0 10267083      853.
+ 4 Afghanistan Asia       1967    34.0 11537966      836.
+ 5 Afghanistan Asia       1972    36.1 13079460      740.
+ 6 Afghanistan Asia       1977    38.4 14880372      786.
+ 7 Afghanistan Asia       1982    39.9 12881816      978.
+ 8 Afghanistan Asia       1987    40.8 13867957      852.
+ 9 Afghanistan Asia       1992    41.7 16317921      649.
+10 Afghanistan Asia       1997    41.8 22227415      635.
+# ℹ 1,694 more rows</code></pre>
+</div>
+</div>
+<p>Note how the <code>read_tsv</code> function printed a message with the type that it inferred from each of the columns.</p>
+</section>
+<section id="write-the-data-to-file" class="level4" data-number="3.2.3.2">
+<h4 data-number="3.2.3.2" class="anchored" data-anchor-id="write-the-data-to-file"><span class="header-section-number">3.2.3.2</span> Write the data to file</h4>
+<p>Similarly to <code>read_tsv</code> and <code>read_csv</code>, the functions <code>write_tsv</code> and <code>write_csv</code> can be used to write the R tables to a file on disk.</p>
+<p>Note that writing flat tables to csv or tsv files is the easiest and most reproducible approach. For complex data structures, say an histogram or a clustering tree, one can use the function <code>save</code> to save a binary R representation of the object on a <code>.rda</code> file. Similarly, the function <code>load</code> will read <code>.rda</code> files back into R.</p>
+</section>
+<section id="additional-resources-for-data-importexport" class="level4" data-number="3.2.3.3">
+<h4 data-number="3.2.3.3" class="anchored" data-anchor-id="additional-resources-for-data-importexport"><span class="header-section-number">3.2.3.3</span> Additional resources for data import/export</h4>
+<p>Sometimes you may need to import data from different formats, e.g., because your collaborator has the data in a MS Excel file or because you are continuing in R an analysis started with SPSS, Stata, or SAS.</p>
+<p>Fortunately, R has many packages that can be used for data import/export:</p>
+<ul>
+<li><code>haven</code> can be used to read SPSS, Stata, and SAS files.</li>
+<li><code>readxl</code> to read excel files (both .xls and .xlsx).</li>
+<li><code>DBI</code> to import data from a variety of databases (advanced).</li>
+<li><code>jsonlite</code> to import json files</li>
+<li><code>xml2</code> to import XML files.</li>
+</ul>
+</section>
+</section>
+<section id="tidy-the-data-the-tidyr-package" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="tidy-the-data-the-tidyr-package"><span class="header-section-number">3.2.4</span> Tidy the data: the <code>tidyr</code> package</h3>
+<p>Often, a large amount of time is spent on “cleaning” the data, in what is sometimes referred to <em>data wrangling</em>.</p>
+<p>This is because often the data are plagued by missing or implausible values, either because of technical issues with the data collection or because of human error. Moreover, data are often recorded in a way that is useful for storing them, but not ideal for analyzing them.</p>
+<p>The objective of data wrangling is to take a messy dataset and make it <em>tidy</em>, so that it becomes easier to work with.</p>
+<section id="what-are-tidy-data" class="level4" data-number="3.2.4.1">
+<h4 data-number="3.2.4.1" class="anchored" data-anchor-id="what-are-tidy-data"><span class="header-section-number">3.2.4.1</span> What are tidy data?</h4>
+<p>The concept of tidy data was introduced by Hadley Wickham in his seminal paper.</p>
+<p>There are three fundamental rules which make a dataset tidy:</p>
+<ol type="1">
+<li>Each variable must have its own column.</li>
+<li>Each observation must have its own row.</li>
+<li>Each value must have its own cell.</li>
+</ol>
+<p>The advantage of tidy data is both conceptual and practical: it allows you to have consistency between datasets and to use tools designed for this data structure. Moreover, because R works extremely well with vectorized operation it is very efficient to operate on the columns of a data frame.</p>
+</section>
+<section id="examples-of-tidy-and-untidy-data" class="level4" data-number="3.2.4.2">
+<h4 data-number="3.2.4.2" class="anchored" data-anchor-id="examples-of-tidy-and-untidy-data"><span class="header-section-number">3.2.4.2</span> Examples of tidy and untidy data</h4>
+<p>To illustrate the concept of tidy data, we can use the examples in the <a href="https://github.com/rstudio/EDAWR">EDAWR package</a>. First we need to download and install it from Github with the <code>devtools</code> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(remotes)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"rstudio/EDAWR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">storms</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">cases</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">pollution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(EDAWR)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>storms</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    storm wind pressure       date
+1 Alberto  110     1007 2000-08-03
+2    Alex   45     1009 1998-07-27
+3 Allison   65     1005 1995-06-03
+4     Ana   40     1013 1997-06-30
+5  Arlene   50     1010 1999-06-11
+6  Arthur   45     1010 1996-06-17</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cases</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  country  2011  2012  2013
+1      FR  7000  6900  7000
+2      DE  5800  6000  6200
+3      US 15000 14000 13000</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pollution</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      city  size amount
+1 New York large     23
+2 New York small     14
+3   London large     22
+4   London small     16
+5  Beijing large    121
+6  Beijing small     56</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Take some time to list and describe the variables present in each datasets. Which of these datasets is tidy?</p>
+</div>
+</div>
+<p>Note that somebody’s tidy data is someone else’s untidy data. For instance in the <code>pollution</code> example, one could argue that the two variables in addition to city are: particle size, and particle amount. In this case the dataset is tidy. But another argument is that the variables are: amount of small particles and amount of large particles. In this case the dataset is untidy.</p>
+<p>For this reason, I actually prefer another terminology: long data and wide data. The pollution dataset is stored in long format, while the cases dataset is stored in wide format.</p>
+<p>To switch between long and wide format, the <code>tidyr</code> package provide two extremely useful functions: <code>piveot_longer()</code> and <code>pivot_wider()</code>.</p>
+</section>
+<section id="make-your-data-tall-pivot_longer" class="level4" data-number="3.2.4.3">
+<h4 data-number="3.2.4.3" class="anchored" data-anchor-id="make-your-data-tall-pivot_longer"><span class="header-section-number">3.2.4.3</span> Make your data “tall”: <code>pivot_longer()</code></h4>
+<p>The function <code>pivot_longer()</code> can be used to transform the data from wide to tall.</p>
+<p>The <code>cases</code> data frame is in wide form. If we want to make it tall, we can use the following command.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>(cases, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"n"</span>, <span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+  country year      n
+  &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt;
+1 FR      2011   7000
+2 FR      2012   6900
+3 FR      2013   7000
+4 DE      2011   5800
+5 DE      2012   6000
+6 DE      2013   6200
+7 US      2011  15000
+8 US      2012  14000
+9 US      2013  13000</code></pre>
+</div>
+</div>
+<p>The <code>names_to</code> and <code>values_to</code> arguments are simply the names of the new columns that will have the variable values. The <code>cols</code> argument specify the columns that contain the data and that should be transformed.</p>
+</section>
+<section id="make-your-data-wide-pivot_wider" class="level4" data-number="3.2.4.4">
+<h4 data-number="3.2.4.4" class="anchored" data-anchor-id="make-your-data-wide-pivot_wider"><span class="header-section-number">3.2.4.4</span> Make your data “wide”: <code>pivot_wider()</code></h4>
+<p>Analogously, the <code>pivot_wider()</code> function let us go back to wide data from tall data.</p>
+<p>If we <code>pivot_wider</code> a table that we previously <code>pivot_longer</code>ed, we should return to the original data representation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cases</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  country  2011  2012  2013
+1      FR  7000  6900  7000
+2      DE  5800  6000  6200
+3      US 15000 14000 13000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>(cases, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"n"</span>, <span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(., <span class="at">names_from =</span> <span class="st">"year"</span>, <span class="at">values_from =</span> <span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  country `2011` `2012` `2013`
+  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 FR        7000   6900   7000
+2 DE        5800   6000   6200
+3 US       15000  14000  13000</code></pre>
+</div>
+</div>
+<p>As we mentioned, sometimes the wide format is the tidy format. This could be the case for the <code>pollution</code> data, which we can transform in the following way.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(pollution, <span class="at">names_from =</span> <span class="st">"size"</span>, <span class="at">values_from =</span> <span class="st">"amount"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  city     large small
+  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
+1 New York    23    14
+2 London      22    16
+3 Beijing    121    56</code></pre>
+</div>
+</div>
+<p>Additional functions useful to transform the data are the <code>separate()</code> and <code>unite()</code> functions. You can find out what they do as an exercize.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Explore the dataset <code>airquality</code>:</p>
+<ul>
+<li>What are the variables? What are the observations?</li>
+<li>Transform it into a taller dataset, so that it will look like this:</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 612 × 4
+   Month   Day variable value
+   &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;
+ 1     5     1 Ozone     41  
+ 2     5     1 Solar.R  190  
+ 3     5     1 Wind       7.4
+ 4     5     1 Temp      67  
+ 5     5     2 Ozone     36  
+ 6     5     2 Solar.R  118  
+ 7     5     2 Wind       8  
+ 8     5     2 Temp      72  
+ 9     5     3 Ozone     12  
+10     5     3 Solar.R  149  
+# ℹ 602 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li>Starting from the created dataset use <code>pivot_wider</code> to turn it back to the original</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="joining-tables" class="level4" data-number="3.2.4.5">
+<h4 data-number="3.2.4.5" class="anchored" data-anchor-id="joining-tables"><span class="header-section-number">3.2.4.5</span> Joining tables</h4>
+<p>In the tidy data framework, each table has one row per observational unit and one column per variable. But what if our analysis involves multiple observational unit types? In that case, there might be one table per observational unit types and you might need to <em>join</em> tables to perform certain data analyses.</p>
+<p>The <code>dplyr</code> package contains several <em>join</em> functions. See <code>?inner_join</code> for a full list. Here, we will cover only the inner and full joins, with the other operations left for homework exercises.</p>
+<p>To illustrate joins, we will use the <code>songs</code> and <code>artists</code> datasets available in the <code>EDAWR</code> package. As you can see the observational units are quite different in the two tables, but nonetheless we might need both sets of variables in a single analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>songs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 song  name
+1 Across the Universe  John
+2       Come Together  John
+3      Hello, Goodbye  Paul
+4           Peggy Sue Buddy</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>artists</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    name  plays
+1 George  sitar
+2   John guitar
+3   Paul   bass
+4  Ringo  drums</code></pre>
+</div>
+</div>
+<p>The inner join only returns those observations that are present in both datasets. You can think of it as a “intersection.”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(songs, artists, <span class="at">by =</span> <span class="st">"name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 song name  plays
+1 Across the Universe John guitar
+2       Come Together John guitar
+3      Hello, Goodbye Paul   bass</code></pre>
+</div>
+</div>
+<p>Coversely, the full join returns all observations that are present in either dataset. You can think of it as a “union.”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">full_join</span>(songs, artists, <span class="at">by =</span> <span class="st">"name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 song   name  plays
+1 Across the Universe   John guitar
+2       Come Together   John guitar
+3      Hello, Goodbye   Paul   bass
+4           Peggy Sue  Buddy   &lt;NA&gt;
+5                &lt;NA&gt; George  sitar
+6                &lt;NA&gt;  Ringo  drums</code></pre>
+</div>
+</div>
+<p>Finally, the left and right join keep the left or right observations, respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(songs, artists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 song  name  plays
+1 Across the Universe  John guitar
+2       Come Together  John guitar
+3      Hello, Goodbye  Paul   bass
+4           Peggy Sue Buddy   &lt;NA&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">right_join</span>(songs, artists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 song   name  plays
+1 Across the Universe   John guitar
+2       Come Together   John guitar
+3      Hello, Goodbye   Paul   bass
+4                &lt;NA&gt; George  sitar
+5                &lt;NA&gt;  Ringo  drums</code></pre>
+</div>
+</div>
+<p>Note how we can imply the “by” argument if we want to use all the common variable names between the two tables.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Load the <code>nycflights13</code> package to explore the four datasets <code>flights</code>, <code>airlines</code>, <code>weather</code>, and <code>planes</code>.</p>
+<ul>
+<li>Join the two tables in a way that each flight contains the names of the airline</li>
+<li>Join the resulting table with the weather information</li>
+<li>Join the resulting table with the airplane information</li>
+<li>Use tidyverse functions to extract the complete information (including weather and airplane info) of UA1545 flight departed on Jan 1st 2013.</li>
+<li>Plot departure delay versus wind speed: is there a relation between these variables? (Hint: avoid overplotting)</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="the-tidyverse-vs.-base-r" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="the-tidyverse-vs.-base-r"><span class="header-section-number">3.2.5</span> The “tidyverse” vs.&nbsp;“base R”</h3>
+<p>As you look at examples or find answers to your questions online, you will notice that people refer to the set of packages that includes <code>dplyr</code>, <code>tidyr</code>, and <code>ggplot2</code> as the <code>tidyverse</code>. You will often see people asking for a “tidyverse” way of doing something or for a “base R” way of doing something.</p>
+<p>There is no right or wrong way to achieve something in R, but considerations about code readability and efficiency may be important depending on the application.</p>
+</section>
+</section>
+<section id="howemork-1" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="howemork-1"><span class="header-section-number">3.3</span> Howemork <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h2>
+<p>Health policy in the United States is complicated, and several forms of healthcare coverage exist, including both coverage by federal goverment-led healthcare policy, and by private insurance companies. Before making any inference about the relationship between health condition and health policy, it is important for us to have a general idea about healthcare economics in the United States. Thus, we are interested in getting sense of healthcare coverage and healthcare spending across States. More specifically, the questions are:</p>
+<ol type="1">
+<li>Is there a relationship between healthcare coverage and healthcare spending in the United States?</li>
+<li>How does the spending distribution change across geographic regions in the United States?</li>
+<li>Does the relationship between healthcare coverage and healthcare spending in the United States change from 2013 to 2014?</li>
+</ol>
+<section id="guided-solution" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="guided-solution"><span class="header-section-number">3.3.1</span> Guided solution</h3>
+<ol type="1">
+<li><p>Read-in the data: use the <code>read_csv</code> function (<code>readr</code> package) to read the <code>healthcare-coverage.cvs</code> and the <code>healthcare-spending.csv</code> files (found at https://github.com/opencasestudies/ocs-healthexpenditure).</p></li>
+<li><p>Load the state information found in the <code>state</code> datasets (<code>datasets</code> package). Note that you need to manually add information about the District of Columbia.</p></li>
+<li><p>Add the abbreviation and the region of each state to the coverage dataset.</p></li>
+<li><p>Join the coverage and spending datasets.</p></li>
+<li><p>Use ggplot to produce a scatterplot of the proportion of coverage by state vs.&nbsp;the spending per capita. Color code the points by region and add state abbreviations as labels. Use facet to stratify the analysis by type of coverage.</p></li>
+<li><p>Use ggplot to create a boxplot of spending per capita stratified by region.</p></li>
+<li><p>Repeat the graph in point 5 but faceting by year, in addition to coverage type. Hint: use the <code>facet_grid()</code> function.</p></li>
+</ol>
+</section>
+</section>
+<section id="further-reading" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">3.4</span> Further reading</h2>
+<ul>
+<li>Claus O. Wilke. <a href="https://clauswilke.com/dataviz/index.html">Fundamentals of Data Visualization</a></li>
+<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/03-chap.html">Chapter 3</a></li>
+<li>Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks and Roger D. Peng <a href="https://jhudatascience.org/tidyversecourse/">Tidyverse Skills for Data Science</a></li>
+</ul>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>This homework is one of the <a href="https://www.opencasestudies.org/">Open Case Studies</a>. Please try to solve this yourself before looking at the solution there.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./dataviz.html" class="pagination-link" aria-label="Data Wrangling and Visualization">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./linmod.html" class="pagination-link" aria-label="Statistical modeling">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Statistical modeling</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

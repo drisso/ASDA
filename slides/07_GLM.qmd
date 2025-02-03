@@ -1,0 +1,29 @@
+---
+title: "Generalized Linear Models"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    beamer:
+        aspectratio: 169
+        include-in-header: template.tex
+        toc: true
+
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
+---
+
+# Likelihood estimation
+
+# Least squares and maximum likelihood
+
+# Generalize to other distributions
+
+# The link function
+
+# Logistic regression
+
+# Log-linear model
+
+# Parameter estimation
