@@ -19,3 +19,8 @@ knitr:
 # The t-test is a linear model
 
 Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).
+
+# Contrasts
+
+# Interactions
+

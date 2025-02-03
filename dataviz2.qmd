@@ -314,7 +314,7 @@ Health policy in the United States is complicated, and several forms of healthca
 
 ### Guided solution
 
-1. Read-in the data: use the `read_csv` function (`readr` package) to read the `healthcare-coverage.cvs` and the `healthcare-spending.csv` files (found at https://github.com/opencasestudies/ocs-healthexpenditure).
+1. Read-in the data: use the `read_csv` function (`readr` package) to read the `healthcare-coverage.cvs` and the `healthcare-spending.csv` files (found [here](https://github.com/opencasestudies/ocs-healthexpenditure) at `data/KFF`).
 
 2. Load the state information found in the `state` datasets (`datasets` package). Note that you need to manually add information about the District of Columbia.
 

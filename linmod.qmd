@@ -16,13 +16,381 @@ execute:
 
 {{< pdf "slides/04_linreg.pdf" >}}
 
-## Lab: linear models
+## Lab: simple linear regression
 
-## Homework [^1]
+### Breast cancer dataset [^1]
+
+We use a subset of the data from @sotiriou2006gene.
+
+The data consist of 32 breast cancer patients with estrogen receptor positive tumors that underwent tamoxifen chemotherapy.
+
+The variables available in the dataset are:
+
+- **grade**: histological grade of tumor (grade 1 vs 3);
+- **node**: lymph node status (0: not affected, 1: lymph nodes affected and removed);
+- **size**: tumor size in cm;
+- **age**: patient's age in years;
+- **ESR1** and **S100A8** gene expression in tumor biopsy (microarray technology).
+
+Read the data and glimpse at the data.
+
+```{r read-in}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 20))
+
+brca <- read_csv("slides/data/breastcancer.csv")
+glimpse(brca)
+```
+
+The goal is to study whether there is an association between the expression of ESR1 (Estrogen Receptor 1) and S100A8, a gene encoding for a calcium bining protein, involved in cell cycle progression and differentiation.
+
+### Data wrangling and exploration
+
+First, we want to turn the categorical variables into factors.
+
+```{r}
+brca <- brca |>
+    mutate(grade = factor(grade), node = factor(node), 
+           er = factor(er), treatment = factor(treatment)) 
+brca
+```
+
+We can now look at the expression of the two genes across the patients.
+
+```{r boxplot}
+brca |> pivot_longer(cols = c("ESR1", "S100A8"), names_to = "gene", values_to = "expression") -> brca_long
+
+brca_long |>
+    ggplot(aes(gene, expression)) +
+    geom_boxplot()
+```
+::: {.callout-important}
+# Exercise
+
+Would the distribution of the genes look better in log scale? Repeat the plot log-transforming the y axis
+:::
+
+Let's now assess the relation between the two genes.
+
+```{r scatter}
+brca |>
+    ggplot(aes(ESR1, S100A8)) +
+    geom_point()
+```
+It is clear that the scatterplot is influenced by three outliers in the S100A8 gene. We can try to remove them and repeat the plot.
+
+```{r scatter-no-out}
+brca |>
+    filter(S100A8 < 2000) -> brca_outrm
+
+brca_outrm |>
+    ggplot(aes(ESR1, S100A8)) +
+    geom_point()
+```
+
+::: {.callout-important}
+# Exercise
+
+Can you think of a different way to improve the visualization that keeps the outliers in the graph?
+:::
+
+Is linear regression a good model for this relationship? We can get a sense of this by fitting a line and a smooth curve to the plot above. We can achieve this by using the `geom_smooth()` geometry.
+
+```{r scatter-no-out-smooth}
+brca_outrm |>
+    ggplot(aes(ESR1, S100A8)) +
+    geom_point() +
+    geom_smooth(se = FALSE, span=1) +
+    geom_smooth(method = lm, color = "red", se = FALSE)
+```
+
+There may be a non-linear relation between the two genes, but the linear regression fits the points fairly well.
+
+### Simple linear regression
+
+Let's fit a linear model.
+
+```{r, lm}
+fit <- lm(S100A8 ~ ESR1, data=brca_outrm)
+summary(fit)
+```
+
+We can see that we have an $R^2$ of 0.47, indicating that ESR1 helps explaining the expression of S100A8.
+
+Its coefficient is highly significant and our predicted values are
+$$
+\hat{y} = 208.5 - 0.06 x,
+$$
+which means that for each unit increase in the expression of ESR1, S100A8's expression decreases by 0.06 units.
+
+::: {.callout-important}
+# Exercise
+
+- What is the predicted S100A8 expression of a patient with ESR1 expression of 1000?
+- What is the predicted S100A8 expression of a patient with ESR1 expression of 3000?
+:::
+
+#### And the outliers?
+
+What would have happened if we had not taken the outliers out of the analysis?
+
+```{r, lm-out}
+fit_out <- lm(S100A8 ~ ESR1, data=brca)
+summary(fit_out)
+```
+
+We see that the outliers have a huge impact on the analysis. The $R^2$ significantly drops, the significance of the coefficient is much less (although it is still significantly different from 0), and its value is a lot further from 0.
+
+In fact, this model indicates that for each unit increase in the expression of ESR1, S100A8's expression decreases by 0.64 units.
+
+::: {.callout-important}
+# Exercise
+
+According to this new model:
+
+- What is the predicted S100A8 expression of a patient with ESR1 expression of 1000?
+- What is the predicted S100A8 expression of a patient with ESR1 expression of 3000?
+:::
+
+Which model is correct? Should we include the outliers or not? Is there an alternative?
+
+#### Transforming the predictor
+
+Remember that the linear model is linear in the coefficients, meaning that we can transform the scale of the variables if we think that this better reflects their nature. In fact, microarray technologies are based on fluorescence intensities, which typically show a skewed, positive distribution and may benefit from a log transformation.
+
+```{r scatter-log}
+brca |>
+    ggplot(aes(log(ESR1), log(S100A8))) +
+    geom_point() +
+    geom_smooth(se = FALSE) +
+    geom_smooth(method = lm, color = "red", se = FALSE)
+```
+
+Now the relation looks a lot more linear than in the linear scale.
+
+We can fit this new model.
+
+```{r, lm-log}
+fit_log <- lm(log(S100A8) ~ log(ESR1), data=brca)
+summary(fit_log)
+```
+
+Whith this model we get a very high $R^2$ of 0.79 and a highly significant association between the two genes.
+
+The predicted values are now
+$$
+\widehat{\log y} = 16.22 - 1.61 \log x,
+$$
+which means that for each unit increase in the log expression of ESR1, S100A8's log expression decreases by 1.61 units.
+
+Note that a model that is additive in a log scale is multiplicative in the natural scale. As an example, let's see what happens to two patients:
+$$
+\log \hat{y}_1 = 16.22 - 1.61 \log x_1 \quad \quad \log \hat{y}_2 = 16.22 - 1.61 \log x_2,
+$$
+hence
+$$
+\log \hat{y}_2 - \log \hat{y}_1 = -1.61 (\log \hat{x}_2 - \log \hat{x}_1)
+$$
+which means
+$$
+\log \left(\frac{\hat{y}_2}{\hat{y}_1}\right) = -1.61  \log \left(\frac{\hat{x}_2}{\hat{x}_1}\right)
+$$
+and in the linear scale
+$$
+\frac{\hat{y}_2}{\hat{y}_1} = \left(\frac{\hat{x}_2}{\hat{x}_1}\right)^{-1.61}
+$$
+If patient 2 has expression of S100A8 twice that of patient 1, we have that their expression of ESR1 is 
+$$
+\hat{y}_2 = 2^{-1.61 } \hat{y}_1 \approx 0.33 \hat{y}_1
+$$
+i.e., approximately $33\%$ of that of patient 1 (or three times lower).
+
+### How to choose a model
+
+We have seen that different modeling choices lead to different results. The question of which model to choose is hence paramount.
+
+There are several considerations to make for this choice.
+
+The first, and perhaps most important, is checking the assumptions of our model. Remember that the main assumptions are:
+
+- Independence of the errors
+- Linearity
+- Homoscedasticity
+- Normality of the errors (for inference)
+
+For the linearity assumption, one can check the above plots; for this example, it seems that the log-scale is better.
+
+For the other assumptions, we can perform what is known as the _analysis of the residuals_.
+
+Let's start from the first model.
+
+```{r residuals}
+plot(fit)
+```
+
+This command produces four graphs:
+
+1. **Residuals vs Fitted** - checks linear relationship assumption of linear regression. A linear relationship will demonstrate a horizontal red line here. Deviations from a horizontal line suggest nonlinearity and that a different approach may be necessary.
+
+2. **Normal Q-Q** - checks whether or not the residuals (the difference between the observed and predicted values) from the model are normally distributed. The best fit models points fall along the dashed line on the plot. Deviation from this line suggests that a different analytical approach may be required.
+
+3. **Scale-Location** - checks the homoscedasticity of the model. A horizontal red line with points equally spread out indicates a well-fit model. A non-horizontal line or points that cluster together suggests that your data are not homoscedastic.
+
+4. **Residuals vs Leverage** - helps to identify outlier or extreme values that may disproportionately affect the model’s results. Their inclusion or exclusion from the analysis may affect the results of the analysis. Note that the top three most extreme values are identified with numbers next to the points in all four plots.
+
+In this case, the residuals do not look bad, but there may be a small issue with linearity (first graph) and heteroschedasticity (third graph).
+
+
+The second model seems slightly better on all analyses.
+
+```{r residuals-log}
+plot(fit_log)
+```
+
+::: {.callout-important}
+# Exercise
+
+Run the residuals analysis of the linear model without removing the outliers. How would you rate the model fit?
+:::
+
+Ultimately in this case, we can choose the model with the log transformation, which seems better in terms of $R^2$ and interpretation of the results.
+
+### Predictions
+
+Let's go back to parameter estimation. Here, we have estimated the two regression coefficients, we can also compute _confidence intervals_ for those estimates.
+
+```{r conf_int}
+confint(fit_log)
+```
+
+This allows us to be more confident on the inferential statements about the relation between the two genes.
+
+However, very often one of the goals of linear modeling is _prediction_. For instance, we can try and predict what would be the expression value of S100A8 for a patient that shows a value of 2000 for ESR1.
+
+```{r predict}
+logpred <- predict(fit_log, newdata = data.frame(ESR1 = 2000))
+exp(logpred)
+```
+
+Also in this case it would be more useful to have a _prediction interval_ rather than a point prediction.
+
+When computing prediction intervals we have to "adjust" the confidence interval to take into consideration, in addition to the uncertainty of estimation of the model parameters, the uncertainty of the new observation, which is a stochastic quantity because it is yet to be observed.
+
+```{r predint}
+grid <- 140:4000
+pred <- predict(fit_log, newdata = data.frame(ESR1 = grid), interval = "prediction")
+head(pred)
+```
+
+We can use these predictions to visually represent the prediction uncertainty of new data points.
+
+```{r predplot}
+newdata <- data.frame(cbind(grid, exp(pred)))
+brca |> ggplot(aes(x = ESR1, y = S100A8)) +
+    geom_point() +
+    geom_line(aes(x = grid, y = fit), newdata) +
+    geom_line(aes(x = grid, y = lwr), newdata, color = "grey") +
+    geom_line(aes(x = grid, y = upr), newdata, color = "grey")
+```
+
+Note that although the model was fit on the log-transformed variables, here we are visualizing it in the linear scale. 
+
+We can of course visualize the model in the log scale, and we will recognize its linear nature.
+
+```{r predplot2}
+brca |> ggplot(aes(x = ESR1, y = S100A8)) +
+    geom_point() +
+    geom_line(aes(x = grid, y = fit), newdata) +
+    geom_line(aes(x = grid, y = lwr), newdata, color = "grey") +
+    geom_line(aes(x = grid, y = upr), newdata, color = "grey") +
+    scale_y_log10() + scale_x_log10()
+```
+
+## Lab: multiple regression
+
+### Prostate cancer dataset [^1]
+
+For this lab we use a dataset that contains measurements of Prostate specific antigen (PSA) and a number of clinical variables for 97 males with radical prostatectomy.
+
+PSA levels can help diagnose prostate cancer: a high level can be a sign of cancer.
+
+Here, we are interested in evaluating the association between PSA and the other available variables, i.e.:
+
+- tumor volume (`lcavol`)
+- prostate weight (`lweight`)
+- `age`
+- benign prostate hypertrophy (`lbph`)
+- seminal vesicle invasion (`svi`)
+- capsular penetration (`lcp`)
+- Gleason score (`gleason`)
+- precentage gleason score 4/5 (`pgg45`)
+
+```{r prostate}
+prostate <- read_csv("slides/data/prostate.csv")
+glimpse(prostate)
+```
+
+As in the previous case, we want to transform categorical variables into factors.
+
+```{r pr-factors}
+prostate <- prostate |>
+    mutate(svi = factor(svi), gleason = factor(gleason),
+           pgg45 = factor(pgg45))
+prostate
+```
+
+::: {.callout-important}
+# Exercise
+
+Explore the relation between PSA and the other variables with a series of plots.
+:::
+
+### Regression model
+
+We can now fit a linear model, including some of the available variables.
+
+```{r pr-fit}
+fit_pr <- lm(lpsa ~ lcavol + lweight + svi + gleason, data=prostate)
+summary(fit_pr)
+```
+
+::: {.callout-important}
+# Exercise
+
+Comment the output, with particular focus on $R^2$, coefficient estimates and significance.
+:::
+
+### Model selection
+
+Is the inclusion of the Gleason score informative or not? Which model is better, with or without such variable?
+
+To test for the global significance of the `gleason` variable, we can fit a model without it and perform an Analysis of Variance (a.k.a. an F-test) to test the two models.
+
+```{r pr-nogleason}
+fit_nogl <- lm(lpsa ~ lcavol + lweight + svi, data=prostate)
+summary(fit_nogl)
+anova(fit_nogl, fit_pr)
+```
+
+The residuals sum of squares will always decrease with the addition of a variable (and the $R^2$ will always increase), but this does not mean that the new variable _significantly_ adds new information in explaining/predicting the response.
+
+In this case, we could decide to drop the `gleason` variable, but significance is not always the only consideration to make.
+
+Model selection is a very important (and difficult!) problem in statistics.
+
+## Homework [^2]
+
+See Obesity homework from Applied Statistics.
 
 ## Further reading
 
 -   S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 2](https://www.huber.embl.de/msmb/02-chap.html)
 
 
-[^1]: This homework is one of the [Open Case Studies](https://www.opencasestudies.org/). Please try to solve this yourself before looking at the solution there.
+[^1]: this example is from the [Practical Statistics for the Life Sciences course](https://statomics.github.io/PSLS)
+[^2]: This homework is based on data from the [UC Irvine Machine Learning Repository](https://archive.ics.uci.edu/).
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
