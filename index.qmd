@@ -12,11 +12,26 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 
 ## Timeline
 
-| Date      | Topic                                | Type    |
-|-----------|--------------------------------------|---------|
-| 24/2/2025 | Intro to course and statistics recap | Lecture |
-| 24/2/2025 | The Normal Linear Model (part 1)     | Lecture |
-| ...       |                                      |         |
+### Lectures
+
+| Week | Date      | Topic                                | Hours |
+|------|-----------|--------------------------------------|-------|
+| 1    | 24/2/2025 | Intro to course and statistics recap | 2     |
+|      | 25/2/2025 | Data wrangling and visualization     | 2     |
+|      | 26/2/2025 | Statistical Modeling                 | 2     |
+|      | 27/2/2025 | Statistical Modeling                 | 2     |
+|      | 28/2/2025 | Linear Models                        | 2     |
+| 2    | 10/3/2025 | Linear Models (part 2)               | 2     |
+|      | ...       |                                      |       |
+
+### Labs
+
+| Week | Date      | Topic                                     | Hours |
+|------|-----------|-------------------------------------------|-------|
+| 1    | 26/2/2025 | Data wrangling and visualization (part 1) | 4     |
+|      | 27/2/2025 | Data wrangling and visualization (part 2) | 4     |
+|      | 28/2/2025 | Linear models                             | 4     |
+|      | ...       |                                           |       |
 
 ## Suggested reading materials
 
@@ -38,8 +53,8 @@ The book is a work in progress as we move through the first edition of this clas
 
 ## Acknowledgments
 
-I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham.
+I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham, Lieven Clement, Milan Malfait.
 
 In the same spirit, I am sharing openly online this course.
 
-Specific resources that can be used as additional readings are noted in the relevant chapter.
+Specific resources that can be used as additional readings are noted in the relevant chapters.

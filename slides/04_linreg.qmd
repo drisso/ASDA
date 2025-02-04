@@ -1,5 +1,5 @@
 ---
-title: "Linear regression"
+title: "Linear models"
 subtitle: "Advanced Statistics and Data Analysis"
 author: "Davide Risso"
 format: 

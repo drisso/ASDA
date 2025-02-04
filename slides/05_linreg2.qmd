@@ -1,5 +1,5 @@
 ---
-title: "Linear regression is (almost) all you need to know"
+title: "Linear models are (almost) all you need to know"
 subtitle: "Advanced Statistics and Data Analysis"
 author: "Davide Risso"
 format: 

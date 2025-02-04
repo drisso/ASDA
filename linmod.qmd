@@ -42,7 +42,7 @@ brca <- read_csv("slides/data/breastcancer.csv")
 glimpse(brca)
 ```
 
-The goal is to study whether there is an association between the expression of ESR1 (Estrogen Receptor 1) and S100A8, a gene encoding for a calcium bining protein, involved in cell cycle progression and differentiation.
+The goal is to study whether there is an association between the expression of ESR1 (Estrogen Receptor 1) and S100A8, a gene encoding for a calcium binding protein, involved in cell cycle progression and differentiation.
 
 ### Data wrangling and exploration
 
@@ -175,7 +175,7 @@ fit_log <- lm(log(S100A8) ~ log(ESR1), data=brca)
 summary(fit_log)
 ```
 
-Whith this model we get a very high $R^2$ of 0.79 and a highly significant association between the two genes.
+With this model we get a very high $R^2$ of 0.79 and a highly significant association between the two genes.
 
 The predicted values are now
 $$
@@ -323,7 +323,7 @@ Here, we are interested in evaluating the association between PSA and the other 
 - seminal vesicle invasion (`svi`)
 - capsular penetration (`lcp`)
 - Gleason score (`gleason`)
-- precentage gleason score 4/5 (`pgg45`)
+- percentage Gleason score 4/5 (`pgg45`)
 
 ```{r prostate}
 prostate <- read_csv("slides/data/prostate.csv")
@@ -380,7 +380,64 @@ Model selection is a very important (and difficult!) problem in statistics.
 
 ## Homework [^2]
 
-See Obesity homework from Applied Statistics.
+@little2009suitability assessed the practical values of telemonitoring devices for remote symptom progression monitoring of early-stage Parkinson's disease patients. 
+
+The collected dataset is composed of a range of biomedical voice measurements from 42 people with early-stage Parkinson's disease recruited to a six-month trial of a telemonitoring device for remote symptom progression monitoring. The recordings were automatically captured in the patient's homes.
+
+The available variables are:
+- subject number, 
+- subject age, 
+- subject gender, 
+- time interval from baseline recruitment date, 
+- motor UPDRS (Unified Parkinson's Disease Rating Scale), 
+- total UPDRS (Unified Parkinson's Disease Rating Scale), 
+- and 16 biomedical voice measures. 
+
+Each row corresponds to one of 5,875 voice recording from these individuals. **The main aim of the data is to predict the motor and total UPDRS scores ('motor_UPDRS' and 'total_UPDRS') from the 16 voice measures**.
+
+The data are available [here](https://archive.ics.uci.edu/dataset/189/parkinsons+telemonitoring).
+
+### Guided solution
+
+1. Read the original paper to familiarize yourself with the research and the data (an open-access version is available [here](https://www.nature.com/articles/npre.2008.2298.1)). Pay special attention to the definition of the measurements.
+2. Download and unzip the data folder.
+3. Read the data (`parkinsons+telemonitoring/parkinsons_updrs.data`) with the `read_csv` function from the `readr` package.
+4. Exploratory Analysis: 
+    - explore the pattern of the 16 measures and the two UPDRS scores over time per patient
+5. Patient-level data:
+    - use the `group_by` and `summarize_all` functions to compute the mean and standard deviation per patient of each of the 16 voice measures and the mean per patient of the two UPDRS scores.
+6. Patient-level EDA:
+    - explore the correlation between the 16 biomedical voice measures
+    - explore the correlation between each of them and the motor UPDRS score
+7. Fit a linear model using total_UPDRS as a response variable, and as covariates
+    - a subset of the 16 mean and variance measures that seem to be informative, and
+    - the patients clinical information (e.g., age and sex)
+    
+Note: be careful about collinearity or near-collinearity in the data, e.g., between different Jitter measurements.
+
+```{r}
+#| echo: false
+#| include: false
+#| eval: false
+
+park <- read_csv("~/Downloads/parkinsons+telemonitoring/parkinsons_updrs.data")
+
+park |>
+    select(-test_time) |>
+    group_by(`subject#`, age, sex) |> 
+    summarise_all(list(mean=mean, sd=sd)) -> park_subj
+
+park_subj |>
+    ggplot(aes(y=`Jitter(Abs)_mean`, x=`Jitter(%)_mean`)) +
+    geom_point()
+
+park_subj |>
+    ggplot(aes(y=`Jitter(Abs)_sd`)) +
+    geom_boxplot()
+
+fit <- lm(total_UPDRS_mean ~ `Jitter(%)_sd` + Shimmer_sd + NHR_sd + RPDE_sd + DFA_sd + PPE_sd, data = park_subj)
+summary(fit)
+```
 
 ## Further reading
 
