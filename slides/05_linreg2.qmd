@@ -14,9 +14,34 @@ knitr:
         fig-align: center
 ---
 
-# ANOVA is a linear model
+# ANOVA
 
-# The t-test is a linear model
+## Analysis of Variance (ANOVA)
+
+Last semester you have seen ANOVA as a generalization of the t-test for more than two groups.
+
+Let's recall it with an example.
+
+```{r, echo=TRUE}
+head(mtcars)
+```
+
+## ANOVA example
+
+Does car efficiency, measured in miles-per-gallon (mpg), depend on the type of engine?
+
+In our data, we have three engyine types: 4, 6, and 8 cylinder engines.
+
+We can use a one-way ANOVA to test whether the efficiency is the same or different across cars with these engines.
+
+## ANOVA example
+
+```{r}
+library(tidyverse)
+
+```
+
+# The t-test and other tests
 
 Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).
 
