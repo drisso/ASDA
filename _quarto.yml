@@ -12,6 +12,7 @@ book:
     - intro.qmd
     - dataviz.qmd
     - dataviz2.qmd
+    - git.qmd
     - linmod.qmd
 
 bibliography: references.bib

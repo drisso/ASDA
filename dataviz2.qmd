@@ -304,7 +304,7 @@ doing something or for a "base R" way of doing something.
 There is no right or wrong way to achieve something in R, but considerations about code readability and efficiency may be important depending on the application.
 
 
-## Howemork [^1]
+## Homework [^1] {#sec-homework1}
 
 Health policy in the United States is complicated, and several forms of healthcare coverage exist, including both coverage by federal goverment-led healthcare policy, and by private insurance companies. Before making any inference about the relationship between health condition and health policy, it is important for us to have a general idea about healthcare economics in the United States. Thus, we are interested in getting sense of healthcare coverage and healthcare spending across States. More specifically, the questions are:
 

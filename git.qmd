@@ -1,0 +1,32 @@
+---
+title: "Tools for reproducible research"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< revealjs "slides/01b_git.html" >}}
+
+## Introduction
+
+This lab is somewhat different from the others. In fact, I do not have written instructions, but it will be a live demonstration of the tools used to achieve reproducibility.
+
+## Quarto
+
+This website, and all the slides of this course, are written in Quarto.
+
+Quarto is a _literate programming_ language [@knuth84] that can be used to author documents, slides, websites and books. It works with R and Python using `knitr` or `Jupyter` as engines.
+
+## Git and Github
+
+Git is a version control software. Github is an open-source website that allows you to freely host your git repositories.
+
+## Homework
+
+1. Create a Quarto document with the homework described in @sec-homework1.
+2. Fork the `drisso/asda-homework` repository on your Github account.
+3. Add your homework's qmd file to the `homework1` folder.
+4. Create a pull request to the main repo to turn in your homework.
