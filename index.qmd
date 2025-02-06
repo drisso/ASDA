@@ -45,7 +45,8 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 
 ### Statistics
 
--   [Modern Statistics for Modern Biology](https://www.huber.embl.de/msmb/)
+- [Modern Statistics for Modern Biology](https://www.huber.embl.de/msmb/)
+- [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences)
 
 ## Work in progress
 
@@ -53,7 +54,7 @@ The book is a work in progress as we move through the first edition of this clas
 
 ## Acknowledgments
 
-I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham, Lieven Clement, Milan Malfait.
+I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, the following people either directly or indirectly inspired the materials developed for this course: Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham, Lieven Clement, Milan Malfait, Karl Broman, Rafael Irizarry, Mike Love, Jeff Leek.
 
 In the same spirit, I am sharing openly online this course.
 
