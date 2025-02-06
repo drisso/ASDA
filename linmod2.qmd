@@ -1,0 +1,33 @@
+---
+title: "Linear models (part 2)"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< pdf "slides/05_linreg2.pdf" >}}
+
+## Lab: complex linear models [^1]
+
+
+## Homework [^2]
+
+
+### Guided solution
+
+
+## Further reading
+
+-   R. A. Irizarry and M. I. Love. [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences)
+
+
+[^1]: this example is from [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences)
+[^2]: This homework is one of the [Open Case Studies](https://www.opencasestudies.org/). Please try to solve this yourself before looking at the solution there.
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
