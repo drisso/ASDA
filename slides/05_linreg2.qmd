@@ -454,16 +454,23 @@ This means that the relationship between MPG and weight changes both in terms of
 How do you interpret the parameters in this case?
 :::
 
+## Contrasts
 
-# The t-test and other tests
+## Contrasts
 
-## 
+A more formal definition (see bcb)
+
+# The math behind `lm()`
+
+## Least squares estimates
+
+## The QR decomposition
+
+# Hypothesis testing
+
+## The t-test and its friends
 
 Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).
 
-# The QR decomposition
-
-
-
-# Interactions
+## Paired data
 
