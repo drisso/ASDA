@@ -127,6 +127,26 @@ Use both the nested syntax and the pipe operator to carry out the following anal
 - Compute the mean of the two columns with the function `colMeans()`
 :::
 
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+## nested syntax
+colMeans(matrix(rnorm(100), ncol=2, nrow=50))
+
+## pipe operator
+rnorm(100) |> matrix(ncol=2, nrow=50) |> colMeans()
+```
+
+:::
+
 ### dplyr verbs
 
 The five key functions of the dplyr package are the following.
@@ -220,6 +240,56 @@ Use the dplyr verbs to answer the following questions.
 2. What is the average GDP of European countries in 1982?
 3. What was the minimum and maximum population of Italy across the study years?
 4. [advanced] What is the average increase in per capita GDP per continent between 1952 and 2007?
+:::
+
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+## 1
+library(tidyverse)
+library(gapminder)
+
+gapminder |>
+    filter(year == 1952 & continent == "Asia") |>
+    select(country, gdpPercap) |>
+    arrange(desc(gdpPercap)) |>
+    head(n=5)
+
+gapminder |>
+    filter(year == 2007 & continent == "Asia") |>
+    select(country, gdpPercap) |>
+    arrange(desc(gdpPercap)) |>
+    head(n=5)
+
+## 2
+gapminder |>
+    filter(year == 1982 & continent == "Europe") |>
+    summarize(averageGdp = mean(gdpPercap))
+
+## 3
+gapminder |>
+    filter(country == "Italy") |>
+    summarize(minPop = min(pop), maxPop = max(pop))
+
+## 4
+gapminder |>
+    mutate(gdp1952 = ifelse(year == 1952, gdpPercap, NA),
+           gdp2007 = ifelse(year == 2007, gdpPercap, NA)) |>
+    group_by(country, continent) |>
+    summarize(gdpIncrease = sum(gdp2007, na.rm = TRUE) - sum(gdp1952, na.rm = TRUE)) |>
+    group_by(continent) |>
+    summarize(avgIncrease = mean(gdpIncrease))
+```
+
 :::
 
 ### Plotting tidy data: the `ggplot2` package
@@ -392,11 +462,64 @@ ggplot(gapminder, aes(y=continent, x=lifeExp, fill=continent)) +
 Use ggplot to produce the following graphs.
 
 
-1. Visualize the distribution of life expectancy as a histogram + a density line (hint: geom_density).
+1. Visualize the distribution of life expectancy as a histogram + a density line (hint: `geom_density`, `after_stat(density)`).
 2. Use facets and the geometry of your choice to visualize the distribution of life expectancy for each continent and each year.
 3. Reproduce the ridgeline plot above, changing the colors to be those stored in the `continent_colors` variable.
 4. Create a scatterplot of life expectancy vs. GDP per capita across all years and continents, using 2d density (`geom_density_2d`) or hexagonal binning (`geom_hex`) to avoid overplotting.
 5. Create a scatterplotof life expectancy vs. GDP per capita in 2007, with the point size proportional to population, color-coded by country, faceted by continent, adding text labels (hint: remove legend with `theme(legend.position = "none")`).
+:::
+
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+## 1
+library(tidyverse)
+library(gapminder)
+gapminder |>
+    ggplot(aes(x = lifeExp, y = after_stat(density))) +
+    geom_histogram() +
+    geom_density(linewidth = 2, col="red")
+
+## 2
+gapminder |>
+    ggplot(aes(x=factor(year), y=lifeExp)) +
+    geom_violin() +
+    facet_wrap(~continent)
+
+## 3
+library(ggridges)
+ggplot(gapminder, aes(y=continent, x=lifeExp, fill=continent)) +
+    geom_density_ridges() +
+    scale_fill_manual(values = continent_colors)
+
+## 4
+gapminder |>
+    ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_hex() +
+    scale_x_log10()
+
+## 5
+library(ggrepel)
+gapminder |>
+    filter(year == 2007) |>
+    ggplot(aes(x = gdpPercap, y = lifeExp, size = pop, col=country)) +
+    geom_point() +
+    scale_x_log10() +
+    theme(legend.position = "none") +
+    scale_color_manual(values = country_colors) +
+    geom_label_repel(aes(label = country), max.overlaps = 50) +
+    facet_wrap(~continent)
+```
+
 :::
 
 ## Further reading

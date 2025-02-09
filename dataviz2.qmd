@@ -204,8 +204,8 @@ original data representation.
 
 ```{r}
 cases
-pivot_longer(cases, names_to = "year", values_to = "n", cols = 2:4)  %>%
-  pivot_wider(., names_from = "year", values_from = "n")
+pivot_longer(cases, names_to = "year", values_to = "n", cols = 2:4)  |>
+  pivot_wider(names_from = "year", values_from = "n")
 ```
 
 As we mentioned, sometimes the wide format is the tidy format. This could be
@@ -228,12 +228,34 @@ Explore the dataset `airquality`:
 ```{r}
 #| echo: false
 
-airquality %>%
+airquality |>
   pivot_longer(c(Ozone, Solar.R, Wind, Temp), 
                names_to = "variable", 
                values_to = "value")
 ```
 - Starting from the created dataset use `pivot_wider` to turn it back to the original
+:::
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+air_long <- airquality |>
+    pivot_longer(c(Ozone, Solar.R, Wind, Temp), 
+                 names_to = "variable", 
+                 values_to = "value")
+
+air_wide <- air_long |>
+    pivot_wider(names_from = "variable", values_from = "value")
+```
+
 :::
 
 #### Joining tables
@@ -287,11 +309,41 @@ Note how we can imply the "by" argument if we want to use all the common variabl
 
 Load the `nycflights13` package to explore the four datasets `flights`, `airlines`, `weather`, and `planes`.
 
-- Join the two tables in a way that each flight contains the names of the airline
+- Join the tables `flights` and `airlines` in a way that each flight contains the names of the airline
 - Join the resulting table with the weather information
 - Join the resulting table with the airplane information
 - Use tidyverse functions to extract the complete information (including weather and airplane info) of UA1545 flight departed on Jan 1st 2013.
 - Plot departure delay versus wind speed: is there a relation between these variables? (Hint: avoid overplotting)
+:::
+
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+## 1-3
+library(nycflights13)
+left_join(flights, airlines) |>
+    left_join(weather) |>
+    left_join(planes) -> complete_data
+
+## 4
+complete_data |>
+    filter(year == 2013 & month == 1 & day == 1 & carrier == "UA", flight == 1545)
+
+## 5
+complete_data |>
+    ggplot(aes(y = dep_delay, x = wind_speed)) +
+    geom_hex()
+```
+
 :::
 
 ### The "tidyverse" vs. "base R"

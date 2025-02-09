@@ -5,6 +5,10 @@ author: "Davide Risso"
 format: 
     revealjs:
         theme: default
+        
+html-math-method:
+    method: mathjax
+    url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 ---
 
 # Introduction
@@ -39,7 +43,11 @@ In short, statistics is the art and science of learning from data.
 
 The **population** is the set of subjects in which we are interested.
 
+. . .
+
 The **sample** is the subset of the population for whom we have (or plan to have) data.
+
+. . .
 
 ::: callout-note
 ## Examples:
@@ -320,6 +328,7 @@ In R, the [`ggplot2`](https://ggplot2-book.org/) package allows you to translate
 #| echo: true
 #| output-location: fragment
 #| fig-align: center
+#| out-width: "75%"
 
 ggplot(df_long, aes(x = type, y = sales, color = month)) +
     geom_point()

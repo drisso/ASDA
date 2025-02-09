@@ -23,7 +23,7 @@ format:
 
 webr: 
   show-startup-message: false
-  packages: ['ggplot2', 'dplyr']
+  packages: ['tidyverse', 'gapminder']
   
 filters:
   - webr
