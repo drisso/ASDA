@@ -272,67 +272,70 @@ Davide Risso
 <section id="why-reproducibility" class="slide level2">
 <h2>Why reproducibility?</h2>
 <ul>
-<li>Replicability is one of the core concepts of science.</li>
-<li>In many scientific fields (including biology), a discovery is confirmed only after an independent research team is able to reproduce the results.</li>
-<li>As data analysts we cannot guarantee the study correctness or replicability.</li>
-<li>The only thing we can guarantee is its reproducibility: using my data and my code, you get my results.</li>
-<li>Think about it as a low bar of scientific best practice.</li>
+<li class="fragment">Replicability is one of the core concepts of science.</li>
+<li class="fragment">In many scientific fields (including biology), a discovery is confirmed only after an independent research team is able to reproduce the results.</li>
+<li class="fragment">As data analysts we cannot guarantee the study correctness or replicability.</li>
+<li class="fragment">The only thing we can guarantee is its reproducibility: using my data and my code, you get my results.</li>
+<li class="fragment">Think about it as a low bar of scientific best practice.</li>
 </ul>
 </section>
 <section id="why-reproducibility-1" class="slide level2">
 <h2>Why reproducibility?</h2>
 <ul>
-<li>Andrew Gelman described the many choices that an analyst can make as a “garden of forking paths”</li>
-<li>For instance, we have freedom to choose the model, which variables to include, whether to remove outliers, …</li>
-<li>With complex data, we cannot “look” at all the data at once, it is hard to reason in high dimensions.</li>
-<li>We have to trust the process of data analysis.</li>
+<li class="fragment">Andrew Gelman described the many choices that an analyst can make as a “garden of forking paths”</li>
+<li class="fragment">For instance, we have freedom to choose the model, which variables to include, whether to remove outliers, …</li>
+<li class="fragment">With complex data, we cannot “look” at all the data at once, it is hard to reason in high dimensions.</li>
+<li class="fragment">We have to trust the process of data analysis.</li>
 </ul>
 </section>
 <section id="why-reproducibility-2" class="slide level2">
 <h2>Why reproducibility?</h2>
 <ul>
-<li>Very often biostatisticians and bioinformaticians that want to replicate the analysis of a study need to make a great effort in understanding <em>exactly</em> what is described in the methods section of a paper.</li>
-<li>Keith Baggerly called this <strong>forensic bioinformatics</strong>.</li>
-<li>The goal of reproducible research is to make this process automatic.</li>
+<li class="fragment">Very often biostatisticians and bioinformaticians that want to replicate the analysis of a study need to make a great effort in understanding <em>exactly</em> what is described in the methods section of a paper.</li>
+<li class="fragment">Keith Baggerly called this <strong>forensic bioinformatics</strong>.</li>
+<li class="fragment">The goal of reproducible research is to make this process automatic.</li>
 </ul>
 </section>
-<section id="example" class="slide level2">
-<h2>Example</h2>
+<section id="examples" class="slide level2">
+<h2>Examples</h2>
 <p><a href="https://www.nature.com/articles/nature.2015.18412">The STAP cell controversy</a></p>
+<p><a href="https://www.nytimes.com/2011/07/08/health/research/08genes.html">The Duke Saga</a></p>
+<p><a href="https://www.buzzfeednews.com/article/stephaniemlee/brian-wansink-cornell-p-hacking">The pizza papers</a></p>
+<p><a href="https://www.tandfonline.com/doi/full/10.1080/09332480.2020.1820254#d1e135">The Santa Clara County COVID study</a></p>
 </section>
 <section id="basic-principles-of-reproducibility" class="slide level2">
 <h2>Basic principles of reproducibility</h2>
 <ul>
-<li>Everything via code</li>
-<li>Everything automated
+<li class="fragment">Everything via code</li>
+<li class="fragment">Everything automated
 <ul>
-<li>Workflow and dependencies clearly documented</li>
+<li class="fragment">Workflow and dependencies clearly documented</li>
 </ul></li>
-<li>Get the data in the most-raw form possible</li>
-<li>Get any/all data and meta-data possible</li>
-<li>Keep track of the provenance of all data files</li>
-<li>Be self-sufficient</li>
+<li class="fragment">Get the data in the most-raw form possible</li>
+<li class="fragment">Get any/all data and meta-data possible</li>
+<li class="fragment">Keep track of the provenance of all data files</li>
+<li class="fragment">Be self-sufficient</li>
 </ul>
 <p>Source: Karl Broman <a href="http://kbroman.org/Tools4RR">Tools for reproducible research</a></p>
 </section>
 <section id="basic-tools" class="slide level2">
 <h2>Basic tools</h2>
 <ul>
-<li><p>knitr / R markdown / Quarto</p></li>
-<li><p>Git / version control</p></li>
-<li><p>Docker</p></li>
+<li class="fragment"><p>knitr / R markdown / Quarto</p></li>
+<li class="fragment"><p>Git / version control</p></li>
+<li class="fragment"><p>Docker</p></li>
 </ul>
 </section>
 <section id="what-not-to-do" class="slide level2">
 <h2>What not to do</h2>
 <ul>
-<li>Open a data file to do even a slight edit</li>
-<li>Paste results into the text of a manuscript</li>
-<li>Copy-paste-edit tables</li>
-<li>Copy-paste-adjust figures</li>
-<li>Copy-paste code
+<li class="fragment">Open a data file to do even a slight edit</li>
+<li class="fragment">Paste results into the text of a manuscript</li>
+<li class="fragment">Copy-paste-edit tables</li>
+<li class="fragment">Copy-paste-adjust figures</li>
+<li class="fragment">Copy-paste code
 <ul>
-<li>loops <span class="math inline">\(&lt;\)</span> functions <span class="math inline">\(&lt;\)</span> packages</li>
+<li class="fragment">loops <span class="math inline">\(&lt;\)</span> functions <span class="math inline">\(&lt;\)</span> packages</li>
 </ul></li>
 </ul>
 <p>Source: Karl Broman <a href="http://kbroman.org/Tools4RR">Tools for reproducible research</a></p>
@@ -345,8 +348,15 @@ Davide Risso
 <section id="literate-programming-1" class="slide level2">
 <h2>Literate programming</h2>
 <ul>
-<li><p>Literate programming was introduced by Donald Knuth as a way to weave together programming and natural language.</p></li>
-<li><p>The idea is that the natural language explanation and the program itself live in the same document.</p></li>
+<li class="fragment"><p>Literate programming was introduced by Donald Knuth as a way to weave together programming and natural language.</p></li>
+<li class="fragment"><p>The idea is that the natural language explanation and the program itself live in the same document.</p></li>
+</ul>
+</section>
+<section id="knuths-literate-programming-1983" class="slide level2">
+<h2>Knuth’s <em>Literate Programming</em> (1983)</h2>
+<ul>
+<li class="fragment"><p>“I believe that the time is ripe for significantly better documentation of programs, and that we can best achieve this by considering programs to be works of literature.”</p></li>
+<li class="fragment"><p>“Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do.”</p></li>
 </ul>
 </section>
 <section id="r-and-literate-programming" class="slide level2">
@@ -371,9 +381,9 @@ Davide Risso
 - __Three__</code></pre>
 <p>Renders as</p>
 <ul>
-<li>One</li>
-<li><em>Two</em></li>
-<li><strong>Three</strong></li>
+<li class="fragment">One</li>
+<li class="fragment"><em>Two</em></li>
+<li class="fragment"><strong>Three</strong></li>
 </ul>
 <p><a href="https://quarto.org/docs/authoring/markdown-basics.html">Markdown basics</a></p>
 </section>
@@ -398,8 +408,8 @@ Davide Risso
 <span id="cb3-4"><a href=""></a>y <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta <span class="sc">*</span> x</span>
 <span id="cb3-5"><a href=""></a><span class="fu">print</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  4.91112408  2.42348450  2.95600653 -2.24513386  1.20225151  0.42099115
- [7]  5.36787301  0.02260687 -3.37927332  3.77362555</code></pre>
+<pre><code> [1]  2.7902388  2.3351705 -1.3432996  0.9715356  0.5572599  0.6038901
+ [7]  0.7038415 -1.0818537  3.0354478  5.0805380</code></pre>
 </div>
 </div>
 </section>
@@ -442,26 +452,26 @@ Davide Risso
 <h2>Version control</h2>
 <p>There are essentially three possibilities when you work on a long project (think about your thesis!).</p>
 <ol type="1">
-<li>Use one version of the file.</li>
-<li>Save each time a new version to a new file.</li>
-<li>Use a “version control” system.</li>
+<li class="fragment">Use one version of the file.</li>
+<li class="fragment">Save each time a new version to a new file.</li>
+<li class="fragment">Use a “version control” system.</li>
 </ol>
 </section>
 <section id="version-control-1" class="slide level2">
 <h2>Version control</h2>
 <ul>
-<li><p>Obviously 2 is better than 1!</p></li>
-<li><p>But what happens if something goes wrong and you need to find (quickly) the last working version?</p></li>
-<li><p>What happens if you send a version to your collaborator and then keep working on the file?</p></li>
+<li class="fragment"><p>Obviously 2 is better than 1!</p></li>
+<li class="fragment"><p>But what happens if something goes wrong and you need to find (quickly) the last working version?</p></li>
+<li class="fragment"><p>What happens if you send a version to your collaborator and then keep working on the file?</p></li>
 </ul>
 </section>
 <section id="advantages-of-version-control" class="slide level2">
 <h2>Advantages of version control</h2>
 <ul>
-<li>The whole history of changes is saved</li>
-<li>You can easily revert back to a previous version</li>
-<li>If two people edit the same file at the same time, you can “merge” the two versions</li>
-<li>You have automatic backups!</li>
+<li class="fragment">The whole history of changes is saved</li>
+<li class="fragment">You can easily revert back to a previous version</li>
+<li class="fragment">If two people edit the same file at the same time, you can “merge” the two versions</li>
+<li class="fragment">You have automatic backups!</li>
 </ul>
 </section>
 <section id="an-example-1" class="slide level2">
@@ -473,10 +483,10 @@ Davide Risso
 <section id="git" class="slide level2">
 <h2>Git</h2>
 <ul>
-<li><p>Git is a version control system developed by Linus Torvalds to work on the Linux project.</p></li>
-<li><p>It tracks all file types, but not ideal for binary or proprietary files.</p></li>
-<li><p>It’s integrated in R Studio and is freely available as an open source software.</p></li>
-<li><p>Free websites offer it as a service (Github, Gitlab, …)</p></li>
+<li class="fragment"><p>Git is a version control system developed by Linus Torvalds to work on the Linux project.</p></li>
+<li class="fragment"><p>It tracks all file types, but not ideal for binary or proprietary files.</p></li>
+<li class="fragment"><p>It’s integrated in R Studio and is freely available as an open source software.</p></li>
+<li class="fragment"><p>Free websites offer it as a service (Github, Gitlab, …)</p></li>
 </ul>
 </section>
 <section id="to-learn-git" class="slide level2">
@@ -493,10 +503,11 @@ Davide Risso
 <section id="motivation-3" class="slide level2">
 <h2>Motivation</h2>
 <ul>
-<li>Even though we may be sure that we know what a script does (because we have documented it with Quarto) …</li>
-<li>… and we are sure we are using the right version of the code (because we are using git) …</li>
-<li>… the results could still change in between two runs of the code.</li>
+<li class="fragment">Even though we may be sure that we know what a script does (because we have documented it with Quarto) …</li>
+<li class="fragment">… and we are sure we are using the right version of the code (because we are using git) …</li>
+<li class="fragment">… the results could still change in between two runs of the code.</li>
 </ul>
+<div class="fragment">
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -510,13 +521,14 @@ Davide Risso
 </div>
 </div>
 </div>
+</div>
 </section>
 <section id="software-versions" class="slide level2">
 <h2>Software versions</h2>
 <ul>
-<li><p>When R packages (or R itself) are updated, the developers may change default values or fix bugs.</p></li>
-<li><p>This may cause your code to not work anymore.</p></li>
-<li><p>Or worse, it could change your results.</p></li>
+<li class="fragment"><p>When R packages (or R itself) are updated, the developers may change default values or fix bugs.</p></li>
+<li class="fragment"><p>This may cause your code to not work anymore.</p></li>
+<li class="fragment"><p>Or worse, it could change your results.</p></li>
 </ul>
 </section>
 <section id="one-solution" class="slide level2 scrollable">
@@ -554,9 +566,9 @@ loaded via a namespace (and not attached):
 <section id="a-better-solution" class="slide level2">
 <h2>A better solution</h2>
 <ul>
-<li><p>Create and share a “virtual machine” that contains all the software needed to reproduce your analysis.</p></li>
-<li><p>This <em>container</em> will have the exact same versions of all the software that you need and will guarantee that whoever runs it will get the exact results that you had.</p></li>
-<li><p>Popular software to achieve this are <strong>Docker</strong> and <strong>Singularity</strong>.</p></li>
+<li class="fragment"><p>Create and share a “virtual machine” that contains all the software needed to reproduce your analysis.</p></li>
+<li class="fragment"><p>This <em>container</em> will have the exact same versions of all the software that you need and will guarantee that whoever runs it will get the exact results that you had.</p></li>
+<li class="fragment"><p>Popular software to achieve this are <strong>Docker</strong> and <strong>Singularity</strong>.</p></li>
 </ul>
 </section>
 <section id="learn-docker-and-singularity" class="slide level2">
