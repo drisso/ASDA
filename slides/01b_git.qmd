@@ -79,10 +79,15 @@ Reproducibility does not imply correctness!
 - Keith Baggerly called this **forensic bioinformatics**.
 - The goal of reproducible research is to make this process automatic.
 
-## Example
+## Examples
 
 [The STAP cell controversy](https://www.nature.com/articles/nature.2015.18412)
 
+[The Duke Saga](https://www.nytimes.com/2011/07/08/health/research/08genes.html)
+
+[The pizza papers](https://www.buzzfeednews.com/article/stephaniemlee/brian-wansink-cornell-p-hacking)
+
+[The Santa Clara County COVID study](https://www.tandfonline.com/doi/full/10.1080/09332480.2020.1820254#d1e135)
 
 ## Basic principles of reproducibility
 
