@@ -240,13 +240,28 @@ Davide Risso
 <section id="sample-and-population" class="slide level2">
 <h2>Sample and population</h2>
 <p>The <strong>population</strong> is the set of subjects in which we are interested.</p>
+<div class="fragment">
 <p>The <strong>sample</strong> is the subset of the population for whom we have (or plan to have) data.</p>
-<p>Examples:</p>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Examples:</strong></p>
+</div>
+<div class="callout-content">
 <ul>
 <li>Consumi Delle Famiglie (ISTAT). Sample: 28.000 families in all cities; population: all Italian families.</li>
 <li>IPSOS exit polls. Sample: 1000 electors, population: all Italian relevant voters.</li>
 <li>A census is a complete enumeration.</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="descriptive-and-inferential-statistics" class="slide level2">
 <h2>Descriptive and Inferential Statistics</h2>
@@ -320,20 +335,43 @@ Davide Risso
 <section id="tidy-data" class="slide level2">
 <h2>Tidy data</h2>
 <p>The concept of tidy data was introduced by Hadley Wickham in his seminal paper (Wickham, 2014).</p>
+<div class="fragment">
 <p>There are three fundamental rules which make a dataset tidy:</p>
 <ol type="1">
 <li>Each variable must have its own column.</li>
 <li>Each observation must have its own row.</li>
 <li>Each value must have its own cell.</li>
 </ol>
+</div>
+<div class="fragment">
 <p>The advantage of tidy data is both conceptual and practical: it allows to have consistency between datasets and to use tools designed for this data structure.</p>
+</div>
 </section>
-<section id="distribution" class="slide level2">
+<section id="distribution" class="slide level2 smaller">
 <h2>Distribution</h2>
 <p>The term <em>distribution</em> refers to the <em>frequencies</em> of one or more (quantitative or qualitative) <em>variables</em> recorded on units in a population or sample of interest.</p>
-<p>A <em>distribution table</em> is a table of <em>absolute frequencies</em> (i.e., counts) or <em>relative frequencies</em> (i.e., percentages) for the values taken on by the variable(s) in the group of interest.</p>
-<p><em>Population distribution</em>: distribution of variables for units in a population; <em>population parameters</em>: functions, i.e., summaries, of the population distribution.</p>
-<p><em>Empirical/Sample distribution</em>: distribution of variables for units in a sample; <em>sample statistics</em>: functions, i.e., summaries, of the empirical distribution.</p>
+<div class="fragment">
+<p>A <em>distribution table</em> is a table of</p>
+<ul>
+<li><em>absolute frequencies</em> (i.e., counts) or</li>
+<li><em>relative frequencies</em> (i.e., percentages)</li>
+</ul>
+<p>for the values taken on by the variable(s) in the group of interest.</p>
+</div>
+<div class="fragment">
+<p><em>Population distribution</em>:</p>
+<ul>
+<li>distribution of variables for units in a population;</li>
+<li><em>population parameters</em>: functions, i.e., summaries, of the population distribution.</li>
+</ul>
+</div>
+<div class="fragment">
+<p><em>Empirical/Sample distribution</em>:</p>
+<ul>
+<li>distribution of variables for units in a sample;</li>
+<li><em>sample statistics</em>: functions, i.e., summaries, of the empirical distribution.</li>
+</ul>
+</div>
 </section>
 <section id="example-life-expectancy" class="slide level2">
 <h2>Example: life expectancy</h2>
@@ -365,12 +403,14 @@ Davide Risso
 <section id="numerical-and-graphical-summaries" class="slide level2">
 <h2>Numerical and graphical summaries</h2>
 <p>As illustrated by the previous example, it is often more informative to provide a <em>summary</em> of the data rather than to look at all of them.</p>
+<div class="fragment">
 <p>Data summaries can be either numerical or graphical and allow us to:</p>
 <ul>
 <li>Focus on the <em>main characteristics</em> of the data.</li>
 <li>Reveal <em>unusual features</em> of the data.</li>
 <li>Summarize <em>relationship between variables</em>.</li>
 </ul>
+</div>
 </section>
 <section id="when-do-we-need-summaries" class="slide level2">
 <h2>When do we need summaries?</h2>
@@ -384,17 +424,23 @@ Davide Risso
 <section id="exploratory-data-analysis-eda" class="slide level2">
 <h2>Exploratory Data Analysis (EDA)</h2>
 <p><em>Exploratory Data Analysis</em> (EDA) is a key step of any data analysis and of statistical practice in general.</p>
+<div class="fragment">
 <p>Before formally modeling the data, the dataset must be examined to get a “first impression” of the data and to reveal expected and unexpected characteristics of the data.</p>
+</div>
+<div class="fragment">
 <p>It is also useful to examine the data for outlying observations and to check the plausibility of the assumptions of candidate statistical models.</p>
+</div>
 </section>
 <section id="communication-of-the-results" class="slide level2">
 <h2>Communication of the results</h2>
 <p><em>Explanatory plots</em> (and tables) are equally important. They are often done at the end of the analysis to communicate the results to others.</p>
+<div class="fragment">
 <p>The main goal is to communicate your main findings:</p>
 <ul>
 <li>focus the attention on the important part of the plot</li>
 <li>make it easy to understand the information (colors, labels)</li>
 </ul>
+</div>
 </section>
 <section id="combining-accuracy-with-aesthetics" class="slide level2">
 <h2>Combining accuracy with aesthetics</h2>
@@ -471,8 +517,486 @@ Davide Risso
 <section id="a-plot-that-chooses-what-to-highlight" class="slide level2">
 <h2>A plot that chooses what to highlight</h2>
 
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<section id="the-grammar-of-graphics" class="slide level2">
+<h2>The Grammar of Graphics</h2>
+<ul>
+<li><strong>Aesthethics</strong> (<code>aes()</code>): translates the data into the <em>position</em>, <em>shape</em>, <em>size</em>, <em>color</em>, and <em>type</em> of the elements of a plot.</li>
+</ul>
+<div class="fragment">
+<ul>
+<li><strong>Geometry</strong> (<code>geom_*()</code>): selects the type of plot that will be displayed, e.g., lines, points, bars or heatmaps.</li>
+</ul>
+</div>
+</section>
+<section id="the-grammar-of-graphics-ggplot2" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">The Grammar of Graphics (<code>ggplot2</code>)</h2>
+<p>In R, the <a href="https://ggplot2-book.org/"><code>ggplot2</code></a> package allows you to translate the theory into practice.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb6-1" class="hljs-ln-code"><a href=""></a><span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> sales, <span class="at">color =</span> month))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-grammar-of-graphics-ggplot2-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">The Grammar of Graphics (<code>ggplot2</code>)</h2>
+<p>In R, the <a href="https://ggplot2-book.org/"><code>ggplot2</code></a> package allows you to translate the theory into practice.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb7-1" class="hljs-ln-code"><a href=""></a><span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> sales, <span class="at">color =</span> month)) <span class="sc">+</span></span>
+<span id="cb7-2" class="hljs-ln-code"><a href=""></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center" style="width:75.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="visualizing-distributions" class="title-slide slide level1 center">
+<h1>Visualizing distributions</h1>
 
-<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section></section>
+</section>
+<section id="visualizing-distributions-1" class="slide level2">
+<h2>Visualizing distributions</h2>
+<p>Often, we want to understand what is the empirical distribution of a variable in a dataset.</p>
+<div class="fragment">
+<p>Perhaps we want to understand if the Gaussian distribution is a good approximation for our data, or we want to see whether the observations that we collected are uniform across age groups, etc.</p>
+</div>
+<div class="fragment">
+<p>In this case, we need a way to <strong>estimate</strong> the variable’s distribution and then visualize it.</p>
+</div>
+<div class="fragment">
+<p>For the univariate case, the two most popular choices are <em>histograms</em> and <em>kernel density estimates</em>.</p>
+</div>
+</section>
+<section id="histograms" class="slide level2 smaller">
+<h2>Histograms</h2>
+<p>A <em>histogram</em> is used to display numerical variables, by aggregating similar values into “bins” to represent the distribution.</p>
+<div class="fragment">
+<p>This can be easily done with the following steps:</p>
+<ol type="1">
+<li>Partition the real line into intervals (<em>bins</em>).</li>
+<li>Assign each observation to its bin depending on its numerical value.</li>
+<li>Possibly scale the height of the bins so that the total area of the histogram is 100%</li>
+</ol>
+</div>
+<div class="fragment">
+<p>Step 3 ensures that the area of each bin represents the percentage of observations in that block.</p>
+</div>
+</section>
+<section id="example-life-expectancy-1" class="slide level2">
+<h2>Example: Life expectancy</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<section id="how-to-choose-the-bins" class="slide level2">
+<h2>How to choose the bins</h2>
+<p>The histogram representation of the data depends on two critical choices:</p>
+<ul>
+<li>The number of bins / the bin width</li>
+<li>The location of the bin boundaries.</li>
+</ul>
+<div class="fragment">
+<p>Note that the number of bins in the histogram controls the amount of information loss: <em>the larger the bin width the more information we lose</em>.</p>
+</div>
+</section>
+<section id="example-life-expectancy-2" class="slide level2">
+<h2>Example: Life expectancy</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
+<section id="density-plots" class="slide level2">
+<h2>Density Plots</h2>
+<p>Density plots are smoothed versions of histograms, obtained using <em>kernel density estimation</em> methods.</p>
+</section>
+<section id="density-plots-1" class="slide level2">
+<h2>Density Plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<section id="density-plots-2" class="slide level2">
+<h2>Density Plots</h2>
+<p>The choice of <em>bandwidth</em>, similarly to the number of bins in a histogram, determines the smoothness of the density.</p>
+<p>There is a <em>bias-variance trade-off</em> in the choice of the bandwidth:</p>
+<ul>
+<li>the larger the bandwidth, the smoother the density (low variance, high bias)</li>
+<li>the smaller the bandwidth, the less smooth (high variance, low bias)</li>
+</ul>
+</section>
+<section id="density-plots-3" class="slide level2">
+<h2>Density Plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
+<section id="density-plots-4" class="slide level2">
+<h2>Density Plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
+<section id="density-plots-5" class="slide level2">
+<h2>Density Plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section>
+<section id="density-plots-6" class="slide level2">
+<h2>Density Plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
+<section id="density-plots-7" class="slide level2">
+<h2>Density Plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+<section id="numerical-summaries-of-one-variable" class="slide level2">
+<h2>Numerical Summaries of One Variable</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
+<section id="numerical-summaries-of-one-variable-1" class="slide level2">
+<h2>Numerical Summaries of One Variable</h2>
+<p>Can we describe the differences between these five distributions using numerical summaries?</p>
+<div class="fragment">
+<div>
+<ol type="1">
+<li class="fragment"><em>Location</em>: what is the “most common” value of the distribution?</li>
+<li class="fragment"><em>Scale</em>: how concentrated are the values aroung the average?</li>
+<li class="fragment"><em>Shape</em>: what is the shape of the distribution?</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="location-mean-and-median" class="slide level2 smaller">
+<h2>Location: Mean and Median</h2>
+<p>The first numerical summary relates to the location of the distribution.</p>
+<p>The simplest summary is the (arithmetic) <em>mean</em>.</p>
+<p>Given a list of <span class="math inline">\(n\)</span> numbers, <span class="math inline">\(\{x_1, \ldots, x_n\}\)</span></p>
+<p><span class="math display">\[
+\bar{x} = \frac{\sum_{i=1}^n x_i}{n}.
+\]</span></p>
+<div class="fragment">
+<p>A <em>robust alternative</em> is the <em>median</em>, which is simply the central observation. One can simply compute the median by ordering the observations and selecting the one that falls in the middle.</p>
+<p>The <em>median</em> is a <em>robust summary</em>, in the sense that it is less influence by extreme values.</p>
+</div>
+</section>
+<section id="example-mean-vs-median" class="slide level2">
+<h2>Example: Mean vs Median</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb8-2"><a href=""></a><span class="fu">mean</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">median</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">100</span>)</span>
+<span id="cb12-2"><a href=""></a><span class="fu">mean</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="fu">median</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.5</code></pre>
+</div>
+</div>
+</section>
+<section id="example-location-of-the-five-distributions" class="slide level2">
+<h2>Example: Location of the five distributions</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-20-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p>The means of the five distributions are: 0, <span style="color:#DF536B">5</span>, <span style="color:#61D04F">0</span>, <span style="color:#2297E6">0</span>, <span style="color:#28E2E5">0</span>.</p>
+</section>
+<section id="scale-standard-deviation-and-variance" class="slide level2 smaller">
+<h2>Scale: Standard Deviation and Variance</h2>
+<p>The <em>standard deviation</em> (SD) measures the <em>spread</em> or <em>scale</em> of a distribution.</p>
+<p>It is defined as</p>
+<p><span class="math display">\[
+s_x = \sqrt{\frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n -1}}.
+\]</span></p>
+<p>The <em>variance</em> is the square of the standard deviation.</p>
+<div class="fragment">
+<p>If the data are approximately normally distributed, roughly 68% of the observations are within one SD of the mean and 95% within two SD.</p>
+</div>
+</section>
+<section id="scale-robust-alternatives" class="slide level2">
+<h2>Scale: Robust Alternatives</h2>
+<p>Similarly to the median for the mean, there are robust summaries to describe the scale of the distribution.</p>
+<div class="fragment">
+<p>The <em>inter-quartile range</em> (IQR) is the difference between the upper- and lower-quartile, i.e., the observation that has <span class="math inline">\(75\%\)</span> of the data below it and the observation that has <span class="math inline">\(25\%\)</span> of the observations below it, respectively.</p>
+</div>
+<div class="fragment">
+<p>The <em>median absolute deviation</em> (MAD) is the median of the absolute deviations from the median:</p>
+<p><span class="math display">\[
+MAD_x = \text{median}( | x_i - M_x |)
+\]</span> where <span class="math inline">\(M_x\)</span> is the median of <span class="math inline">\(\{x_1, \ldots, x_n\}\)</span>.</p>
+</div>
+</section>
+<section id="quantiles" class="slide level2">
+<h2>Quantiles</h2>
+<p>The median, upper-quartile, and lower-quartile are examples of <em>quantiles</em>.</p>
+<div class="fragment">
+<p>More formally, the <span class="math inline">\(f\)</span> <em>quantile</em> or <span class="math inline">\(f\times 100\)</span>th <em>percentile</em> of a distribution is the smallest number <span class="math inline">\(q\)</span> such that at least <span class="math inline">\(f \times 100\)</span>% of the observations are less than or equal to <span class="math inline">\(q\)</span>.</p>
+</div>
+<div class="fragment">
+<p>In other words, <span class="math inline">\(f\times 100\)</span>% of the area under the histogram is to the left of the <span class="math inline">\(f\)</span> quantile.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Quartiles</strong></p>
+</div>
+<div class="callout-content">
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>First/lower quartile</td>
+<td>0.25 quantile</td>
+</tr>
+<tr class="even">
+<td>Second quartile/median</td>
+<td>0.50 quantile</td>
+</tr>
+<tr class="odd">
+<td>Third/upper quartile</td>
+<td>0.75 quantile</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-median-as-a-quantile" class="slide level2">
+<h2>The Median as a Quantile</h2>
+<p>The <em>median</em> corresponds to the special case <span class="math inline">\(f=0.5\)</span>.</p>
+<p>If the number of observations <span class="math inline">\(n\)</span> is <em>odd</em>, i.e., <span class="math inline">\(n=2m+1\)</span>, there will be an observation that corresponds to the median.</p>
+<p>If the number of observations <span class="math inline">\(n\)</span> is <em>even</em>, i.e., <span class="math inline">\(n=2m\)</span>, we need to average the two central observations.</p>
+</section>
+<section id="boxplot" class="slide level2">
+<h2>Boxplot</h2>
+<p>The boxplot, also called <em>box-and-whisker plot</em> was first introduced by Tukey in 1977 as a graphical summary of a variable’s distribution.</p>
+<p>It is a graphical representation of the median, upper and lower quartile, and the range (possibly, with outliers).</p>
+</section>
+<section id="boxplot-1" class="slide level2">
+<h2>Boxplot</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-21-1.png" class="quarto-figure quarto-figure-center r-stretch" width="384"></section>
+<section id="boxplot-2" class="slide level2">
+<h2>Boxplot</h2>
+<ul>
+<li>The bold line represents the <em>median</em>.</li>
+<li>The upper and lower sides of the box represent the lower and upper quartiles, respectively.</li>
+<li>The central box represents the <em>IQR</em>.</li>
+<li>The whiskers represent the range of the variable, but any point more than 1.5 IQR above the upper quartile (or below the lower quartile) are plotted individually as <em>outliers</em>.</li>
+<li>Comparing the distances between the quartiles and the median gives indication of the symmetry of the distribution.</li>
+</ul>
+</section>
+<section id="boxplots-of-the-five-distributions" class="slide level2">
+<h2>Boxplots of the five distributions</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch"></section>
+<section id="pros-and-cons-of-boxplots" class="slide level2">
+<h2>Pros and Cons of Boxplots</h2>
+<div>
+<ul>
+<li class="fragment"><p>Boxplots are a great graphical tool to summarize distributions, especially when they are approximately normally distributed.</p></li>
+<li class="fragment"><p>Even in the presence of strong asymmetry, the boxplot still captures the shape of the distribution.</p></li>
+<li class="fragment"><p>One of the advantages of the boxplot is its effectiveness at identifying outlying observations.</p></li>
+<li class="fragment"><p>However, the boxplot <em>hides multimodality</em> in the data.</p></li>
+</ul>
+</div>
+</section>
+<section id="pros-and-cons-of-boxplots-1" class="slide level2">
+<h2>Pros and Cons of Boxplots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-23-1.png" width="960" class="r-stretch"></section>
+<section id="scale-of-the-five-distributions" class="slide level2">
+<h2>Scale of the five distributions</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-24-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p>The standard deviations of the five distributions are: 1, <span style="color:#DF536B">1</span>, <span style="color:#61D04F">2</span>, <span style="color:#2297E6">2</span>, <span style="color:#28E2E5">2</span>.</p>
+</section>
+<section id="shape-of-the-five-distributions" class="slide level2">
+<h2>Shape of the five distributions</h2>
+<div>
+<ul>
+<li class="fragment"><p>Even though the green, blue, and cyan distributions have the same mean and variance, they are clearly different.</p></li>
+<li class="fragment"><p>How can we capture these differences?</p></li>
+<li class="fragment"><p>There are numerical summaries called <em>skewness</em> and <em>kurtosis</em>, but the most effective way is to look at graphical summaries (boxplots and histograms).</p></li>
+<li class="fragment"><p>The skewness of the five distributions are: 0, <span style="color:#DF536B">0</span>, <span style="color:#61D04F">0</span>, <span style="color:#2297E6">2</span>, <span style="color:#28E2E5">0</span>.</p></li>
+<li class="fragment"><p>The kurtosis of the five distributions are: 3, <span style="color:#DF536B">3</span>, <span style="color:#61D04F">3</span>, <span style="color:#2297E6">10</span>, <span style="color:#28E2E5">18</span>.</p></li>
+</ul>
+</div>
+</section>
+<section id="alternatives-to-boxplots" class="slide level2">
+<h2>Alternatives to boxplots</h2>
+<p>Boxplots can be used to visualize multiple distributions at once.</p>
+<p>If we want to do the same using kernel density, we can use <em>violin plots</em> or <em>ridgeline plots</em>.</p>
+</section>
+<section id="violin-plots" class="slide level2">
+<h2>Violin plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"></section>
+<section id="ridgeline-plots" class="slide level2">
+<h2>Ridgeline plots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section></section>
+<section>
+<section id="visualizing-two-variables" class="title-slide slide level1 center">
+<h1>Visualizing two variables</h1>
+
+</section>
+<section id="graphical-summaries-of-two-variables" class="slide level2">
+<h2>Graphical Summaries of Two Variables</h2>
+<div>
+<ul>
+<li class="fragment"><p>Boxplots, histograms, and density plots all summarize the univariate distribution of a single variable. But what if we want to capture the relation between variables?</p></li>
+<li class="fragment"><p>The most used graphical representation of the relation between two variables is not a summary. We can simply plot <em>all the observations</em> for the two variables in a <em>scatterplot</em>.</p></li>
+<li class="fragment"><p>When there are too many observations, summaries based on 2D-density estimation can be used.</p></li>
+</ul>
+</div>
+</section>
+<section id="scatterplots" class="slide level2">
+<h2>Scatterplots</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"></section>
+<section id="considerations-for-scatterplots" class="slide level2">
+<h2>Considerations for scatterplots</h2>
+<p>Even for this simple element, there are important considerations to make when presenting results.</p>
+<div class="fragment">
+<p>In fact, “stretching” one or the other axis may lead to emphasizing one aspect over others.</p>
+</div>
+<div class="fragment">
+<p>This is particularly important in the case where the measurements of the two axes are similar and should be treated as such.</p>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Use the <code>coord_equal()</code> function in <code>ggplot2</code> to ensure equal coordinates.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="coordinate-systems-and-axes" class="slide level2">
+<h2>Coordinate systems and axes</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-28-1.png" width="960" class="r-stretch"></section>
+<section id="data-transformation" class="slide level2">
+<h2>Data transformation</h2>
+<p>You may have noticed that I used the logarithm of GDP per capita in the previous plot.</p>
+<div class="fragment">
+<p>This is because in the linear scale this variable has a skewed distribution most points are “squished” to the left, making the general trend difficult to see.</p>
+</div>
+<div class="fragment">
+<p>Log transformation, like many data transformations, can be useful, but sometimes can create distorsions; hence, it is always good to try different scales for your data <em>in the exploratory phase</em>.</p>
+</div>
+</section>
+<section id="example" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb16-1" class="hljs-ln-code"><a href=""></a><span class="fu">ggplot</span>(gapminder, <span class="fu">aes</span>(<span class="at">x =</span> gdpPercap, <span class="at">y =</span> lifeExp)) <span class="sc">+</span></span>
+<span id="cb16-2" class="hljs-ln-code"><a href=""></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"></section>
+<section id="example-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb17-1" class="hljs-ln-code"><a href=""></a><span class="fu">ggplot</span>(gapminder, <span class="fu">aes</span>(<span class="at">x =</span> gdpPercap, <span class="at">y =</span> lifeExp)) <span class="sc">+</span></span>
+<span id="cb17-2" class="hljs-ln-code"><a href=""></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-3" class="hljs-ln-code"><a href=""></a>    <span class="fu">scale_x_continuous</span>(<span class="at">trans =</span> <span class="st">"log10"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
+<section id="avoid-overplotting" class="slide level2">
+<h2>Avoid overplotting</h2>
+<p>When there are too many data points, plotting every point is redundant and may cause loss of information.</p>
+<p>In such cases, it is better to display the two-dimensional density of the points, either with contours or with hexagonal binning.</p>
+</section>
+<section id="example-2" class="slide level2 smaller">
+<h2>Example</h2>
+<p>Let’s have a look at an example dataset, which contains the expression of 45101 genes in two embryos.</p>
+<p>Here, we are plotting tens of thousands of points, many of which are on top of each other.</p>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-32-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="example-3" class="slide level2 smaller">
+<h2>Example</h2>
+<p>We can estimate a 2D density and plot the density function instead of (or in addition to) the points.</p>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-33-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="example-4" class="slide level2 smaller">
+<h2>Example</h2>
+<p>In this case a better alternative is to use hexagonal binning of points to represent their density.</p>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-34-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="numerical-summaries-of-two-variables" class="slide level2">
+<h2>Numerical Summaries of Two Variables</h2>
+<p>The variance and standard deviation are summaries of the spread of the distribution of one variable.</p>
+<div class="fragment">
+<p>We can compute them for multiple variables, but they will not tell us anything about the relationship between two or more variables.</p>
+</div>
+<div class="fragment">
+<p>The <em>covariance</em> can be used to assess the relation between two variables, say <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
+<p><span class="math display">\[
+Cov(x, y) = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x}) (y_i - \bar{y}).
+\]</span></p>
+</div>
+</section>
+<section id="correlation-coefficient" class="slide level2 smaller">
+<h2>Correlation Coefficient</h2>
+<p>The problem with the covariance is that it depends on the scale of the two variables. It is often more useful to have an absolute indication of the strength of the relation, such as an index between -1 and 1.</p>
+<div class="fragment">
+<p>Such an index is the <em>correlation coefficient</em>.</p>
+<p>It is a measure of the <em>linear association</em> between two variables.</p>
+<p><span class="math display">\[
+r = Cor(x, y) = \frac{1}{n} \sum_{i=1}^n \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
+\]</span></p>
+<p>This is also called <em>Pearson correlation</em>.</p>
+</div>
+<div class="fragment">
+<p><em>Spearman’s correlation coefficient</em> is a robust measure of correlation, where ranks are used in place of the values of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
+</div>
+</section>
+<section id="example-of-correlated-and-uncorrelated-data" class="slide level2">
+<h2>Example of Correlated and Uncorrelated Data</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-35-1.png" width="960" class="r-stretch"></section>
+<section id="these-patterns-are-not-captured-by-univariate-techniques" class="slide level2">
+<h2>These patterns are not captured by univariate techniques</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-36-1.png" width="960" class="r-stretch"></section></section>
+<section>
+<section id="visualizing-more-than-two-variables" class="title-slide slide level1 center">
+<h1>Visualizing more than two variables</h1>
+
+</section>
+<section id="faceting" class="slide level2">
+<h2>Faceting</h2>
+<p>The embryo gene expression example dataset is much more complex than what we have been looked at earlier.</p>
+<p>It contains 45101 genes measured in 101 samples.</p>
+<div class="fragment">
+<p>In some cases, it may be useful to use <em>faceting</em> to represent a third dimension, e.g., this plot shows the relation between two genes across samples, stratified by genotype.</p>
+</div>
+</section>
+<section id="faceting-1" class="slide level2">
+<h2>Faceting</h2>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"></section>
+<section id="heatmaps" class="slide level2 smaller">
+<h2>Heatmaps</h2>
+<p>Heatmaps can be used to visualize high-dimensional data.</p>
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-39-1.png" class="quarto-figure quarto-figure-center r-stretch" width="576"></section>
+<section id="dimensionality-reduction" class="slide level2 smaller">
+<h2>Dimensionality reduction</h2>
+<p>A smart alternative for high-dimensional data is to project the data points onto a lower-dimensional embedding, such as the space of the first principal components.</p>
+
+
+<img data-src="02_dataviz_files/figure-revealjs/unnamed-chunk-40-1.png" width="960" class="r-stretch"></section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -662,7 +1186,7 @@ Davide Risso
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

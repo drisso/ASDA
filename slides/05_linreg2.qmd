@@ -1,21 +1,475 @@
 ---
-title: "Linear regression is (almost) all you need to know"
+title: "Linear models are (almost) all you need to know"
 subtitle: "Advanced Statistics and Data Analysis"
 author: "Davide Risso"
 format: 
-    beamer:
-        aspectratio: 169
-        include-in-header: template.tex
-        toc: true
-
+    revealjs:
+        theme: default
+        incremental: true
+html-math-method:
+    method: mathjax
+    url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 knitr:
     opts_chunk:
         out-width: 75%
         fig-align: center
 ---
 
-# ANOVA is a linear model
+# ANOVA
 
-# The t-test is a linear model
+## Analysis of Variance (ANOVA)
+
+Last semester you have seen ANOVA as a generalization of the t-test for more than two groups.
+
+Let's recall it with an example.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 20))
+```
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+select(mtcars, mpg, cyl) |>
+    head()
+```
+
+## ANOVA example
+
+Does car efficiency, measured in miles-per-gallon (mpg), depend on the type of engine?
+
+In our data, we have three engyine types: 4, 6, and 8 cylinder engines.
+
+We can use a one-way ANOVA to test whether the efficiency is the same or different across cars with these engines.
+
+## ANOVA example
+
+```{r}
+mtcars |>
+    ggplot(aes(x = factor(cyl), y = mpg)) +
+    geom_point() +
+    stat_summary(fun.y= mean, fun.ymin=mean, fun.ymax=mean, geom="crossbar", width=0.5, color="red")
+```
+
+## ANOVA example
+
+```{r, echo=TRUE}
+anova <- aov(mpg ~ factor(cyl), data=mtcars)
+summary(anova)
+```
+
+## ANOVA as a linear model
+
+In fact, we can perform the same analysis as a linear regression, choosing `mpg` as the response and `cyl` as a _categorical_ covariate.
+
+Remember that for categorical covariates, we need to define _dummy variables_.
+
+In the case of `cyl`, which has three levels, we need two dummies (plus the intercept).
+
+::: {.callout-warning}
+
+::: {.nonincremental}
+- Why do we need only two dummy variables?
+- What would happen if we include all three in the regression?
+:::
+
+:::
+
+## ANOVA as a linear model
+
+\scriptsize
+
+```{r, echo=TRUE}
+fit <- lm(mpg ~ factor(cyl), data=mtcars)
+summary(fit)
+```
+
+## ANOVA as a linear model
+
+As we can see from the F statistic and its p-value, the results are _exactly the same_.
+
+This is not by coincidence, but because we are performing _exactly the same analysis_.
+
+In fact, R's `aov` function internally calls `lm.fit` exactly like `lm`.
+
+## The design matrix
+
+To understand mathematically why this is the same thing, we have to introduce the _design matrix_, which is just another name for the matrix $X$ whose columns contain the covariates that we include in the model.
+
+When we perform a regression against categorical variables, `lm` implicitly defines a set of dummy variables to include in the design matrix.
+
+We can see what happens internally, by using the `model.matrix` function, which transforms the formula we feed into `lm` into a design matrix.
+
+## The design matrix
+
+```{r, echo=TRUE}
+head(model.matrix(~factor(cyl), data=mtcars))
+```
+
+## Why not all three dummies?
+
+Remember that we need to invert the design matrix $X$ to obtain the least squares solution:
+$$
+\hat{\beta} = (X^\top X)^{-1} X^\top y.
+$$
+
+This means that $X^\top X$ needs to be invertible, which implies that $X$ is _full rank_.
+
+::: {.callout-important}
+# Definition
+
+The rank of a matrix is the number of columns that are independent of all the others.
+
+If the rank is equal to the number of columns, the matrix is said to be full rank.
+:::
+
+## Why not all three dummies?
+
+\scriptsize
+
+```{r, echo=TRUE, error=TRUE}
+X <- cbind(1, model.matrix(~factor(cyl)-1, data=mtcars))
+head(X)
+qr(X)$rank
+solve(crossprod(X))
+```
+
+## ANOVA and linear regression
+
+When we think about ANOVA, we are thinking about comparing the means of three or more groups.
+
+In the `mtcars` example, we have three groups, and we can think about the following model
+$$
+y_i = 
+\begin{cases}
+\mu_1 + \varepsilon_i & \text{if obs. } i \text{ is in group 1} \\
+\mu_2 + \varepsilon_i & \text{if obs. } i \text{ is in group 2} \\
+\mu_3 + \varepsilon_i & \text{if obs. } i \text{ is in group 3}
+\end{cases}
+$$
+
+## ANOVA and linear regression
+
+In matrix notation:
+$$
+\begin{bmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_{i} \\
+y_{i+1} \\
+\vdots \\
+y_{n-1} \\
+y_{n} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 0 & 0 \\
+1 & 0 & 0 \\
+\vdots \\
+0 & 1 & 0 \\
+0 & 1 & 0 \\
+\vdots \\
+0 & 0 & 1 \\
+0 & 0 & 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu_1 \\
+\mu_2 \\
+\mu_3
+\end{bmatrix}
++
+\begin{bmatrix}
+\varepsilon_1 \\
+\varepsilon_2 \\
+\vdots \\
+\varepsilon_{i} \\
+\varepsilon_{i+1} \\
+\vdots \\
+\varepsilon_{n-1} \\
+\varepsilon_{n} \\
+\end{bmatrix}
+$$
+
+
+## ANOVA and linear regression
+
+In linear regression, we define the model as
+$$
+y_i = \beta_0 + \sum_{j=1}^p \beta_j x_{ij} + \varepsilon_i,
+$$
+
+where $p$ is the number of covariates in $X$.
+
+
+## ANOVA and linear regression
+
+In matrix notation:
+$$
+\begin{bmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_{i} \\
+y_{i+1} \\
+\vdots \\
+y_{n-1} \\
+y_{n} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 0 & 0 \\
+1 & 0 & 0 \\
+\vdots \\
+1 & 1 & 0 \\
+1 & 1 & 0 \\
+\vdots \\
+1 & 0 & 1 \\
+1 & 0 & 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\beta_0 \\
+\beta_1 \\
+\beta_2
+\end{bmatrix}
++
+\begin{bmatrix}
+\varepsilon_1 \\
+\varepsilon_2 \\
+\vdots \\
+\varepsilon_{i} \\
+\varepsilon_{i+1} \\
+\vdots \\
+\varepsilon_{n-1} \\
+\varepsilon_{n} \\
+\end{bmatrix}
+$$
+
+
+
+## ANOVA and linear regression
+
+Mathematically, we can see that 
+$$
+y = \beta_0 X^{(1)} + \beta_1 X^{(2)} + \beta_2 X^{(3)} + \varepsilon,
+$$
+where $X^{(j)}$ indicates the $j$-th column of the design matrix. 
+
+Hence,
+$$
+y_i = 
+\begin{cases}
+\beta_0 &\text{if obs. } i \text{ is in group 1} \\
+\beta_0 + \beta_1 & \text{if obs. } i \text{ is in group 2} \\
+\beta_0 + \beta_2 & \text{if obs. } i \text{ is in group 3}
+\end{cases}
+$$
+
+## ANOVA and linear regression
+
+It is now easy to see that:
+
+- $\mu_1 = \beta_0$, i.e., the mean of the _reference group_;
+
+- $\mu_2 = \beta_0 + \beta_1 \implies \beta_1 = \mu_2 - \mu_1$;
+
+- $\mu_3 = \beta_0 + \beta_2 \implies \beta_2 = \mu_3 - \mu_1$;
+
+This gives an intuitive interpretation of the regression coefficients in the case of dummy variables.
+
+## ANOVA and linear regression
+
+We can check this in R.
+
+```{r, echo=TRUE}
+mtcars |> group_by(cyl) |> summarize(mean(mpg))
+
+unname(c(fit$coefficients[1], 
+fit$coefficients[1] + fit$coefficients[2],
+fit$coefficients[1] + fit$coefficients[3]))
+```
+
+## Contrasts
+
+But what is the average difference between the MPG of 6 and 8 cylinder cars? 
+
+Is this difference statistically significant?
+
+To answer this question, we need to compute a linear combination of the parameters, called _a contrast_.
+
+In fact,
+$$
+\mu_3 - \mu_2 = (\beta_0 + \beta_2) - (\beta_0 + \beta_1) = \beta_2 - \beta_1
+$$
+
+We can apply the usual t-test to test the significance of _any linear combination of the coefficients_.
+
+**Add example in R**
+
+## Advantages of linear modeling
+
+The advantage of the linear model formulation is that we can now include multiple covariates, including continuous ones, and even interactions.
+
+```{r}
+mtcars |>
+    ggplot(aes(x = wt, y = mpg, group = factor(cyl), color = factor(cyl))) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+## Including weight in the model {.smaller}
+
+If we include weight in the model, we have to include an additional column in the design matrix.
+
+$$
+\begin{bmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_{i} \\
+y_{i+1} \\
+\vdots \\
+y_{n-1} \\
+y_{n} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 0 & 0 & w_1\\
+1 & 0 & 0 & w_2\\
+\vdots \\
+1 & 1 & 0 & w_i\\
+1 & 1 & 0 & w_{i+1}\\
+\vdots \\
+1 & 0 & 1 & w_{n-1}\\
+1 & 0 & 1 & w_n\\
+\end{bmatrix}
+\begin{bmatrix}
+\beta_0 \\
+\beta_1 \\
+\beta_2 \\
+\beta_3
+\end{bmatrix}
++
+\begin{bmatrix}
+\varepsilon_1 \\
+\varepsilon_2 \\
+\vdots \\
+\varepsilon_{i} \\
+\varepsilon_{i+1} \\
+\vdots \\
+\varepsilon_{n-1} \\
+\varepsilon_{n} \\
+\end{bmatrix}
+$$
+
+## Including weight in the model
+
+Now we have:
+$$
+y_i = 
+\begin{cases}
+\beta_0 + \beta_3 w_i &\text{if obs. } i \text{ is in group 1} \\
+\beta_0 + \beta_1 + \beta_3 w_i & \text{if obs. } i \text{ is in group 2} \\
+\beta_0 + \beta_2 + \beta_3 w_i & \text{if obs. } i \text{ is in group 3}
+\end{cases}
+$$
+
+This means that the relationship between MPG and weight has the same slope across groups, but start from a different intercept.
+
+## Including weight in the model
+
+\scriptsize
+
+```{r}
+fit2 <- lm(mpg ~ factor(cyl) + wt, data = mtcars)
+summary(fit2)
+```
+
+
+## Including interactions {.smaller}
+
+If we include the interactions in the model, we have to include two additional columns in the design matrix, which are obtained by multiplying the two relative columns.
+
+$$
+\begin{bmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_{i} \\
+y_{i+1} \\
+\vdots \\
+y_{n-1} \\
+y_{n} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 0 & 0 & w_1 & 0 & 0\\
+1 & 0 & 0 & w_2 & 0 & 0\\
+\vdots \\
+1 & 1 & 0 & w_i & w_i & 0\\
+1 & 1 & 0 & w_{i+1} & w_{i+1} & 0\\
+\vdots \\
+1 & 0 & 1 & w_{n-1} & 0 & w_{n-1} \\
+1 & 0 & 1 & w_n & 0 & w_n\\
+\end{bmatrix}
+\begin{bmatrix}
+\beta_0 \\
+\beta_1 \\
+\beta_2 \\
+\beta_3 \\
+\beta_4 \\
+\beta_5
+\end{bmatrix}
++
+\begin{bmatrix}
+\varepsilon_1 \\
+\varepsilon_2 \\
+\vdots \\
+\varepsilon_{i} \\
+\varepsilon_{i+1} \\
+\vdots \\
+\varepsilon_{n-1} \\
+\varepsilon_{n} \\
+\end{bmatrix}
+$$
+
+## Including interactions
+
+\scriptsize
+
+```{r}
+fit3 <- lm(mpg ~ factor(cyl) * wt, data = mtcars)
+summary(fit3)
+```
+
+## Including interactions
+
+Now we have:
+$$
+y_i = 
+\begin{cases}
+\beta_0 + \beta_3 w_i &\text{if obs. } i \text{ is in group 1} \\
+(\beta_0 + \beta_1) + (\beta_3 + \beta_4) w_i & \text{if obs. } i \text{ is in group 2} \\
+(\beta_0 + \beta_2) + (\beta_3 + \beta_5) w_i & \text{if obs. } i \text{ is in group 3}
+\end{cases}
+$$
+
+This means that the relationship between MPG and weight changes both in terms of slope and intercept across groups.
+
+::: {.callout-important}
+How do you interpret the parameters in this case?
+:::
+
+## Contrasts
+
+## Contrasts
+
+A more formal definition (see bcb)
+
+# Hypothesis testing
+
+## The t-test and its friends
 
 Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).
+
+## Paired data
+

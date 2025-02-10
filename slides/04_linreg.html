@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="04_linreg_files/libs/clipboard/clipboard.min.js"></script>
+<script src="04_linreg_files/libs/quarto-html/tabby.min.js"></script>
+<script src="04_linreg_files/libs/quarto-html/popper.min.js"></script>
+<script src="04_linreg_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="04_linreg_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="04_linreg_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="04_linreg_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Davide Risso">
+  <title>Linear models</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="04_linreg_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="04_linreg_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="04_linreg_files/libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link href="04_linreg_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="04_linreg_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="04_linreg_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="04_linreg_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Linear models</h1>
+  <p class="subtitle">Advanced Statistics and Data Analysis</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Davide Risso 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="linear-algebra" class="title-slide slide level1 center">
+<h1>Linear Algebra</h1>
+
+</section>
+<section id="linear-algebra-1" class="slide level2">
+<h2>Linear Algebra</h2>
+<p>Linear algebra, also called matrix algebra, and its mathematical notation greatly facilitates the understanding of the concepts behind linear models.</p>
+<div class="fragment">
+<p>Here, we spend some time to review key concepts of linear algebra, with particular focus on matrix operations and matrix notation.</p>
+</div>
+<div class="fragment">
+<p>We will also see how to perform matrix operations in R.</p>
+</div>
+</section>
+<section id="matrix-notation" class="slide level2">
+<h2>Matrix Notation</h2>
+<p>Linear algebra was created to solve systems of linear equations, e.g.</p>
+<p><span class="math display">\[\begin{align*}
+a + b + c &amp;= 6\\
+3a - 2b + x &amp;= 2\\
+2a + b - c &amp;=1
+\end{align*}\]</span></p>
+<p>which becomes, in matrix notation,</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+1 &amp; 1 &amp; 1 \\
+3 &amp; -2 &amp; 1 \\
+2 &amp; 1 &amp; -1
+\end{bmatrix}
+\begin{bmatrix}
+a \\
+b \\
+c
+\end{bmatrix}
+=
+\begin{bmatrix}
+6 \\
+2 \\
+1
+\end{bmatrix}
+\]</span></p>
+</section>
+<section id="matrix-notation-1" class="slide level2">
+<h2>Matrix Notation</h2>
+<p>The system is solved by</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+a \\
+b \\
+c
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 &amp; 1 &amp; 1 \\
+3 &amp; -2 &amp; 1 \\
+2 &amp; 1 &amp; -1
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+6 \\
+2 \\
+1
+\end{bmatrix}
+\]</span></p>
+<p>where the <span class="math inline">\(-1\)</span> denotes the inverse of the matrix.</p>
+<p>We can borrow this notation to solve linear models in statistics.</p>
+</section>
+<section id="notation" class="slide level2">
+<h2>Notation</h2>
+<p>We define vectors as <em>column vectors</em>, i.e., matrices with just one column.</p>
+<p>This means that all the operations defined for matrices will be applicable to vectors as well.</p>
+<p>We can write matrices by either concatenating vectors or by explicitly writing their elements.</p>
+<p><span class="math display">\[
+Y =
+\begin{bmatrix}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_n
+\end{bmatrix}
+\quad
+\quad
+X = [X_1 \, X_2] =
+\begin{bmatrix}
+X_{1,1} &amp; X_{1, 2}\\
+X_{2,1} &amp; X_{2, 2}\\
+\vdots &amp; \vdots\\
+X_{n,1} &amp; X_{n,2}
+\end{bmatrix}
+\]</span></p>
+</section>
+<section id="vectors-matrices" class="slide level2">
+<h2>Vectors, matrices</h2>
+<p>We already know how to create these objects in R</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">6</span>)</span>
+<span id="cb1-2"><a href=""></a>x2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">2</span>)</span>
+<span id="cb1-3"><a href=""></a><span class="fu">cbind</span>(x1, x2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     x1 x2
+[1,]  1  7
+[2,]  4  7
+[3,]  6  2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">matrix</span>(<span class="at">data =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">2</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    7
+[2,]    4    7
+[3,]    6    2</code></pre>
+</div>
+</div>
+</section>
+<section id="matrix-operations" class="slide level2">
+<h2>Matrix operations</h2>
+<p>Here, we review some of the operations that can be performed on matrices, both in mathematical terms and in R.</p>
+<ul>
+<li class="fragment">Multiplication by a scalar</li>
+<li class="fragment">Transposition</li>
+<li class="fragment">Matrix multiplication</li>
+<li class="fragment">Inverse</li>
+</ul>
+</section>
+<section id="multiplication-by-a-scalar" class="slide level2">
+<h2>Multiplication by a scalar</h2>
+<p>This is the simplest operation: each element of the matrix is multiplied by the scalar.</p>
+<p>R automatically recognize a scalar and a matrix and “does the right thing.”</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>a <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb5-2"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">data =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">2</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb5-3"><a href=""></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    7
+[2,]    4    7
+[3,]    6    2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>a <span class="sc">*</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    2   14
+[2,]    8   14
+[3,]   12    4</code></pre>
+</div>
+</div>
+</section>
+<section id="the-transpose" class="slide level2">
+<h2>The transpose</h2>
+<p>Transposition is a simple operation that simply changes columns to rows. We use <span class="math inline">\(\top\)</span> sign to denote the transposed of a matrix.</p>
+<p><span class="math display">\[
+X^\top =
+\begin{bmatrix}
+X_{1,1} &amp; \ldots &amp; X_{n, 1}\\
+X_{1,2} &amp; \ldots &amp;X_{n, 2}\\
+\vdots &amp; \ddots &amp;\vdots\\
+X_{1,p} &amp; \ldots &amp; X_{n,p}
+\end{bmatrix}
+\]</span></p>
+</section>
+<section id="the-transpose-1" class="slide level2">
+<h2>The transpose</h2>
+<p>In R, we can use the <code>t()</code> operator to transpose a matrix.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">t</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    4    6
+[2,]    7    7    2</code></pre>
+</div>
+</div>
+</section>
+<section id="matrix-multiplication" class="slide level2">
+<h2>Matrix multiplication</h2>
+<p>If <span class="math inline">\(A\)</span> is an <span class="math inline">\(n \times m\)</span> matrix and <span class="math inline">\(B\)</span> is an <span class="math inline">\(m \times p\)</span> matrix, their matrix product <span class="math inline">\(X = AB\)</span> is an <span class="math inline">\(n \times p\)</span> matrix, in which each row of <span class="math inline">\(A\)</span> is multiplied by each column of <span class="math inline">\(B\)</span> and summed.</p>
+<p>In R, we can use the <code>%*%</code> operator.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">nrow=</span><span class="dv">2</span>)</span>
+<span id="cb11-2"><a href=""></a>x <span class="sc">%*%</span> y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]   47   21
+[2,]   62   42
+[3,]   42   46</code></pre>
+</div>
+</div>
+</section>
+<section id="properties-of-matrix-multiplication" class="slide level2">
+<h2>Properties of matrix multiplication</h2>
+<p>In general, the matrix multiplication operator is</p>
+<ol type="1">
+<li class="fragment">Not commutative: <span class="math inline">\(A \, B \neq B \, A.\)</span></li>
+<li class="fragment">Distributive over matrix addition: <span class="math inline">\(A(B+C) = AB + AC.\)</span></li>
+<li class="fragment">Compatible with scalar multiplication: <span class="math inline">\(a(AB) = (aA)B\)</span></li>
+<li class="fragment">Transposition: <span class="math inline">\((AB)^\top = B^\top A^\top.\)</span></li>
+</ol>
+</section>
+<section id="the-identity-matrix" class="slide level2">
+<h2>The identity matrix</h2>
+<p>For scalars we have the number <span class="math inline">\(1\)</span>, a number such that <span class="math inline">\(1 x = x\)</span> for any <span class="math inline">\(x\)</span>.</p>
+<p>The analogous for matrices, is the <em>identity matrix</em> <span class="math display">\[
+I =
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; \ldots &amp; 0 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; \ldots &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 1 &amp; \ldots &amp; 0 &amp; 0\\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots\\
+0 &amp; 0 &amp; 0 &amp; \ldots &amp; 1 &amp; 0\\
+0 &amp; 0 &amp; 0 &amp; \ldots &amp; 0 &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p>By definition, for any matrix <span class="math inline">\(X\)</span>, <span class="math inline">\(X \, I = X\)</span>.</p>
+</section>
+<section id="the-identity-matrix-1" class="slide level2">
+<h2>The identity matrix</h2>
+<p>In R we can use the function <code>diag()</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>x <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    7
+[2,]    4    7
+[3,]    6    2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">diag</span>(<span class="dv">3</span>) <span class="sc">%*%</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    7
+[2,]    4    7
+[3,]    6    2</code></pre>
+</div>
+</div>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>Note the different behavior of <code>diag(x)</code> when <code>x</code> is a scalar or a vector!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-inverse" class="slide level2">
+<h2>The inverse</h2>
+<p>A matrix is called <em>square</em> if it has the same number of rows and columns.</p>
+<p>The inverse of a square matrix <span class="math inline">\(X\)</span>, denoted by <span class="math inline">\(X^{-1}\)</span> is the matrix that when multiplied by <span class="math inline">\(X\)</span> returns the identity matrix.</p>
+<p><span class="math display">\[
+X \, X^{-1} = I.
+\]</span></p>
+<p>Note that not all matrices have a defined inverse.</p>
+<p>We will see later how this plays a role for linear models.</p>
+</section>
+<section id="the-inverse-1" class="slide level2">
+<h2>The inverse</h2>
+<p>If the inverse exists, it can be computed using <code>solve()</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    5    7
+[2,]    6    2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="fu">solve</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        [,1]     [,2]
+[1,] -0.0625  0.21875
+[2,]  0.1875 -0.15625</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a>y <span class="sc">%*%</span> <span class="fu">solve</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]         [,2]
+[1,]    1 2.220446e-16
+[2,]    0 1.000000e+00</code></pre>
+</div>
+</div>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>The <code>solve()</code> function is numerically unstable and should be used with caution.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="using-matrix-algebra-in-statistics" class="slide level2">
+<h2>Using matrix algebra in statistics</h2>
+<ul>
+<li class="fragment"><p>Why do we need linear algebra and matrix notation in statistics?</p></li>
+<li class="fragment"><p>Linear algebra is a very convenient and compact mathematical way of formalizing many of the concepts of statistics, especially with regards to linear models.</p></li>
+<li class="fragment"><p>Let’s focus on a couple of simple examples.</p></li>
+</ul>
+</section>
+<section id="example-the-mean" class="slide level2">
+<h2>Example: The mean</h2>
+<ul>
+<li class="fragment"><p>Assume that we have a vector <span class="math inline">\(X\)</span> that contains the data for a sample of <span class="math inline">\(n\)</span> observations. We can use matrix notation to denote the sample mean of that vector.</p></li>
+<li class="fragment"><p>Define a <span class="math inline">\(n \times 1\)</span> matrix <span class="math inline">\(\mathbf{1} = [1 \, \ldots \, 1]^\top\)</span>.</p></li>
+<li class="fragment"><p>We can compute the mean simply as <span class="math inline">\(\frac{1}{n} \mathbf{1}^\top X\)</span>. <span class="math display">\[
+\frac{1}{n} \mathbf{1}^\top X = \frac{1}{n} [1 \, \ldots \, 1]
+\begin{bmatrix}
+X_1\\
+\vdots\\
+X_n
+\end{bmatrix}
+= \frac{1}{n} \sum_{i=1}^n X_i = \bar{X}.
+\]</span></p></li>
+</ul>
+</section>
+<section id="example-the-mean-1" class="slide level2">
+<h2>Example: The mean</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb23-2"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb23-3"><a href=""></a><span class="fu">mean</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3554733</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>A <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, n)</span>
+<span id="cb25-2"><a href=""></a><span class="dv">1</span><span class="sc">/</span>n <span class="sc">*</span> <span class="fu">t</span>(A) <span class="sc">%*%</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]
+[1,] 0.3554733</code></pre>
+</div>
+</div>
+</section>
+<section id="example-the-variance" class="slide level2">
+<h2>Example: The variance</h2>
+<p>The same is true for the variance: We can simply multiply the centered matrix by its transpose to compute it.</p>
+<p><span class="math display">\[
+R = X - \bar{X} =
+\begin{bmatrix}
+X_1 - \bar{X}\\
+\vdots\\
+X_n - \bar{X}
+\end{bmatrix}
+\]</span></p>
+<p>Then, <span class="math display">\[
+\frac{1}{n-1} R^\top R = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2.
+\]</span></p>
+</section>
+<section id="example-the-variance-1" class="slide level2">
+<h2>Example: The variance</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">var</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7857384</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>r <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb29-2"><a href=""></a><span class="dv">1</span><span class="sc">/</span>(n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">t</span>(r) <span class="sc">%*%</span> r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]
+[1,] 0.7857384</code></pre>
+</div>
+</div>
+</section>
+<section id="the-crossprod-function" class="slide level2">
+<h2>The <code>crossprod</code> function</h2>
+<p>The operation <span class="math inline">\(X^\top Y\)</span> is so important in statistics that R has a shortcut function for it, the <code>crossprod()</code> function.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb31-2"><a href=""></a>B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb31-3"><a href=""></a><span class="fu">t</span>(A) <span class="sc">%*%</span> B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]       [,2]
+[1,] -0.1496215  0.6568237
+[2,] -1.0055909 -2.2075735</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="fu">crossprod</span>(A, B)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]       [,2]
+[1,] -0.1496215  0.6568237
+[2,] -1.0055909 -2.2075735</code></pre>
+</div>
+</div>
+</section>
+<section id="the-crossprod-function-1" class="slide level2">
+<h2>The <code>crossprod</code> function</h2>
+<p>The <code>crossprod</code> function can be used to compute the variance.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">var</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7857384</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a><span class="fu">crossprod</span>(r)<span class="sc">/</span>(n<span class="dv">-1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]
+[1,] 0.7857384</code></pre>
+</div>
+</div>
+<p>Note that <code>crossprod(r)</code> is a further shortcut for <code>crossprod(r, r)</code>.</p>
+</section></section>
+<section>
+<section id="least-squares-regression" class="title-slide slide level1 center">
+<h1>Least-squares regression</h1>
+
+</section>
+<section id="least-squares-regression-1" class="slide level2">
+<h2>Least-Squares Regression</h2>
+<ul>
+<li class="fragment"><p>If we want to measure the linear association between two continuous variables, we can use the <em>correlation coefficient</em>.</p></li>
+<li class="fragment"><p>An alternative way to look at the association between two variables is to <em>determine the best line that describe their relationship</em>.</p></li>
+<li class="fragment"><p>What do we mean by “best”? In the context of regression, “best” means the line that minimizes <em>the sum of squared distances</em>.</p></li>
+</ul>
+</section>
+<section id="a-simple-example" class="slide level2">
+<h2>A simple example</h2>
+
+<img data-src="04_linreg_files/figure-revealjs/unnamed-chunk-11-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="a-simple-example-1" class="slide level2">
+<h2>A simple example</h2>
+
+<img data-src="04_linreg_files/figure-revealjs/unnamed-chunk-12-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="a-simple-example-2" class="slide level2">
+<h2>A simple example</h2>
+
+<img data-src="04_linreg_files/figure-revealjs/unnamed-chunk-13-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="a-simple-example-3" class="slide level2">
+<h2>A simple example</h2>
+
+<img data-src="04_linreg_files/figure-revealjs/unnamed-chunk-14-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="a-simple-example-4" class="slide level2">
+<h2>A simple example</h2>
+
+<img data-src="04_linreg_files/figure-revealjs/unnamed-chunk-15-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="a-simple-example-5" class="slide level2">
+<h2>A simple example</h2>
+
+<img data-src="04_linreg_files/figure-revealjs/unnamed-chunk-16-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="least-squares-regression-2" class="slide level2">
+<h2>Least-Squares Regression</h2>
+<p>Mathematically, we can describe the linear relation between the two quantities <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> as <span class="math display">\[
+\hat{y} = \alpha + \beta x.
+\]</span></p>
+<p>Finding the best line corresponds to minimize the <em>sum of squared distances</em> between the values of <span class="math inline">\(y\)</span> and the values of <span class="math inline">\(\alpha + \beta x\)</span>, i.e. <span class="math display">\[
+\min_{\alpha, \beta} \sum_{i=1}^n (y_i - (\alpha + \beta x_i))^2.
+\]</span></p>
+</section>
+<section id="least-squares-regression-3" class="slide level2 smaller">
+<h2>Least-Squares Regression</h2>
+<p>To minimize this quantity, as usual, we compute the partial derivatives.</p>
+<p><span class="math display">\[\begin{align*}
+\frac{\partial}{\partial \alpha} &amp;= -2 \sum_{i=1}^n (y_i - \alpha - \beta x_i) = 0,\\
+\frac{\partial}{\partial \beta} &amp;= -2 \sum_{i=1}^n (y_i - \alpha - \beta x_i) (x_i) = 0,\\
+\end{align*}\]</span></p>
+<div class="fragment">
+<p>We can show that <span class="math display">\[\begin{align*}
+\alpha &amp;= \bar{y} - \beta \bar{x},\\
+\beta &amp;= \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)}.
+\end{align*}\]</span></p>
+</div>
+</section>
+<section id="multiple-regression" class="slide level2">
+<h2>Multiple Regression</h2>
+<p>The ideas of linear regression can be applied in the case where we have more than one covariate.</p>
+<p>Instead of fitting the line <span class="math inline">\(\hat{y} = \alpha + \beta x\)</span>, we can consider the more general form <span class="math display">\[
+\hat{y} = \alpha + \beta_1 x_1 + \ldots + \beta_p x_p,
+\]</span> where <span class="math inline">\(p\)</span> is the number of covariates and <span class="math inline">\(x_1, \ldots, x_p\)</span> are <span class="math inline">\(p\)</span> variables.</p>
+<p>For symmetry, the intercept <span class="math inline">\(\alpha\)</span> is often denoted with <span class="math inline">\(\beta_0\)</span>.</p>
+</section>
+<section id="multiple-regression-matrix-notation" class="slide level2">
+<h2>Multiple Regression: matrix notation</h2>
+<p>Given a set of <span class="math inline">\(n\)</span> independent observations, and <span class="math inline">\(p\)</span> covariates, with <span class="math inline">\(n &gt; p\)</span>, the linear regression model is defined, in matrix notation, as <span class="math display">\[
+\hat Y = X \beta,
+\]</span> where</p>
+<ul>
+<li class="fragment"><span class="math inline">\(Y\)</span> is a <span class="math inline">\(n \times 1\)</span> vector containing the response variable.</li>
+<li class="fragment"><span class="math inline">\(X\)</span> is a <span class="math inline">\(n \times p\)</span> matrix of covariates.</li>
+<li class="fragment"><span class="math inline">\(\beta\)</span> is a <span class="math inline">\(p \times 1\)</span> vector of regression parameters.</li>
+</ul>
+</section>
+<section id="least-squares-multiple-regression" class="slide level2 smaller">
+<h2>Least squares: multiple regression</h2>
+<p>The least-square equation is easier in matrix notation:</p>
+<p><span class="math display">\[
+(Y - X\beta)^\top (Y - X\beta)
+\]</span></p>
+<p>The derivative in matrix notation is <span class="math display">\[
+2 X^\top (Y - X\beta) = 0
+\]</span> which leads to <span class="math display">\[
+X^\top X \beta = X^\top Y
+\]</span> and <span class="math display">\[
+\hat\beta = (X^\top X)^{-1}X^\top Y
+\]</span></p>
+</section>
+<section id="example-cherry-trees" class="slide level2">
+<h2>Example: Cherry trees</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a><span class="fu">head</span>(trees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Girth Height Volume
+1   8.3     70   10.3
+2   8.6     65   10.3
+3   8.8     63   10.2
+4  10.5     72   16.4
+5  10.7     81   18.8
+6  10.8     83   19.7</code></pre>
+</div>
+</div>
+</section>
+<section id="example-cherry-trees-1" class="slide level2">
+<h2>Example: Cherry trees</h2>
+
+<img data-src="04_linreg_files/figure-revealjs/unnamed-chunk-18-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="example-cherry-trees-2" class="slide level2">
+<h2>Example: Cherry trees</h2>
+<p>For the Cherry tree data, assume to model the volume (<span class="math inline">\(y\)</span>) of the trees as a function of girth (<span class="math inline">\(x_1\)</span>) and height (<span class="math inline">\(x_2\)</span>): <span class="math display">\[
+Y_i=\beta_0+ \beta_1 x_{i1}+ \beta_2 x_{i2}+\varepsilon_i\,,\,\,\, i=1, \ldots, 31.
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>y <span class="ot">&lt;-</span> trees<span class="sc">$</span>Volume</span>
+<span id="cb41-2"><a href=""></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, trees<span class="sc">$</span>Girth, trees<span class="sc">$</span>Height)</span>
+<span id="cb41-3"><a href=""></a><span class="fu">head</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10.3 10.3 10.2 16.4 18.8 19.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">head</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1  8.3   70
+[2,]    1  8.6   65
+[3,]    1  8.8   63
+[4,]    1 10.5   72
+[5,]    1 10.7   81
+[6,]    1 10.8   83</code></pre>
+</div>
+</div>
+</section>
+<section id="example-cherry-trees-3" class="slide level2">
+<h2>Example: Cherry trees</h2>
+<p>This yields</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">crossprod</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       [,1]     [,2]     [,3]
+[1,]   31.0   410.70   2356.0
+[2,]  410.7  5736.55  31524.7
+[3,] 2356.0 31524.70 180274.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a><span class="fu">crossprod</span>(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+[1,]   935.30
+[2,] 13887.86
+[3,] 72962.60</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href=""></a><span class="fu">solve</span>(<span class="fu">crossprod</span>(X)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            [,1]
+[1,] -57.9876589
+[2,]   4.7081605
+[3,]   0.3392512</code></pre>
+</div>
+</div>
+</section>
+<section id="example-cherry-trees-4" class="slide level2">
+<h2>Example: Cherry trees</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(Volume <span class="sc">~</span> Girth <span class="sc">+</span> Height, <span class="at">data =</span> trees)</span>
+<span id="cb51-2"><a href=""></a>fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Volume ~ Girth + Height, data = trees)
+
+Coefficients:
+(Intercept)        Girth       Height  
+   -57.9877       4.7082       0.3393  </code></pre>
+</div>
+</div>
+</section>
+<section id="regression-as-a-statistical-model" class="slide level2">
+<h2>Regression as a statistical model</h2>
+<ul>
+<li class="fragment"><p>Up until now, we have only defined the regression line as a mathematical entity that we can compute starting from a vector <span class="math inline">\(y\)</span> and a matrix <span class="math inline">\(X\)</span>.</p></li>
+<li class="fragment"><p>However, in inferential statistics, both <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span> are random variables, and what we observe are the values of our random sample from the population.</p></li>
+<li class="fragment"><p>This means that what we want to <em>infer</em> the true relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> in the population starting from the relationship that we observe in the sample.</p></li>
+</ul>
+</section>
+<section id="regression-as-a-statistical-model-1" class="slide level2">
+<h2>Regression as a statistical model</h2>
+<ul>
+<li class="fragment"><p>In other words, there is a <em>true parameter</em> <span class="math inline">\(\beta\)</span> in the population, and we need to <em>estimate</em> it with the values of our sample.</p></li>
+<li class="fragment"><p>In the context of inference, regression is often referred to as <em>the linear model</em>.</p></li>
+</ul>
+</section></section>
+<section>
+<section id="linear-models" class="title-slide slide level1 center">
+<h1>Linear models</h1>
+
+</section>
+<section id="simple-linear-models" class="slide level2">
+<h2>Simple linear Models</h2>
+<ul>
+<li class="fragment"><p>Suppose that, on <span class="math inline">\(n\)</span> cases, we observe a continuous response <span class="math inline">\(y_i\)</span> and one explanatory variable <span class="math inline">\(x_{i}\)</span>.</p></li>
+<li class="fragment"><p>A simple linear model postulates that the observations are realizations of independent rv’s <span class="math inline">\(Y_i\)</span> such that: <span class="math display">\[
+E(Y_i | X_i = x_i)= \beta_0  +  \beta_1 x_{i}, \,\,\,i=1,\,\,\,\ldots,n.
+\]</span></p></li>
+<li class="fragment"><p>Therefore, observations are realizations of independent rv’s whose averages lie on the straight line <span class="math inline">\(\beta_0 +  \beta_1 x\)</span>.</p></li>
+</ul>
+</section>
+<section id="simple-linear-regression" class="slide level2">
+<h2>Simple linear regression</h2>
+<p>Another way to look at this is: <span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_{i} + \varepsilon_i\,\,\,i=1,\ldots,n,
+\]</span> where <span class="math inline">\(\varepsilon_i\)</span> are random errors with mean 0.</p>
+<div class="fragment">
+<p>Often, it is assumed that the variance of the error terms, for all <span class="math inline">\(i=1,\ldots,n\)</span>, is the same, i.e., errors are <em>homoschedastic</em>.</p>
+</div>
+</section>
+<section id="interpretation-of-slope" class="slide level2">
+<h2>Interpretation of slope</h2>
+<p>Consider two subjects:</p>
+<div>
+<ul>
+<li>A has covariate value <span class="math inline">\(x_{A}\)</span></li>
+<li>B has covariate value <span class="math inline">\(x_{B}=x_{A}+1\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>The expected difference in the response of the two subjects is: <span class="math display">\[
+E(Y_B) - E(Y_A) = \beta_0  + \beta_1 (x_{A}+1) - \beta_0  - \beta_1 x_{A}=\beta_1,
+\]</span> i.e., <span class="math inline">\(\beta_1\)</span> is the effect of a one unit increase in <span class="math inline">\(x.\)</span></p>
+</div>
+</section>
+<section id="multiple-linear-regression" class="slide level2">
+<h2>Multiple linear regression</h2>
+<p>In multiple linear regression, rather than one predictor, we have more than one, <span class="math inline">\(p\)</span>, say. <span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_{i1} + \ldots +\beta_p x_{ip} + \varepsilon_i\,\,\,i=1,\ldots,n
+\]</span></p>
+<p>or equivalently <span class="math display">\[Y = X\beta + \varepsilon.\]</span></p>
+</section>
+<section id="interpretation-of-parameters" class="slide level2 smaller">
+<h2>Interpretation of parameters</h2>
+<p>Consider two subjects:</p>
+<div>
+<ul>
+<li>A has covariate values <span class="math inline">\(x_{A1},x_{A2}, \ldots, x_{Ap}\)</span></li>
+<li>B has covariate values <span class="math inline">\(x_{A1},x_{A2}+1, \ldots, x_{Ap}\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>Expected difference in the response of the two subjects: <span class="math display">\[
+\begin{aligned}
+E(Y_B) - E(Y_A) &amp;=&amp;\beta_0 + \beta_1 x_{A1} + \beta_2 (x_{A2}+1)+ \ldots + \beta_p x_{Ap}+\\
+&amp;&amp; - \beta_0 - \beta_1 x_{A1} - \beta_2 x_{A2}- \ldots - \beta_p x_{Ap}\\
+&amp;=&amp;\beta_2,\end{aligned}
+\]</span> i.e., <span class="math inline">\(\beta_2\)</span> is the effect of a one unit increase in <span class="math inline">\(x_2\)</span> for fixed level of the other predictors.</p>
+<p>Coefficients <span class="math inline">\(\beta_1, \ldots, \beta_p\)</span> are called (partial) regression coefficients because they “allow” for the (partial) effect of other variables.</p>
+</div>
+</section>
+<section id="the-linear-model-matrix-notation" class="slide level2">
+<h2>The linear model: matrix notation</h2>
+<p>Given a set of <span class="math inline">\(n\)</span> independent observations, and <span class="math inline">\(p\)</span> covariates, with <span class="math inline">\(n &gt; p\)</span>, the linear model is defined, in matrix notation, as <span class="math display">\[
+Y = X \beta + \varepsilon,
+\]</span> where</p>
+<ul>
+<li class="fragment"><span class="math inline">\(Y\)</span> is a <span class="math inline">\(n \times 1\)</span> vector containing the response variable.</li>
+<li class="fragment"><span class="math inline">\(X\)</span> is a <span class="math inline">\(n \times p\)</span> matrix of covariates, called the <em>design matrix</em>.</li>
+<li class="fragment"><span class="math inline">\(\beta\)</span> is a <span class="math inline">\(p \times 1\)</span> vector of regression parameters.</li>
+<li class="fragment"><span class="math inline">\(\varepsilon\)</span> is a <span class="math inline">\(n \times 1\)</span> vector of random errors.</li>
+</ul>
+</section>
+<section id="the-linear-model" class="slide level2">
+<h2>The linear model</h2>
+<p>As with all the statistical models, it is always a good idea to identify the observed / unobserved quantities, as well as the random / fixed quantities.</p>
+<p>In this case,</p>
+<ul>
+<li class="fragment"><span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are <em>observed random variables</em>.</li>
+<li class="fragment"><span class="math inline">\(\varepsilon\)</span> is an <em>unobserved random variable</em>.</li>
+<li class="fragment"><span class="math inline">\(\beta\)</span> is a set of <em>unknown parameters</em> that we will need to estimate.</li>
+</ul>
+</section>
+<section id="the-linear-model-1" class="slide level2">
+<h2>The linear model</h2>
+<p>In some books, <span class="math inline">\(X\)</span> is not considered a random variable, but a fixed quantity. In this course, we will consider it random, but we will <em>condition</em> our analysis to the observed values of <span class="math inline">\(X\)</span>.</p>
+<p>For practical purposes, we do not care about the random variation of <span class="math inline">\(X\)</span>.</p>
+</section>
+<section id="a-note-on-linearity" class="slide level2">
+<h2>A note on linearity</h2>
+<p>The term <em>linear</em> in the linear model refers to the linearity of the model <em>with respect to the parameter</em> <span class="math inline">\(\beta\)</span>.</p>
+<div class="fragment">
+<p>It does not imply that we have linearity in <span class="math inline">\(X\)</span> and <span class="math inline">\(X\)</span> may contain non-linear transformation of the data. For instance the following models are valid linear models.</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \varepsilon
+\]</span></p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 \log X + \varepsilon
+\]</span></p>
+</div>
+</section>
+<section id="a-note-on-the-design-matrix" class="slide level2">
+<h2>A note on the design matrix</h2>
+<p>Recall that <span class="math display">\[
+\hat\beta = (X^\top X)^{-1}X^\top Y.
+\]</span></p>
+<div class="fragment">
+<p>This means that <span class="math inline">\(X^\top X\)</span> needs to be invertible, which implies that <span class="math inline">\(X\)</span> is <em>full rank</em>.</p>
+</div>
+<div class="fragment">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p>The rank of a matrix is the number of columns that are independent of all the others.</p>
+<p>If the rank is equal to the number of columns, the matrix is said to be full rank.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>This is often referred to as the <em>non collinearity</em> condition.</p>
+</div>
+</section>
+<section id="assumptions" class="slide level2">
+<h2>Assumptions</h2>
+<p>As with all the statistical models, we need some assumptions.</p>
+<ol type="1">
+<li class="fragment">There is a linear relation between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>.</li>
+<li class="fragment">The error terms <span class="math inline">\(\varepsilon\)</span> are i.i.d. with mean 0 and constant variance:
+<ul>
+<li class="fragment"><span class="math inline">\(E[\varepsilon] = 0\)</span>;</li>
+<li class="fragment"><span class="math inline">\(Var(\varepsilon) = \sigma^2\)</span> (homoscedasticity).</li>
+</ul></li>
+<li class="fragment">The error terms <span class="math inline">\(\varepsilon\)</span> are independent of <span class="math inline">\(X\)</span>:
+<ul>
+<li class="fragment"><span class="math inline">\(\varepsilon {\perp\!\!\!\!\perp} X\)</span>.</li>
+</ul></li>
+</ol>
+</section>
+<section id="conditional-expectation" class="slide level2">
+<h2>Conditional Expectation</h2>
+<p>As a consequence of these assumptions, we can see that the conditional expectation of <span class="math inline">\(Y\)</span> is</p>
+<p><span class="math display">\[
+E[Y | X] = X\beta.
+\]</span></p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Exercise</strong></p>
+</div>
+<div class="callout-content">
+<p>Why?</p>
+</div>
+</div>
+</div>
+</section>
+<section id="why-fitting-linear-models" class="slide level2">
+<h2>Why fitting linear models</h2>
+<p><strong>Explanation</strong></p>
+<p>Here the idea is the that system under study really is (approximately) linear, and we are interested in the coefficients per se.</p>
+<p>It is often of particular interest to find a minimal set of explanatory variables.</p>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Example</strong></p>
+</div>
+<div class="callout-content">
+<p>We can use a linear model to understand the effect of a certain treatment on gene expression.</p>
+<p>We want to understand which genes are affected by the treatment and why.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="why-fitting-linear-models-1" class="slide level2">
+<h2>Why fitting linear models</h2>
+<p><strong>Prediction</strong></p>
+<p>Here a model is a convenient means to create predictions for new cases.</p>
+<p>The only interest is in the quality of the predictions.</p>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Example</strong></p>
+</div>
+<div class="callout-content">
+<p>We can use a linear model to predict whether a patient will react to a therapy based on their gene expression</p>
+<p>We want to get the best possible prediction, we do not care much about which genes are involved.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="to-solve-now" class="slide level2">
+<h2>To solve now</h2>
+<ol type="1">
+<li class="fragment"><p>Fitting the model: how do we estimate <span class="math inline">\((\beta, \sigma^2)\)</span>?</p></li>
+<li class="fragment"><p>Inference: what can we say about <span class="math inline">\(\beta\)</span> (rarely, about <span class="math inline">\(\sigma^2\)</span>) based on the <span class="math inline">\(n\)</span> observations?</p></li>
+</ol>
+</section></section>
+<section>
+<section id="ordinary-least-squares" class="title-slide slide level1 center">
+<h1>Ordinary Least Squares</h1>
+
+</section>
+<section id="ordinary-least-squares-1" class="slide level2">
+<h2>Ordinary Least Squares</h2>
+<p>We do not observe the true parameter <span class="math inline">\(\beta\)</span> and we need to estimate it from the data.</p>
+<div class="fragment">
+<p>Luckily, we already know how to estimate <span class="math inline">\(\beta\)</span>, as the value that minimizes the <em>sum of the squares of the differences between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\beta\)</span>.</em></p>
+</div>
+<div class="fragment">
+<p>The value of <span class="math inline">\(\beta\)</span> such that <span class="math display">\[
+\hat\beta=(X^\top X)^{-1}X^\top y.
+\]</span> is called the <em>ordinary least squares</em> (OLS) estimator.</p>
+</div>
+</section>
+<section id="ordinary-least-squares-2" class="slide level2">
+<h2>Ordinary Least Squares</h2>
+<p>To estimate the variance of the random terms, it seems natural to consider the variability of the residuals. An unbiased estimator for <span class="math inline">\(\sigma^2\)</span> is given by <span class="math display">\[
+s^2=\displaystyle\frac{\sum(y_i - \hat y_i)^2}{n-p}.
+\]</span></p>
+</section>
+<section id="ordinary-least-squares-3" class="slide level2">
+<h2>Ordinary Least Squares</h2>
+<p>In matrix form we have that: <span class="math display">\[
+\hat y = X\hat\beta,
+\]</span></p>
+<p><span class="math display">\[
+e=y - \hat y,
+\]</span></p>
+<p><span class="math display">\[
+s^2=e^\top e/(n-p)=(y - \hat y)^\top(y - \hat y)/(n-p).
+\]</span></p>
+</section>
+<section id="why-least-squares" class="slide level2">
+<h2>Why least squares?</h2>
+<p>We can prove that <span class="math inline">\(\hat\beta\)</span> is conditionally unbiased, i.e., <span class="math display">\[
+E[\hat \beta | X] = \beta.
+\]</span></p>
+<p>The variance of the OLS estimator is</p>
+<p><span class="math display">\[
+Var(\hat\beta | X) = \sigma^2 (X^\top X)^{-1}.
+\]</span></p>
+</section>
+<section id="the-ols-estimator-is-conditionally-unbiased" class="slide level2">
+<h2>The OLS estimator is conditionally unbiased</h2>
+<p><span class="math display">\[\begin{align*}
+\hat\beta &amp;= (X^\top X)^{-1} X^\top (X\beta + \varepsilon)\\
+  &amp;= (X^\top X)^{-1} X^\top X\beta + (X^\top X)^{-1} X^\top \varepsilon\\
+  &amp;= \beta + (X^\top X)^{-1} X^\top \varepsilon.
+\end{align*}\]</span></p>
+<p>Hence, <span class="math display">\[
+\hat\beta = \beta + \eta \quad \text{where} \quad \eta = (X^\top X)^{-1} X^\top \varepsilon.
+\]</span></p>
+</section>
+<section id="the-ols-estimator-is-conditionally-unbiased-1" class="slide level2">
+<h2>The OLS estimator is conditionally unbiased</h2>
+<p>To show that <span class="math inline">\(E[\hat \beta | X] = \beta\)</span>, we need to show that <span class="math inline">\(E[\eta | X] = 0.\)</span></p>
+<p><span class="math display">\[
+E[\eta | X] = (X^\top X)^{-1} X^\top E[\varepsilon | X].
+\]</span></p>
+<p>Since <span class="math inline">\(\varepsilon {\perp\!\!\!\!\perp} X\)</span>, conditioning on <span class="math inline">\(X\)</span> does not influence the distribution of <span class="math inline">\(\varepsilon\)</span>, and we know by assumption that <span class="math inline">\(E[\varepsilon] = 0\)</span>. Hence, <span class="math display">\[
+E[\hat\beta | X] = \beta.
+\]</span></p>
+</section>
+<section id="standard-error-of-the-ols-estimator" class="slide level2">
+<h2>Standard Error of the OLS estimator</h2>
+<p>As it is true in general for estimation, it is not enough to have a <em>point estimate</em> of the regression parameter, but we want to know what is the <em>distribution</em> of the estimator.</p>
+<div class="fragment">
+<p>First, we need to compute the standard errors of <span class="math inline">\(\hat\beta\)</span>.</p>
+</div>
+<div class="fragment">
+<p>In order to do that we have to remember the assumptions of the linear model, especially those related to the error term <span class="math inline">\(\varepsilon\)</span>.</p>
+</div>
+</section>
+<section id="standard-error-of-the-ols-estimator-1" class="slide level2">
+<h2>Standard Error of the OLS estimator</h2>
+<p>We denote with <span class="math inline">\(\Sigma\)</span> the variance/covariance matrix of the error term. In particular, <span class="math display">\[
+\Sigma_{i,j} = Cov(\varepsilon_i, \varepsilon_j) =
+\begin{cases}
+\sigma^2 &amp; i=j\\
+0 &amp; i \neq j
+\end{cases}
+\]</span></p>
+<p>Hence, we can write <span class="math display">\[
+\Sigma = \sigma^2 I.
+\]</span></p>
+</section>
+<section id="standard-error-of-the-ols-estimator-2" class="slide level2">
+<h2>Standard Error of the OLS estimator</h2>
+<p>As a consequence, the conditional variance of <span class="math inline">\(Y\)</span> is <span class="math display">\[
+Var(Y | X) = Var(X\beta + \epsilon| X) = Var(\epsilon) = \sigma^2 I
+\]</span></p>
+</section>
+<section id="variance-of-a-linear-combinations" class="slide level2">
+<h2>Variance of a linear combinations</h2>
+<p>In matrix notation, the variance of a linear combination <span class="math inline">\(AY\)</span> can be computed as <span class="math display">\[
+Var(AY) = A Var(Y) A^\top
+\]</span></p>
+<p>Since <span class="math inline">\(\hat\beta\)</span> is a linear combination of <span class="math inline">\(Y\)</span>, we can use the same rule to compute its variance.</p>
+</section>
+<section id="standard-error-of-the-ols-estimator-3" class="slide level2">
+<h2>Standard Error of the OLS estimator</h2>
+<p><span class="math display">\[\begin{align*}
+Var(\hat\beta | X) &amp;= Var((X^\top X)^{-1} X^\top Y | X)\\
+  &amp;= (X^\top X)^{-1} X^\top Var(Y | X) ((X^\top X)^{-1} X^\top)^\top.
+\end{align*}\]</span></p>
+<div class="fragment">
+<p>Note that:</p>
+<div>
+<ul>
+<li><span class="math inline">\(X^\top X\)</span> is symmetric;</li>
+<li>if <span class="math inline">\(A\)</span> is symmetric <span class="math inline">\(A^\top = A\)</span>;</li>
+<li><span class="math inline">\((AB)^\top = B^\top A^\top\)</span>.</li>
+<li><span class="math inline">\((A^\top)^\top = A\)</span>.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="standard-error-of-the-ols-estimator-4" class="slide level2 smaller">
+<h2>Standard Error of the OLS estimator</h2>
+<p>Hence, <span class="math display">\[
+((X^\top X)^{-1} X^\top)^\top = X (X^\top X)^{-1}
+\]</span></p>
+<div class="fragment">
+<p>Therefore,</p>
+<p><span class="math display">\[\begin{align*}
+Var(\hat\beta | X) &amp;= (X^\top X)^{-1} X^\top Var(Y|X) X (X^\top X)^{-1} \\
+  &amp;= (X^\top X)^{-1} X^\top \sigma^2 I X (X^\top X)^{-1}\\
+  &amp;= \sigma^2 (X^\top X)^{-1} X^\top X (X^\top X)^{-1}\\
+  &amp;= \sigma^2 (X^\top X)^{-1}.
+\end{align*}\]</span></p>
+<p>Hence, the diagonal of the square root of this matrix contains the standard errors of <span class="math inline">\(\beta\)</span>.</p>
+</div>
+</section>
+<section id="how-to-estimate-sigma2" class="slide level2">
+<h2>How to estimate <span class="math inline">\(\sigma^2\)</span>?</h2>
+<p>If we could observe <span class="math inline">\(\varepsilon\)</span>, we could simply estimate <span class="math inline">\(\sigma^2\)</span> by <span class="math display">\[
+\hat\sigma^2 = \frac{1}{n} \sum_{i=1}^n \varepsilon_i^2.
+\]</span></p>
+<p>Since we do not observe <span class="math inline">\(\varepsilon\)</span>, we can use the residuals <span class="math inline">\(e = Y - X\hat\beta\)</span>.</p>
+</section>
+<section id="how-to-estimate-sigma2-1" class="slide level2">
+<h2>How to estimate <span class="math inline">\(\sigma^2\)</span>?</h2>
+<p>We also need to correct for the degrees of freedom (more on this later), to get our estimator: <span class="math display">\[
+s^2 = \frac{1}{n-p} \sum_{i=1}^n e_i^2.
+\]</span></p>
+<p>This estimator is <em>conditionally unbiased</em>, i.e., <span class="math display">\[
+E[s^2 | X] = \sigma^2.
+\]</span></p>
+</section>
+<section id="a-note-on-n-p" class="slide level2 smaller">
+<h2>A note on <span class="math inline">\(n-p\)</span></h2>
+<p>The fact that we divide by <span class="math inline">\(n-p\)</span> derives from the proof that <span class="math inline">\(\hat\sigma^2\)</span> is unbiased.</p>
+<p>This proof is quite complicated mathematically, so we will skip it for now.</p>
+<p>However, it derives from the geometric interpretation of regression, which we will see if we have time at the end of the course.</p>
+<p>For now, notice that because we assumed that <span class="math inline">\(n &gt; p\)</span>, we do not have problems in estimating <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>Also, note the similarity with the usual estimator of the variance: Here, instead of <span class="math inline">\(n - 1\)</span> we use <span class="math inline">\(n-p\)</span>, because we have <span class="math inline">\(p\)</span> parameters, and hence <span class="math inline">\(n-p\)</span> degrees of freedom.</p>
+</section>
+<section id="a-note-on-the-assumptions" class="slide level2">
+<h2>A note on the assumptions</h2>
+<p>Note which assumptions we <em>did not need</em> to get to these results.</p>
+<ol type="1">
+<li class="fragment">We did not assume normality!</li>
+<li class="fragment">We did not assume independence of the columns of <span class="math inline">\(X\)</span>, just non-collinearity.</li>
+</ol>
+<div class="fragment">
+<p>These results ensure that linear models can be applied in a lot of different settings, without requiring too stringent assumptions.</p>
+</div>
+</section>
+<section id="example-cherry-trees-5" class="slide level2">
+<h2>Example: Cherry trees</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href=""></a>betahat <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">crossprod</span>(X)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(X, y)</span>
+<span id="cb53-2"><a href=""></a>res <span class="ot">&lt;-</span> y <span class="sc">-</span> X <span class="sc">%*%</span> betahat</span>
+<span id="cb53-3"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb53-4"><a href=""></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb53-5"><a href=""></a>s2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(res<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(n<span class="sc">-</span>p)</span>
+<span id="cb53-6"><a href=""></a>s2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15.06862</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href=""></a>sdb <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(s2 <span class="sc">*</span> <span class="fu">solve</span>(<span class="fu">crossprod</span>(X))))</span>
+<span id="cb55-2"><a href=""></a>sdb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8.6382259 0.2642646 0.1301512</code></pre>
+</div>
+</div>
+</section>
+<section id="example-cherry-trees-6" class="slide level2">
+<h2>Example: Cherry trees</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href=""></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)</span>
+<span id="cb57-2"><a href=""></a>s<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15.06862</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href=""></a>s<span class="sc">$</span>coefficients[,<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)       Girth      Height 
+  8.6382259   0.2642646   0.1301512 </code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="the-normal-linear-model" class="title-slide slide level1 center">
+<h1>The Normal Linear Model</h1>
+
+</section>
+<section id="normality-assumption" class="slide level2">
+<h2>Normality assumption</h2>
+<p>Remember that for now, we did not make any assumptions about the distribution of the data. We only assumed that:</p>
+<ol type="1">
+<li class="fragment">There is a linear relation between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>; with <span class="math inline">\(X\)</span> full-rank and <span class="math inline">\(p &lt; n\)</span>.</li>
+<li class="fragment">The error terms <span class="math inline">\(\varepsilon\)</span> are i.i.d. with mean 0 and constant variance:
+<ul>
+<li class="fragment"><span class="math inline">\(E[\varepsilon] = 0\)</span>;</li>
+<li class="fragment"><span class="math inline">\(Var(\varepsilon) = \sigma^2\)</span> (homoscedasticity).</li>
+</ul></li>
+<li class="fragment">The error terms <span class="math inline">\(\varepsilon\)</span> are independent of <span class="math inline">\(X\)</span>: <span class="math inline">\(\varepsilon\perp\!\!\!\!\perp X\)</span>.</li>
+</ol>
+</section>
+<section id="normality-assumption-1" class="slide level2">
+<h2>Normality assumption</h2>
+<p>For the next results to hold, we need to restrict our model to the following assumption: <span class="math display">\[
+\varepsilon_i \overset{iid}{\sim} N(0, \sigma^2).
+\]</span></p>
+<p>We need the normality assumption in order to make inference on the coefficients of the model, i.e., to create confidence intervals and test hypotheses on the parameter <span class="math inline">\(\beta\)</span>.</p>
+<p>The main results that we will see are the <span class="math inline">\(t\)</span>-test and the <span class="math inline">\(F\)</span>-test.</p>
+</section>
+<section id="in-the-general-model" class="slide level2">
+<h2>In the general model</h2>
+<p>It can be proved that:</p>
+<ul>
+<li class="fragment"><p><span class="math inline">\(\hat\beta \sim N_p(\beta, \sigma^2(X^\top X)^{-1})\)</span>;</p></li>
+<li class="fragment"><p><span class="math inline">\((n-p)s^2/\sigma^2 \sim \chi^2_{n-p}\)</span>;</p></li>
+<li class="fragment"><p><span class="math inline">\(\hat\beta\)</span> and <span class="math inline">\(s^2\)</span> are independent rv.</p></li>
+</ul>
+<div class="fragment">
+<p>We have, for <span class="math inline">\(j=1,\ldots,p\)</span></p>
+<ol type="1">
+<li class="fragment"><p><span class="math inline">\(\hat\beta_j\sim N(\beta_j, \sigma^2[(X^\top X)^{-1}]_{jj})\)</span>;</p></li>
+<li class="fragment"><p><span class="math inline">\(T_j = \frac{\hat\beta_j-\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}}  \sim t_{n-p}.\)</span></p></li>
+</ol>
+</div>
+</section>
+<section id="testing-h_0-beta_j-0" class="slide level2 smaller">
+<h2>Testing <span class="math inline">\(H_0 : \beta_j = 0\)</span></h2>
+<p>Can be tested with a t-test: <span class="math display">\[
+T_j = \frac{\hat\beta_j-\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}}  \sim t_{n-p}.
+\]</span></p>
+<p>Equivalently, using sum of squares, we can use: <span class="math display">\[
+F = \frac{(e^\top_Re_R - e^\top_Fe_F)/1}{e^\top_Fe_F/(n-p)} \sim F_{1, n-p}
+\]</span> Reject <span class="math inline">\(H_0\)</span> at level <span class="math inline">\(\alpha\)</span> if <span class="math inline">\(F^{obs} &gt; F_{1, n-3; 1-\alpha}.\)</span></p>
+<p>Note that, in this case, <span class="math inline">\(F=T_j^2.\)</span></p>
+</section>
+<section id="overall-goodness-of-fit" class="slide level2">
+<h2>Overall goodness of fit</h2>
+<p>Consider the model <span class="math display">\[
+Y_i = \beta_0  +  \beta_1 x_{i1} +\beta_2 x_{i2} + \varepsilon_i.
+\]</span></p>
+<p>Want to test the overall goodness of fit <span class="math display">\[
+H_0: \beta_1 =\beta_2 = 0.
+\]</span></p>
+</section>
+<section id="overall-goodness-of-fit-1" class="slide level2">
+<h2>Overall goodness of fit</h2>
+<p>Two models</p>
+<ul>
+<li class="fragment"><p>Full: <span class="math inline">\(Y_i = \beta_0  +  \beta_1 x_{i1} +\beta_2 x_{i2} + \varepsilon_i\)</span></p></li>
+<li class="fragment"><p>Reduced: <span class="math inline">\(Y_i = \beta_0 + \varepsilon_i\)</span></p></li>
+</ul>
+<div class="fragment">
+<p>F-statistic, under <span class="math inline">\(H_0\)</span> (details similar as before): <span class="math display">\[
+F = \frac{(e^\top_Re_R - e^\top_Fe_F)/2}{e^\top_Fe_F/(n-3)} \sim F_{2, n-3}
+\]</span> Reject <span class="math inline">\(H_0\)</span> at level <span class="math inline">\(\alpha\)</span> if <span class="math inline">\(F^{obs} &gt; F_{2, n-3; 1-\alpha}.\)</span></p>
+</div>
+</section>
+<section id="example-t-test" class="slide level2">
+<h2>Example: t-test</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href=""></a><span class="co"># Girth</span></span>
+<span id="cb61-2"><a href=""></a><span class="fu">c</span>(betahat[<span class="dv">2</span>], sdb[<span class="dv">2</span>], betahat[<span class="dv">2</span>]<span class="sc">/</span>sdb[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  4.7081605  0.2642646 17.8160841</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href=""></a><span class="co"># Height</span></span>
+<span id="cb63-2"><a href=""></a><span class="fu">c</span>(betahat[<span class="dv">3</span>], sdb[<span class="dv">3</span>], betahat[<span class="dv">3</span>]<span class="sc">/</span>sdb[<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3392512 0.1301512 2.6065936</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href=""></a>s<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Estimate Std. Error   t value     Pr(&gt;|t|)
+(Intercept) -57.9876589  8.6382259 -6.712913 2.749507e-07
+Girth         4.7081605  0.2642646 17.816084 8.223304e-17
+Height        0.3392512  0.1301512  2.606594 1.449097e-02</code></pre>
+</div>
+</div>
+</section>
+<section id="example-f-test" class="slide level2">
+<h2>Example: F-test</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href=""></a><span class="do">## Add example of "manual" goodness-of-fit test</span></span>
+<span id="cb67-2"><a href=""></a>fit0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Volume <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>trees)</span>
+<span id="cb67-3"><a href=""></a><span class="fu">anova</span>(fit0, fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: Volume ~ 1
+Model 2: Volume ~ Girth + Height
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     30 8106.1                                  
+2     28  421.9  2    7684.2 254.97 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href=""></a>res0 <span class="ot">&lt;-</span> y <span class="sc">-</span> <span class="fu">mean</span>(y)</span>
+<span id="cb69-2"><a href=""></a>ss <span class="ot">&lt;-</span> (<span class="fu">crossprod</span>(res0) <span class="sc">-</span> <span class="fu">crossprod</span>(res))</span>
+<span id="cb69-3"><a href=""></a>rss <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(res)</span>
+<span id="cb69-4"><a href=""></a><span class="fu">c</span>(rss, ss, (ss<span class="sc">/</span><span class="dv">2</span>)<span class="sc">/</span>(rss<span class="sc">/</span>(n<span class="dv">-3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  421.9214 7684.1625  254.9723</code></pre>
+</div>
+</div>
+</section>
+<section id="dropping-subsets" class="slide level2">
+<h2>Dropping subsets</h2>
+<p>Suppose we have the model <span class="math display">\[
+Y_i = \beta_0 +\beta_1 x_{i1} + \ldots + \beta_p x_{ip} + \varepsilon_i\,\,\,i=1,\ldots,n,
+\]</span> and we want to test whether we can simplify the model by dropping <span class="math inline">\(k\)</span> variables, i.e.&nbsp;want to test <span class="math display">\[
+H_0 : \beta_{j_{_1}} = \beta_{j_{_2}} = \ldots = \beta_{j_{_k}} = 0
+\]</span> Two models</p>
+<ul>
+<li class="fragment"><p>Full: above</p></li>
+<li class="fragment"><p>Reduced: model with the <span class="math inline">\(k\)</span> columns <span class="math inline">\(x_{j_{_1}}, x_{j_{_2}}, \ldots, x_{j_{_k}}\)</span> omitted from the design matrix.</p></li>
+</ul>
+</section>
+<section id="dropping-subsets-1" class="slide level2">
+<h2>Dropping subsets</h2>
+<p>F-statistic, under <span class="math inline">\(H_0\)</span> (details similar as before): <span class="math display">\[
+F = \frac{(e^\top_Re_R - e^\top_Fe_F)/(p-k)}{e^\top_Fe_F/(n-p)} \sim F_{p-k, n-p}.
+\]</span> Reject <span class="math inline">\(H_0\)</span> at level <span class="math inline">\(\alpha\)</span> if <span class="math inline">\(F^{obs} &gt; F_{p-k, n-p; 1-\alpha}.\)</span></p>
+</section>
+<section id="maximum-likelihood-estimator" class="slide level2">
+<h2>Maximum Likelihood Estimator</h2>
+<p>What about Maximum Likelihood? Why don’t we estimate the parameters with MLE like we did before?</p>
+<div class="fragment">
+<p>Actually, one can show that if <span class="math display">\[
+Y | X \sim \mathcal{N}(X \beta, \sigma^2 I),
+\]</span> the estimator <span class="math display">\[
+\hat \beta = (X^\top X)^{-1} X^\top Y
+\]</span> is the <strong>maximimum likelihood estimator (MLE)</strong>.</p>
+</div>
+</section></section>
+<section>
+<section id="the-math-behind-lm" class="title-slide slide level1 center">
+<h1>The math behind <code>lm()</code></h1>
+
+</section>
+<section id="the-math-behind-lm-1" class="slide level2">
+<h2>The math behind <code>lm()</code></h2>
+<p>We have seen with the Cherry tree example that we can compute <span class="math inline">\(\hat \beta\)</span> using the <code>crossprod()</code> and the <code>solve()</code> functions.</p>
+<div class="fragment">
+<p>However, <code>lm()</code> uses a more efficient and numerically stable method, based on the <strong>QR decomposition</strong>.</p>
+</div>
+</section>
+<section id="solve-is-numerically-unstable" class="slide level2">
+<h2><code>solve()</code> is numerically unstable</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href=""></a>n <span class="ot">&lt;-</span> <span class="dv">50</span>; M <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb71-2"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, M, <span class="at">len=</span>n)</span>
+<span id="cb71-3"><a href=""></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x, x<span class="sc">^</span><span class="dv">2</span>, x<span class="sc">^</span><span class="dv">3</span>)</span>
+<span id="cb71-4"><a href=""></a>beta <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">1</span>)</span>
+<span id="cb71-5"><a href=""></a></span>
+<span id="cb71-6"><a href=""></a>y <span class="ot">&lt;-</span> X<span class="sc">%*%</span>beta<span class="sc">+</span><span class="fu">rnorm</span>(n,<span class="at">sd=</span><span class="dv">1</span>)</span>
+<span id="cb71-7"><a href=""></a></span>
+<span id="cb71-8"><a href=""></a><span class="fu">solve</span>(<span class="fu">crossprod</span>(X)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(X,y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in solve.default(crossprod(X)): system is computationally singular: reciprocal condition number = 2.93617e-17</code></pre>
+</div>
+</div>
+<p>This happens because <span class="math inline">\((X^\top X)\)</span> has some huge elements.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href=""></a><span class="fu">crossprod</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        x                          
+          50        12525 4.217364e+06 1.597455e+09
+x      12525      4217364 1.597455e+09 6.454018e+11
+     4217364   1597455115 6.454018e+11 2.716100e+14
+  1597455115 645401757068 2.716100e+14 1.175658e+17</code></pre>
+</div>
+</div>
+</section>
+<section id="lm-is-numerically-stable" class="slide level2">
+<h2><code>lm()</code> is numerically stable</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href=""></a>fit <span class="ot">&lt;-</span> <span class="fu">lm.fit</span>(X, y)</span>
+<span id="cb75-2"><a href=""></a>fit<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  x                     
+0.3772690 1.0130466 0.9999377 1.0000001 </code></pre>
+</div>
+</div>
+</section>
+<section id="the-qr-decomposition" class="slide level2">
+<h2>The QR decomposition</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p>We can decompose any full-rank <span class="math inline">\(n \times p\)</span> matrix as <span class="math display">\[
+X = Q R,
+\]</span> with</p>
+<ul>
+<li class="fragment"><span class="math inline">\(Q\)</span> a <span class="math inline">\(n \times p\)</span> matrix such that <span class="math inline">\(Q^\top Q = I\)</span>,</li>
+<li class="fragment"><span class="math inline">\(R\)</span> a <span class="math inline">\(p \times p\)</span> upper triangular matrix.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="upper-triangular-matrix" class="slide level2">
+<h2>Upper triangular matrix</h2>
+<p>Upper triangular matrices are very useful to solve linear systems of equations, as we can show with this example: <span class="math display">\[
+\begin{bmatrix}
+1 &amp; 2 &amp; -1 \\
+0 &amp; 1 &amp; 2 \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+a \\
+b \\
+c
+\end{bmatrix}
+=
+\begin{bmatrix}
+6 \\
+4 \\
+1
+\end{bmatrix}
+\]</span></p>
+<p>It is immediate to see from the last row that <span class="math inline">\(c=1\)</span>, and we can make our way up to solve the other variables.</p>
+</section>
+<section id="finding-hat-beta-with-qr" class="slide level2">
+<h2>Finding <span class="math inline">\(\hat \beta\)</span> with QR</h2>
+<p>We can rewrite the least squares equation using the QR decomposition:</p>
+<p><span class="math display">\[\begin{align*}
+X^\top X \beta &amp;= X^\top Y \\
+(QR)^\top (QR) \beta &amp;= (QR)^\top Y \\
+R^\top (Q^\top Q) R \beta &amp;= R^\top Q^\top Y \\
+R^\top R \beta &amp;= R^\top Q^\top Y \\
+R \beta &amp;= Q^\top Y \\
+\beta &amp;= R^{-1} Q^\top Y
+\end{align*}\]</span></p>
+</section>
+<section id="finding-hat-beta-with-qr-1" class="slide level2">
+<h2>Finding <span class="math inline">\(\hat \beta\)</span> with QR</h2>
+<p>We can now use the same trick that we used in the example equations to solve for <span class="math inline">\(\beta\)</span>.</p>
+<p>In R:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href=""></a>QR <span class="ot">&lt;-</span> <span class="fu">qr</span>(X)</span>
+<span id="cb77-2"><a href=""></a>Q <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QR)</span>
+<span id="cb77-3"><a href=""></a>R <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(QR)</span>
+<span id="cb77-4"><a href=""></a></span>
+<span id="cb77-5"><a href=""></a><span class="fu">backsolve</span>(R, <span class="fu">crossprod</span>(Q,y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]
+[1,] 0.3772690
+[2,] 1.0130466
+[3,] 0.9999377
+[4,] 1.0000001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href=""></a>fit<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  x                     
+0.3772690 1.0130466 0.9999377 1.0000001 </code></pre>
+</div>
+</div>
+</section>
+<section id="qr" class="slide level2">
+<h2>QR</h2>
+<p>The QR decomposition can also be used to compute the fitted values and the standard deviation of <span class="math inline">\(\hat \beta\)</span>.</p>
+<p><span class="math display">\[
+\hat y = X \hat \beta = (QR) R^{-1} Q^\top Y = Q Q^\top Y
+\]</span> and</p>
+<p><span class="math display">\[
+\text{Var}(\hat \beta) = \sigma^2 (X^\top X)^{-1} = \sigma^2 (R^\top Q^\top Q R)^{-1} = \sigma^2 (R^\top R)^{-1}
+\]</span></p>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="04_linreg_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="04_linreg_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="04_linreg_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="04_linreg_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="04_linreg_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="04_linreg_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="04_linreg_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="04_linreg_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="04_linreg_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="04_linreg_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

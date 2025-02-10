@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Davide Risso">
-<meta name="dcterms.date" content="2025-02-02">
+<meta name="dcterms.date" content="2025-02-10">
 
 <title>Advanced Statistics and Data Analysis</title>
 <style>
@@ -133,8 +133,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tools for reproducible research</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./linmod.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Statistical modeling</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear models</span></span></a>
   </div>
 </li>
     </ul>
@@ -150,7 +156,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
   <li><a href="#organization-of-this-website" id="toc-organization-of-this-website" class="nav-link" data-scroll-target="#organization-of-this-website">Organization of this website</a></li>
-  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline">Timeline</a></li>
+  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline">Timeline</a>
+  <ul class="collapse">
+  <li><a href="#lectures" id="toc-lectures" class="nav-link" data-scroll-target="#lectures">Lectures</a></li>
+  <li><a href="#labs" id="toc-labs" class="nav-link" data-scroll-target="#labs">Labs</a></li>
+  </ul></li>
   <li><a href="#suggested-reading-materials" id="toc-suggested-reading-materials" class="nav-link" data-scroll-target="#suggested-reading-materials">Suggested reading materials</a>
   <ul class="collapse">
   <li><a href="#r-resources" id="toc-r-resources" class="nav-link" data-scroll-target="#r-resources">R resources</a></li>
@@ -191,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 2, 2025</p>
+      <p class="date">February 10, 2025</p>
     </div>
   </div>
   
@@ -214,32 +224,102 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="timeline" class="level2">
 <h2 class="anchored" data-anchor-id="timeline">Timeline</h2>
+<section id="lectures" class="level3">
+<h3 class="anchored" data-anchor-id="lectures">Lectures</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Week</th>
 <th>Date</th>
 <th>Topic</th>
-<th>Type</th>
+<th>Hours</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td>1</td>
 <td>24/2/2025</td>
 <td>Intro to course and statistics recap</td>
-<td>Lecture</td>
+<td>2</td>
 </tr>
 <tr class="even">
-<td>24/2/2025</td>
-<td>The Normal Linear Model (part 1)</td>
-<td>Lecture</td>
+<td></td>
+<td>25/2/2025</td>
+<td>Data wrangling and visualization</td>
+<td>2</td>
 </tr>
 <tr class="odd">
+<td></td>
+<td>26/2/2025</td>
+<td>Statistical Modeling</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>27/2/2025</td>
+<td>Statistical Modeling</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>28/2/2025</td>
+<td>Linear Models</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>10/3/2025</td>
+<td>Linear Models (part 2)</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td></td>
 <td>…</td>
 <td></td>
 <td></td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="labs" class="level3">
+<h3 class="anchored" data-anchor-id="labs">Labs</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Week</th>
+<th>Date</th>
+<th>Topic</th>
+<th>Hours</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>26/2/2025</td>
+<td>Data wrangling and visualization (part 1)</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>27/2/2025</td>
+<td>Data wrangling and visualization (part 2)</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>28/2/2025</td>
+<td>Linear models</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>…</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <section id="suggested-reading-materials" class="level2">
 <h2 class="anchored" data-anchor-id="suggested-reading-materials">Suggested reading materials</h2>
@@ -257,6 +337,7 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="statistics">Statistics</h3>
 <ul>
 <li><a href="https://www.huber.embl.de/msmb/">Modern Statistics for Modern Biology</a></li>
+<li><a href="https://leanpub.com/dataanalysisforthelifesciences">Data Analysis for the Life Sciences</a></li>
 </ul>
 </section>
 </section>
@@ -266,9 +347,9 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="acknowledgments" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
-<p>I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham.</p>
+<p>I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, the following people either directly or indirectly inspired the materials developed for this course: Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham, Lieven Clement, Milan Malfait, Karl Broman, Rafael Irizarry, Mike Love, Jeff Leek.</p>
 <p>In the same spirit, I am sharing openly online this course.</p>
-<p>Specific resources that can be used as additional readings are noted in the relevant chapter.</p>
+<p>Specific resources that can be used as additional readings are noted in the relevant chapters.</p>
 
 
 </section>
