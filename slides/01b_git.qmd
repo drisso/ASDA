@@ -2,7 +2,10 @@
 title: "Tools for Reproducible Research"
 subtitle: "Advanced Statistics and Data Analysis"
 author: "Davide Risso"
-format: revealjs
+format: 
+    revealjs:
+        theme: default
+        incremental: true
 execute:
     echo: true
 ---
@@ -127,6 +130,14 @@ Source: Karl Broman [Tools for reproducible research](http://kbroman.org/Tools4R
 - Literate programming was introduced by Donald Knuth as a way to weave together programming and natural language.
 
 - The idea is that the natural language explanation and the program itself live in the same document.
+
+## Knuth's _Literate Programming_ (1983)
+
+- "I believe that the time is ripe for significantly better documentation of programs, and that we can best achieve this by considering programs to be works of literature."
+
+
+- "Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do."
+
 
 ## R and literate programming
 
@@ -278,6 +289,8 @@ There are essentially three possibilities when you work on a long project (think
 - Even though we may be sure that we know what a script does (because we have documented it with Quarto) ...
 - ... and we are sure we are using the right version of the code (because we are using git) ...
 - ... the results could still change in between two runs of the code.
+
+. . .
 
 ::: {.callout-important}
 How come?
