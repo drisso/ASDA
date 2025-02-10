@@ -3,11 +3,12 @@ title: "Linear models are (almost) all you need to know"
 subtitle: "Advanced Statistics and Data Analysis"
 author: "Davide Risso"
 format: 
-    beamer:
-        aspectratio: 169
-        include-in-header: template.tex
-        toc: true
-
+    revealjs:
+        theme: default
+        incremental: true
+html-math-method:
+    method: mathjax
+    url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 knitr:
     opts_chunk:
         out-width: 75%
@@ -65,8 +66,12 @@ Remember that for categorical covariates, we need to define _dummy variables_.
 In the case of `cyl`, which has three levels, we need two dummies (plus the intercept).
 
 ::: {.callout-warning}
+
+::: {.nonincremental}
 - Why do we need only two dummy variables?
 - What would happen if we include all three in the regression?
+:::
+
 :::
 
 ## ANOVA as a linear model
@@ -128,7 +133,7 @@ qr(X)$rank
 solve(crossprod(X))
 ```
 
-## ANOVA and linear regression: two equivalent views
+## ANOVA and linear regression
 
 When we think about ANOVA, we are thinking about comparing the means of three or more groups.
 
@@ -142,7 +147,7 @@ y_i =
 \end{cases}
 $$
 
-## ANOVA and linear regression: two equivalent views
+## ANOVA and linear regression
 
 In matrix notation:
 $$
@@ -186,7 +191,7 @@ y_{n} \\
 $$
 
 
-## ANOVA and linear regression: two equivalent views
+## ANOVA and linear regression
 
 In linear regression, we define the model as
 $$
@@ -196,7 +201,7 @@ $$
 where $p$ is the number of covariates in $X$.
 
 
-## ANOVA and linear regression: two equivalent views
+## ANOVA and linear regression
 
 In matrix notation:
 $$
@@ -241,7 +246,7 @@ $$
 
 
 
-## ANOVA and linear regression: two equivalent views
+## ANOVA and linear regression
 
 Mathematically, we can see that 
 $$
@@ -259,7 +264,7 @@ y_i =
 \end{cases}
 $$
 
-## ANOVA and linear regression: two equivalent views
+## ANOVA and linear regression
 
 It is now easy to see that:
 
@@ -271,7 +276,7 @@ It is now easy to see that:
 
 This gives an intuitive interpretation of the regression coefficients in the case of dummy variables.
 
-## ANOVA and linear regression: two equivalent views
+## ANOVA and linear regression
 
 We can check this in R.
 
@@ -311,7 +316,7 @@ mtcars |>
     geom_smooth(method = "lm", se = FALSE)
 ```
 
-## Including weight in the model
+## Including weight in the model {.smaller}
 
 If we include weight in the model, we have to include an additional column in the design matrix.
 
@@ -380,7 +385,7 @@ summary(fit2)
 ```
 
 
-## Including interactions
+## Including interactions {.smaller}
 
 If we include the interactions in the model, we have to include two additional columns in the design matrix, which are obtained by multiplying the two relative columns.
 
@@ -459,12 +464,6 @@ How do you interpret the parameters in this case?
 ## Contrasts
 
 A more formal definition (see bcb)
-
-# The math behind `lm()`
-
-## Least squares estimates
-
-## The QR decomposition
 
 # Hypothesis testing
 

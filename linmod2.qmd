@@ -8,7 +8,7 @@ execute:
 
 ## Lecture Slides
 
-{{< pdf "slides/05_linreg2.pdf" >}}
+{{< revealjs "slides/05_linreg2.html" >}}
 
 ## Lab: complex linear models [^1]
 

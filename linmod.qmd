@@ -10,11 +10,11 @@ execute:
 
 ### Statistical modeling
 
-{{< pdf "slides/03_statmod.pdf" >}}
+{{< revealjs "slides/03_statmod.html" >}}
 
 ### Linear models
 
-{{< pdf "slides/04_linreg.pdf" >}}
+{{< revealjs "slides/04_linreg.html" >}}
 
 ## Lab: simple linear regression
 
@@ -70,6 +70,26 @@ brca_long |>
 Would the distribution of the genes look better in log scale? Repeat the plot log-transforming the y axis
 :::
 
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+brca_long |>
+    ggplot(aes(gene, expression)) +
+    geom_boxplot() +
+    scale_y_log10()
+```
+
+:::
+
 Let's now assess the relation between the two genes.
 
 ```{r scatter}
@@ -92,6 +112,25 @@ brca_outrm |>
 # Exercise
 
 Can you think of a different way to improve the visualization that keeps the outliers in the graph?
+:::
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+brca |>
+    ggplot(aes(ESR1, S100A8)) +
+    geom_point() +
+    scale_y_log10()
+```
+
 :::
 
 Is linear regression a good model for this relationship? We can get a sense of this by fitting a line and a smooth curve to the plot above. We can achieve this by using the `geom_smooth()` geometry.
@@ -130,6 +169,25 @@ which means that for each unit increase in the expression of ESR1, S100A8's expr
 - What is the predicted S100A8 expression of a patient with ESR1 expression of 3000?
 :::
 
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+predict(fit, newdata=data.frame(ESR1=1000))
+fit$coefficients[1] + fit$coefficients[2] * 1000
+predict(fit, newdata=data.frame(ESR1=3000))
+fit$coefficients[1] + fit$coefficients[2] * 3000
+```
+
+:::
+
 #### And the outliers?
 
 What would have happened if we had not taken the outliers out of the analysis?
@@ -150,6 +208,26 @@ According to this new model:
 
 - What is the predicted S100A8 expression of a patient with ESR1 expression of 1000?
 - What is the predicted S100A8 expression of a patient with ESR1 expression of 3000?
+:::
+
+```{webr-r}
+## Your solution
+```
+
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+predict(fit_out, newdata=data.frame(ESR1=1000))
+fit_out$coefficients[1] + fit_out$coefficients[2] * 1000
+predict(fit_out, newdata=data.frame(ESR1=3000))
+fit_out$coefficients[1] + fit_out$coefficients[2] * 3000
+```
+
 :::
 
 Which model is correct? Should we include the outliers or not? Is there an alternative?
@@ -253,6 +331,24 @@ plot(fit_log)
 Run the residuals analysis of the linear model without removing the outliers. How would you rate the model fit?
 :::
 
+
+```{webr-r}
+## Your solution
+```
+
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+plot(fit_out)
+```
+
+:::
+
 Ultimately in this case, we can choose the model with the log transformation, which seems better in terms of $R^2$ and interpretation of the results.
 
 ### Predictions
@@ -345,6 +441,34 @@ prostate
 Explore the relation between PSA and the other variables with a series of plots.
 :::
 
+
+```{webr-r}
+## Your solution
+```
+
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+#| code-fold: true
+#| eval: false
+
+prostate |>
+    ggplot(aes(y = lpsa, x = lcavol, color=svi)) +
+    geom_point()
+
+prostate |>
+    ggplot(aes(y = lpsa, x = lcavol, color=factor(gleason))) +
+    geom_point()
+
+prostate |>
+    ggplot(aes(y = lpsa, x = lweight, color=svi)) +
+    geom_point()
+```
+
+:::
+
 ### Regression model
 
 We can now fit a linear model, including some of the available variables.
@@ -359,6 +483,7 @@ summary(fit_pr)
 
 Comment the output, with particular focus on $R^2$, coefficient estimates and significance.
 :::
+
 
 ### Model selection
 
@@ -415,6 +540,7 @@ The data are available [here](https://archive.ics.uci.edu/dataset/189/parkinsons
     
 Note: be careful about collinearity or near-collinearity in the data, e.g., between different Jitter measurements.
 
+
 ```{r}
 #| echo: false
 #| include: false
@@ -442,6 +568,7 @@ summary(fit)
 ## Further reading
 
 -   S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 2](https://www.huber.embl.de/msmb/02-chap.html)
+-   R. A. Irizarry and M. I. Love. [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences).
 
 
 [^1]: this example is from the [Practical Statistics for the Life Sciences course](https://statomics.github.io/PSLS)

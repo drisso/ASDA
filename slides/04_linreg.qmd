@@ -189,10 +189,10 @@ x %*% y
 
 In general, the matrix multiplication operator is
 
-1. Not commutative: $A \, B \neq B \, A$.
-2. Distributive over matrix addition: $A(B+C) = AB + AC$.
+1. Not commutative: $A \, B \neq B \, A.$
+2. Distributive over matrix addition: $A(B+C) = AB + AC.$
 3. Compatible with scalar multiplication: $a(AB) = (aA)B$
-4. Transposition: $(AB)^\top = B^\top A^\top$.
+4. Transposition: $(AB)^\top = B^\top A^\top.$
 
 ## The identity matrix
 
@@ -243,7 +243,7 @@ We will see later how this plays a role for linear models.
 
 ## The inverse
 
-If the inverse exists, it can be computed using the `solve()` function in R.
+If the inverse exists, it can be computed using `solve()`.
 
 ```{r, echo=TRUE}
 y
@@ -496,10 +496,10 @@ pairs(trees)
 ## Example: Cherry trees
 
 For the Cherry tree data, assume to model the volume ($y$) of the trees
-as a function of girth ($x_1$) and height ($x_2$) with the linear model
-$Y_i=\beta_0+ \beta_1 x_{i1}+ \beta_2 x_{i2}+\varepsilon_i\,,\,\,\, i=1, \ldots, 31.$
-
-We have
+as a function of girth ($x_1$) and height ($x_2$):
+$$
+Y_i=\beta_0+ \beta_1 x_{i1}+ \beta_2 x_{i2}+\varepsilon_i\,,\,\,\, i=1, \ldots, 31.
+$$
 
 ```{r, echo=TRUE}
 y <- trees$Volume
@@ -765,9 +765,6 @@ are involved.
 
 1.  Fitting the model: how do we estimate $(\beta, \sigma^2)$?
 
-    -   Least squares
-    -   Other methods
-
 2.  Inference: what can we say about $\beta$ (rarely, about $\sigma^2$)
     based on the $n$ observations?
 
@@ -917,7 +914,7 @@ Note that:
 - $(A^\top)^\top = A$.
 :::
 
-## Standard Error of the OLS estimator
+## Standard Error of the OLS estimator {.smaller}
 
 Hence,
 $$
@@ -958,7 +955,7 @@ $$
 E[s^2 | X] = \sigma^2.
 $$
 
-## A note on $n-p$
+## A note on $n-p$ {.smaller}
 
 The fact that we divide by $n-p$ derives from the proof that $\hat\sigma^2$ is unbiased.
 
@@ -1007,9 +1004,7 @@ s$coefficients[,2]
 
 ## Normality assumption
 
-Remember that for now, we did not make any assumptions about the distribution of the data.
-
-Indeed, the assumptions of the linear model that we have made so far are:
+Remember that for now, we did not make any assumptions about the distribution of the data. We only assumed that:
 
 1. There is a linear relation between $Y$ and $X$; with $X$ full-rank and $p < n$.
 2. The error terms $\varepsilon$ are i.i.d. with mean 0 and constant variance:
@@ -1017,12 +1012,12 @@ Indeed, the assumptions of the linear model that we have made so far are:
     - $Var(\varepsilon) = \sigma^2$ (homoscedasticity).
 3. The error terms $\varepsilon$ are independent of $X$: $\varepsilon\perp\!\!\!\!\perp X$.
 
+## Normality assumption
+
 For the next results to hold, we need to restrict our model to the following assumption:
 $$
 \varepsilon_i \overset{iid}{\sim} N(0, \sigma^2).
 $$
-
-## Normality assumption
 
 We need the normality assumption in order to make inference on the coefficients of the model, i.e., to create confidence intervals and test hypotheses on the parameter $\beta$.
 
@@ -1046,7 +1041,7 @@ We have, for $j=1,\ldots,p$
 
 2.  $T_j = \frac{\hat\beta_j-\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}}  \sim t_{n-p}.$
 
-## Testing $H_0 : \beta_j = 0$
+## Testing $H_0 : \beta_j = 0$ {.smaller}
 
 Can be tested with a t-test:
 $$
@@ -1106,6 +1101,13 @@ s$coefficients
 
 ```{r, echo=TRUE}
 ## Add example of "manual" goodness-of-fit test
+fit0 <- lm(Volume ~ 1, data=trees)
+anova(fit0, fit)
+
+res0 <- y - mean(y)
+ss <- (crossprod(res0) - crossprod(res))
+rss <- crossprod(res)
+c(rss, ss, (ss/2)/(rss/(n-3)))
 ```
 
 ## Dropping subsets
@@ -1134,3 +1136,136 @@ $$
 F = \frac{(e^\top_Re_R - e^\top_Fe_F)/(p-k)}{e^\top_Fe_F/(n-p)} \sim F_{p-k, n-p}.
 $$
 Reject $H_0$ at level $\alpha$ if $F^{obs} > F_{p-k, n-p; 1-\alpha}.$
+
+## Maximum Likelihood Estimator
+
+What about Maximum Likelihood? Why don't we estimate the parameters with MLE like we did before?
+
+. . .
+
+Actually, one can show that if
+$$
+Y | X \sim \mathcal{N}(X \beta, \sigma^2 I),
+$$
+the estimator
+$$
+\hat \beta = (X^\top X)^{-1} X^\top Y
+$$
+is the **maximimum likelihood estimator (MLE)**.
+
+# The math behind `lm()`
+
+## The math behind `lm()`
+
+We have seen with the Cherry tree example that we can compute $\hat \beta$ using the `crossprod()` and the `solve()` functions.
+
+. . .
+
+However, `lm()` uses a more efficient and numerically stable method, based on the **QR decomposition**.
+
+## `solve()` is numerically unstable
+
+```{r, echo=TRUE, error=TRUE}
+n <- 50; M <- 500
+x <- seq(1, M, len=n)
+X <- cbind(1, x, x^2, x^3)
+beta <- matrix(c(1,1,1,1), nrow=4, ncol=1)
+
+y <- X%*%beta+rnorm(n,sd=1)
+
+solve(crossprod(X)) %*% crossprod(X,y)
+```
+
+This happens because $(X^\top X)$ has some huge elements.
+
+```{r, echo=TRUE}
+crossprod(X)
+```
+
+## `lm()` is numerically stable
+
+```{r, echo=TRUE}
+fit <- lm.fit(X, y)
+fit$coefficients
+```
+
+## The QR decomposition
+
+::: {.callout-important}
+# Definition
+We can decompose any full-rank $n \times p$ matrix as
+$$
+X = Q R,
+$$
+with
+
+- $Q$ a $n \times p$ matrix such that $Q^\top Q = I$,
+- $R$ a $p \times p$ upper triangular matrix.
+:::
+
+## Upper triangular matrix
+
+Upper triangular matrices are very useful to solve linear systems of equations, as we can show with this example:
+$$
+\begin{bmatrix}
+1 & 2 & -1 \\
+0 & 1 & 2 \\
+0 & 0 & 1 
+\end{bmatrix}
+\begin{bmatrix}
+a \\
+b \\
+c
+\end{bmatrix}
+=
+\begin{bmatrix}
+6 \\
+4 \\
+1
+\end{bmatrix}
+$$
+
+It is immediate to see from the last row that $c=1$, and we can make our way up to solve the other variables.
+
+## Finding $\hat \beta$ with QR
+
+We can rewrite the least squares equation using the QR decomposition:
+
+\begin{align*}
+X^\top X \beta &= X^\top Y \\
+(QR)^\top (QR) \beta &= (QR)^\top Y \\
+R^\top (Q^\top Q) R \beta &= R^\top Q^\top Y \\
+R^\top R \beta &= R^\top Q^\top Y \\
+R \beta &= Q^\top Y \\
+\beta &= R^{-1} Q^\top Y
+\end{align*}
+
+## Finding $\hat \beta$ with QR
+
+We can now use the same trick that we used in the example equations to solve for $\beta$.
+
+In R:
+
+```{r, echo=TRUE}
+QR <- qr(X)
+Q <- qr.Q(QR)
+R <- qr.R(QR)
+
+backsolve(R, crossprod(Q,y))
+
+fit$coefficients
+```
+
+## QR
+
+The QR decomposition can also be used to compute the fitted values and the standard deviation of $\hat \beta$.
+
+$$
+\hat y = X \hat \beta = (QR) R^{-1} Q^\top Y = Q Q^\top Y
+$$
+and
+
+$$
+\text{Var}(\hat \beta) = \sigma^2 (X^\top X)^{-1} = \sigma^2 (R^\top Q^\top Q R)^{-1} = \sigma^2 (R^\top R)^{-1}
+$$
+
