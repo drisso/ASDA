@@ -258,9 +258,9 @@ Hence,
 $$
 y_i = 
 \begin{cases}
-\beta_0 &\text{if obs. } i \text{ is in group 1} \\
-\beta_0 + \beta_1 & \text{if obs. } i \text{ is in group 2} \\
-\beta_0 + \beta_2 & \text{if obs. } i \text{ is in group 3}
+\beta_0 + \varepsilon_i &\text{if obs. } i \text{ is in group 1} \\
+\beta_0 + \beta_1 + \varepsilon_i & \text{if obs. } i \text{ is in group 2} \\
+\beta_0 + \beta_2 + \varepsilon_i & \text{if obs. } i \text{ is in group 3}
 \end{cases}
 $$
 
@@ -273,6 +273,8 @@ It is now easy to see that:
 - $\mu_2 = \beta_0 + \beta_1 \implies \beta_1 = \mu_2 - \mu_1$;
 
 - $\mu_3 = \beta_0 + \beta_2 \implies \beta_2 = \mu_3 - \mu_1$;
+
+. . .
 
 This gives an intuitive interpretation of the regression coefficients in the case of dummy variables.
 
@@ -292,14 +294,22 @@ fit$coefficients[1] + fit$coefficients[3]))
 
 But what is the average difference between the MPG of 6 and 8 cylinder cars? 
 
+. . .
+
 Is this difference statistically significant?
 
+. . .
+
 To answer this question, we need to compute a linear combination of the parameters, called _a contrast_.
+
+. . .
 
 In fact,
 $$
 \mu_3 - \mu_2 = (\beta_0 + \beta_2) - (\beta_0 + \beta_1) = \beta_2 - \beta_1
 $$
+
+. . .
 
 We can apply the usual t-test to test the significance of _any linear combination of the coefficients_.
 
@@ -365,11 +375,11 @@ $$
 
 Now we have:
 $$
-y_i = 
+y_i \sim 
 \begin{cases}
-\beta_0 + \beta_3 w_i &\text{if obs. } i \text{ is in group 1} \\
-\beta_0 + \beta_1 + \beta_3 w_i & \text{if obs. } i \text{ is in group 2} \\
-\beta_0 + \beta_2 + \beta_3 w_i & \text{if obs. } i \text{ is in group 3}
+\beta_0 + \beta_3 w_i + \varepsilon_i &\text{if group 1} \\
+\beta_0 + \beta_1 + \beta_3 w_i + \varepsilon_i & \text{if group 2} \\
+\beta_0 + \beta_2 + \beta_3 w_i + \varepsilon_i & \text{if group 3}
 \end{cases}
 $$
 
@@ -447,9 +457,9 @@ Now we have:
 $$
 y_i = 
 \begin{cases}
-\beta_0 + \beta_3 w_i &\text{if obs. } i \text{ is in group 1} \\
-(\beta_0 + \beta_1) + (\beta_3 + \beta_4) w_i & \text{if obs. } i \text{ is in group 2} \\
-(\beta_0 + \beta_2) + (\beta_3 + \beta_5) w_i & \text{if obs. } i \text{ is in group 3}
+\beta_0 + \beta_3 w_i + \varepsilon_i &\text{if group 1} \\
+(\beta_0 + \beta_1) + (\beta_3 + \beta_4) w_i + \varepsilon_i & \text{if group 2} \\
+(\beta_0 + \beta_2) + (\beta_3 + \beta_5) w_i + \varepsilon_i & \text{if group 3}
 \end{cases}
 $$
 
