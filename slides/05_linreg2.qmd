@@ -61,7 +61,11 @@ summary(anova)
 
 In fact, we can perform the same analysis as a linear regression, choosing `mpg` as the response and `cyl` as a _categorical_ covariate.
 
-Remember that for categorical covariates, we need to define _dummy variables_.
+. . .
+
+For categorical covariates, we need to define _dummy variables_.
+
+. . .
 
 In the case of `cyl`, which has three levels, we need two dummies (plus the intercept).
 
@@ -75,8 +79,6 @@ In the case of `cyl`, which has three levels, we need two dummies (plus the inte
 :::
 
 ## ANOVA as a linear model
-
-\scriptsize
 
 ```{r, echo=TRUE}
 fit <- lm(mpg ~ factor(cyl), data=mtcars)
@@ -95,7 +97,11 @@ In fact, R's `aov` function internally calls `lm.fit` exactly like `lm`.
 
 To understand mathematically why this is the same thing, we have to introduce the _design matrix_, which is just another name for the matrix $X$ whose columns contain the covariates that we include in the model.
 
+. . .
+
 When we perform a regression against categorical variables, `lm` implicitly defines a set of dummy variables to include in the design matrix.
+
+. . .
 
 We can see what happens internally, by using the `model.matrix` function, which transforms the formula we feed into `lm` into a design matrix.
 
@@ -104,6 +110,16 @@ We can see what happens internally, by using the `model.matrix` function, which 
 ```{r, echo=TRUE}
 head(model.matrix(~factor(cyl), data=mtcars))
 ```
+
+. . .
+
+::: {.callout-important}
+
+# Definition
+
+Dummy variables are binary variables that indicate whether each observation belongs to a given category.
+
+:::
 
 ## Why not all three dummies?
 
@@ -313,7 +329,12 @@ $$
 
 We can apply the usual t-test to test the significance of _any linear combination of the coefficients_.
 
-**Add example in R**
+## Contrasts
+
+```{r, echo=TRUE}
+library(contrast)
+contrast(fit, list(cyl = "8"), list(cyl = "6"))
+```
 
 ## Advantages of linear modeling
 
@@ -375,7 +396,7 @@ $$
 
 Now we have:
 $$
-y_i \sim 
+y_i =
 \begin{cases}
 \beta_0 + \beta_3 w_i + \varepsilon_i &\text{if group 1} \\
 \beta_0 + \beta_1 + \beta_3 w_i + \varepsilon_i & \text{if group 2} \\
@@ -469,17 +490,46 @@ This means that the relationship between MPG and weight changes both in terms of
 How do you interpret the parameters in this case?
 :::
 
-## Contrasts
+## Confounding
 
-## Contrasts
+- start with an example
+- perhaps show a dag
+- first solution: add as covariate
+- more complex cases: causal inference
 
-A more formal definition (see bcb)
+## The flexibility of linear models
 
-# Hypothesis testing
+As nicely shown by Jonas Kristoffer Lindelov in his blog post, [common statistical tests are linear models](https://lindeloev.github.io/tests-as-linear/):
 
-## The t-test and its friends
+![](https://lindeloev.github.io/tests-as-linear/linear_tests_cheat_sheet.png){fig-align="center"}
 
-Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).
+## Example: t-test
 
-## Paired data
+Assume that we have measured gene ESR1 in a cohort of patients with breast cancer and we want to test if its expression is the same or different between patients with grade 1 or grade 3 tumors.
 
+```{r}
+library(tidyverse)
+brca <- read_csv("data/breastcancer.csv")
+brca <- brca |>
+    mutate(grade = factor(grade), node = factor(node), 
+           er = factor(er), treatment = factor(treatment)) 
+
+ggplot(brca, aes(y = ESR1, x = grade)) +
+    geom_boxplot()
+```
+
+## Example: t-test
+
+Assuming that the data are normal, we can use a t-test.
+
+```{r, echo=TRUE}
+t.test(ESR1 ~ grade, var.equal=TRUE, data=brca)
+```
+## Example: t-test
+
+An equivalent way to perform this test is by fitting a linear model, using the gene expression as response variable and grade as a categorical (binary) covariate.
+
+```{r, echo=TRUE}
+fit <- lm(ESR1 ~ grade, data=brca)
+summary(fit)
+```
