@@ -10,11 +10,13 @@ execute:
 
 {{< revealjs "slides/05_linreg2.html" >}}
 
-## Lab: complex linear models [^1]
+## Lab: confounding and adjustment [^1]
 
+Show simulation study from "Adjustment" chapter
 
 ## Homework [^2]
 
+Use Rafa and Mike's spider example
 
 ### Guided solution
 
@@ -24,8 +26,9 @@ execute:
 -   R. A. Irizarry and M. I. Love. [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences)
 
 
-[^1]: this example is from [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences)
-[^2]: This homework is one of the [Open Case Studies](https://www.opencasestudies.org/). Please try to solve this yourself before looking at the solution there.
+[^1]: This lab was inspired by [Regression Models for Data Science in R](https://leanpub.com/regmods)
+
+[^2]: This homework is from [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences). Please try to solve this yourself before looking at the solution there.
 
 ## References {.unnumbered}
 

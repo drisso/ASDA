@@ -492,47 +492,85 @@ How do you interpret the parameters in this case?
 
 # Confounding
 
-## Sheldon and Facebook
+## Google and Elon Musk
 
-![](https://tylervigen.com/spurious/correlation/image/4912_popularity-of-the-bazinga-meme_correlates-with_google-searches-for-facebook.svg){fig-align="center"}
+![](img/20515_google-searches-for-who-is-elon-musk_correlates-with_alphabets-stock-price-googl.png){fig-align="center"}
+
+## Cause or effect?
+
+
+```{r}
+library(ggdag)
+dag <- dagify(Google ~~ Elon, 
+              labels = c("Google" = "Google",
+                         "Elon" = "Elon Musk"))
+ggdag(dag, text = FALSE, use_labels = "label", layout="mds") + theme_dag()
+```
+
+
+## Cause or effect?
+
+
+```{r}
+library(ggdag)
+dag <- dagify(Google ~ AI,
+              Elon ~ AI, 
+              labels = c("Google" = "Google",
+                         "Elon" = "Elon Musk",
+                         "AI" = "Big tech boom"))
+ggdag(dag, text = FALSE, use_labels = "label", layout = "mds") + theme_dag()
+```
+
+## Pirates use Firefox!
+
+![](img/2204_pirate-attacks-globally_correlates-with_google-searches-for-download-firefox.png){fig-align="center"}
 
 ## Is this real?
 
 ::: {.r-fit-text}
 
-[Let's ask AI!](https://tylervigen.com/spurious/correlation/4912_popularity-of-the-bazinga-meme_correlates-with_google-searches-for-facebook)
+[Let's ask AI!](https://tylervigen.com/spurious/correlation/2204_pirate-attacks-globally_correlates-with_google-searches-for-download-firefox)
 
 :::
 
-## Is this real?
+## Confounding and spurious correlations
 
+One needs to be careful when interpreting linear models.
+
+. . .
+
+*Confounding* may lead to significant associations that turn out not to be significant or may even be opposite effects!
+
+. . .
+
+This is known as the **Simpson's paradox**.
+
+. . .
+
+**Association does not imply causation**
+
+## A more realistic example
+
+We want to study the fertility rates in Swiss provinces and their relations with some socio-economic indicators.
 
 ```{r}
-library(ggdag)
-dag <- dagify(Bazinga ~~ Facebook, 
-              labels = c("Bazinga" = "Bazinga",
-                         "Facebook" = "Facebook"))
-ggdag(dag, text = FALSE, use_labels = "label", layout="circle") + theme_dag()
+data("swiss")
+head(swiss)
 ```
 
-
-## Is this real?
-
+## A more realistic example
 
 ```{r}
-library(ggdag)
-dag <- dagify(Bazinga ~ Year,
-              Facebook ~ Year, 
-              labels = c("Bazinga" = "Bazinga",
-                         "Facebook" = "Facebook",
-                         "Year" = "Year"))
-ggdag(dag, text = FALSE, use_labels = "label", layout = "circle") + theme_dag()
+fit1 <- lm(Fertility ~ Agriculture, data = swiss)
+summary(fit1)
 ```
 
-## Confounding
+## A more realistic example
 
-- first solution: add as covariate
-- more complex cases: causal inference
+```{r}
+fit2 <- lm(Fertility ~ Agriculture + Education + Catholic, data = swiss)
+summary(fit2)
+```
 
 # (Almost) everything is a linear model!
 
@@ -540,7 +578,7 @@ ggdag(dag, text = FALSE, use_labels = "label", layout = "circle") + theme_dag()
 
 As nicely shown by Jonas Kristoffer Lindelov in his blog post, [common statistical tests are linear models](https://lindeloev.github.io/tests-as-linear/):
 
-![](https://lindeloev.github.io/tests-as-linear/linear_tests_cheat_sheet.png){fig-align="center"}
+![](img/linear_tests_cheat_sheet.png){fig-align="center"}
 
 ## Example: t-test
 
@@ -561,14 +599,14 @@ ggplot(brca, aes(y = ESR1, x = grade)) +
 
 Assuming that the data are normal, we can use a t-test.
 
-```{r, echo=TRUE}
+```{r}
 t.test(ESR1 ~ grade, var.equal=TRUE, data=brca)
 ```
 ## Example: t-test
 
 An equivalent way to perform this test is by fitting a linear model, using the gene expression as response variable and grade as a categorical (binary) covariate.
 
-```{r, echo=TRUE}
+```{r}
 fit <- lm(ESR1 ~ grade, data=brca)
 summary(fit)
 ```
