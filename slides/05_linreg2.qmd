@@ -490,12 +490,51 @@ This means that the relationship between MPG and weight changes both in terms of
 How do you interpret the parameters in this case?
 :::
 
+# Confounding
+
+## Sheldon and Facebook
+
+![](https://tylervigen.com/spurious/correlation/image/4912_popularity-of-the-bazinga-meme_correlates-with_google-searches-for-facebook.svg){fig-align="center"}
+
+## Is this real?
+
+::: {.r-fit-text}
+
+[Let's ask AI!](https://tylervigen.com/spurious/correlation/4912_popularity-of-the-bazinga-meme_correlates-with_google-searches-for-facebook)
+
+:::
+
+## Is this real?
+
+
+```{r}
+library(ggdag)
+dag <- dagify(Bazinga ~~ Facebook, 
+              labels = c("Bazinga" = "Bazinga",
+                         "Facebook" = "Facebook"))
+ggdag(dag, text = FALSE, use_labels = "label", layout="circle") + theme_dag()
+```
+
+
+## Is this real?
+
+
+```{r}
+library(ggdag)
+dag <- dagify(Bazinga ~ Year,
+              Facebook ~ Year, 
+              labels = c("Bazinga" = "Bazinga",
+                         "Facebook" = "Facebook",
+                         "Year" = "Year"))
+ggdag(dag, text = FALSE, use_labels = "label", layout = "circle") + theme_dag()
+```
+
 ## Confounding
 
-- start with an example
-- perhaps show a dag
 - first solution: add as covariate
 - more complex cases: causal inference
+
+# (Almost) everything is a linear model!
 
 ## The flexibility of linear models
 
