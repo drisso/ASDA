@@ -521,15 +521,15 @@ dag <- dagify(Google ~ AI,
 ggdag(dag, text = FALSE, use_labels = "label", layout = "mds") + theme_dag()
 ```
 
-## Pirates use Firefox!
+## Cats vote Democrat!
 
-![](img/2204_pirate-attacks-globally_correlates-with_google-searches-for-download-firefox.png){fig-align="center"}
+![](img/4598_google-searches-for-cat-memes_correlates-with_democrat-votes-for-senators-in-california.png){fig-align="center"}
 
 ## Is this real?
 
 ::: {.r-fit-text}
 
-[Let's ask AI!](https://tylervigen.com/spurious/correlation/2204_pirate-attacks-globally_correlates-with_google-searches-for-download-firefox)
+[Let's ask AI!](https://tylervigen.com/spurious/correlation/4598_google-searches-for-cat-memes_correlates-with_democrat-votes-for-senators-in-california)
 
 :::
 

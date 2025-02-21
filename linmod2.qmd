@@ -12,14 +12,314 @@ execute:
 
 ## Lab: confounding and adjustment [^1]
 
-Show simulation study from "Adjustment" chapter
+```{r, echo=FALSE}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 20))
+```
+
+In this Lab, we will use simulations to show the effect of modelling choices on inference.
+
+Let's consider this rather general situation, in which a continuous _outcome_ is influenced by a binary _treatment_ $z$ (that we are interested in studying) and a continuous _confounder_ $x$:
+$$
+y_i = \beta_0 + \beta_1 x_i + \beta_2 z_i + \varepsilon_i.
+$$
+
+Note that here we are using the outcome/treatment/confounder terminology, typical of epidemiology.
+
+### Experiment 1
+
+Let's simulate some data, starting from an ideal situation.
+
+```{r}
+set.seed(1503)
+
+n <- 200
+z <- rep(c(0, 1), each=n/2)
+x <- runif(n)
+beta0 <- 0
+beta1 <- 2
+beta2 <- 1
+sigma <- .2
+
+y <- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)
+```
+
+Let's plot the data.
+
+```{r}
+df <- data.frame(x, y, z=factor(z))
+ggplot(df, aes(x = x, y = y, color = z)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+Let's look at the marginal relation between $y$ and $z$.
+
+```{r}
+ggplot(df, aes(y = y, x = z, fill=z)) +
+    geom_boxplot()
+```
+:::
+
+Let's finally look at the relation between $x$ and $z$.
+
+```{r}
+ggplot(df, aes(y = x, x = z, fill=z)) +
+    geom_boxplot()
+```
+
+The marginal relation between $z$ and $y$ is consistent with the conditional relation. This is because $x$ and $z$ are independent.
+
+Let's fit a linear model.
+
+```{r}
+fit1 <- lm(y ~ z + x)
+summary(fit1)
+```
+We can see that the estimates are not far from the true estimated values.
+
+```{r}
+data.frame(estimate = round(fit1$coefficients, 2),
+           true =c(beta0, beta1, beta2))
+```
+
+What happens if we omit $x$ from the model?
+
+```{r}
+fit1b <- lm(y ~ z)
+summary(fit1b)
+```
+
+In this case the estimate of the coefficient for $z$ is still good, since $x$ does not confound the relation between $z$ and $y$.
+
+```{r}
+data.frame(estimate = round(fit1b$coefficients, 2),
+           true =c(beta0, beta1))
+```
+
+
+### Experiment 2
+
+Let's now include some dependence in the data generation, e.g., by estimating $x$ differently for the two categories of $z$.
+
+```{r}
+set.seed(1538)
+
+n <- 200
+z <- rep(c(0, 1), each=n/2)
+x <- c(runif(n/2), runif(n/2, min = 1.5, max = 2.5))
+beta0 <- 0
+beta1 <- 2
+beta2 <- 1
+sigma <- .2
+
+y <- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)
+```
+
+Let's plot the data.
+
+```{r}
+df <- data.frame(x, y, z=factor(z))
+ggplot(df, aes(x = x, y = y, color = z)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+Now we can see that, as expected, $x$ depends on $z$.
+
+```{r}
+ggplot(df, aes(y = x, x = z, fill=z)) +
+    geom_boxplot()
+```
+
+
+This translates into a difference between the marginal and conditional relation between $z$ and $y$.
+
+```{r}
+ggplot(df, aes(y = y, x = z, fill=z)) +
+    geom_boxplot()
+```
+
+Notice the "compound effect" of $x$ and $z$ on $y$.
+
+Let's fit the correct model.
+
+```{r}
+fit2 <- lm(y ~ z + x)
+summary(fit2)
+```
+
+As expected, we get good estimates of the coefficients.
+
+```{r}
+data.frame(estimate=round(fit2$coefficients, 2), 
+           true=round(c(beta0, beta1, beta2), 2))
+```
+
+What happens if we now omit the $x$ confounder?
+
+```{r}
+fit2b <- lm(y ~ z)
+summary(fit2b)
+```
+
+We are overestimating the treatment effect!
+
+```{r}
+data.frame(estimate=round(fit2b$coefficients, 2), 
+           true=c(beta0, beta1))
+```
+
+### Experiment 3
+
+Things get more complicated when we simulate coefficients with opposite signs.
+
+```{r}
+set.seed(1547)
+
+n <- 200
+z <- rep(c(0, 1), each=n/2)
+x <- c(runif(n/2), runif(n/2, min = 1, max = 2))
+beta0 <- 0
+beta1 <- -1
+beta2 <- 1
+sigma <- .2
+
+y <- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)
+```
+
+Let's plot the data.
+
+```{r}
+df <- data.frame(x, y, z=factor(z))
+ggplot(df, aes(x = x, y = y, color = z)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+
+Now that the effects of two correlated variables are opposite to each other, the marginal effect of $z$ on $y$ becomes almost 0.
+
+```{r}
+ggplot(df, aes(y = y, x = z, fill=z)) +
+    geom_boxplot()
+```
+
+
+Let's fit a linear model.
+
+```{r}
+fit3 <- lm(y ~ z + x)
+summary(fit3)
+```
+
+Again, the correct model correctly estimates the parameters.
+
+```{r}
+data.frame(estimate=round(fit3$coefficients, 2), 
+           true=c(beta0, beta1, beta2))
+```
+
+But when omitting $x$, we lose the significant association between $z$ and $y$.
+
+```{r}
+fit3b <- lm(y ~ z)
+summary(fit3b)
+```
+
+In fact we are overestimating the treatment effect to essentially 0!
+
+```{r}
+data.frame(estimate=round(fit3b$coefficients, 2), 
+           true=c(beta0, beta1))
+```
+
+
+### Experiment 4
+
+Even more dramatic effects can be observed when the variable of interest is $x$.
+
+```{r}
+set.seed(1547)
+
+n <- 200
+z <- rep(c(0, 1), each=n/2)
+x <- c(runif(n/2), runif(n/2, min = 1, max = 2))
+beta0 <- 0
+beta1 <- -2
+beta2 <- 1
+sigma <- .2
+
+y <- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)
+```
+
+Let's plot the data.
+
+```{r}
+df <- data.frame(x, y, z=factor(z))
+ggplot(df, aes(x = x, y = y, color = z)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+In this case, while the conditional effect of $x$ on $y$ is positive, its marginal effect is negative!
+
+Let's fit a linear model.
+
+```{r}
+fit4 <- lm(y ~ z + x)
+summary(fit4)
+```
+
+Once more, the correct model correctly estimates the parameters.
+
+```{r}
+data.frame(estimate=round(fit4$coefficients, 2), 
+           true=c(beta0, beta1, beta2))
+```
+
+But when omitting $z$, we invert the sign of the $x$ coefficient!
+
+```{r}
+fit4b <- lm(y ~ x)
+summary(fit4b)
+```
+
+
+```{r}
+data.frame(estimate=round(fit4b$coefficients, 2), 
+           true=c(beta0, beta2))
+```
+
+
 
 ## Homework [^2]
 
-Use Rafa and Mike's spider example
+@wolff2013radial studied the different frictional coefficients on the different legs of a spider.
 
-### Guided solution
+Please, read the article, with particular focus on the analysis described in its Figure 4.
 
+Briefly, the goal is to compare the pulling and pushing motions of different leg pairs.
+
+Load the data available in [this csv file](https://raw.githubusercontent.com/genomicsclass/dagdata/refs/heads/master/inst/extdata/spider_wolff_gorb_2013.csv).
+
+Perform the following analyses:
+
+1. **Visual inspection of the data**: use a boxplot or similar plot to compare the distribution of the different forces (pull and push) and legs.
+
+2. Specify a linear model with `friction` as response and `type` as covariate. What is the effect of the force type on friction?
+
+3. Specify a linear model with `friction` as response and `type` and `leg` as covariates. What is the effect of the force type on friction? Did it change compared to the previous model? What is the effect of `leg`?
+
+4. Specify a contrast to compare leg pairs L3 and L2. Is the difference in friction significant?
+
+5. Specify a linear model that includes, in addition to the two covariates, their interaction. Is the interaction significant? How do you interpret the coefficients?
+
+6. Specify a contrast to compare the push and pull force of leg L2. Is the difference significant?
 
 ## Further reading
 
