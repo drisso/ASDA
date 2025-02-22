@@ -3,11 +3,12 @@ title: "Experimental design"
 subtitle: "Advanced Statistics and Data Analysis"
 author: "Davide Risso"
 format: 
-    beamer:
-        aspectratio: 169
-        include-in-header: template.tex
-        toc: true
-
+    revealjs:
+        theme: default
+        incremental: true
+html-math-method:
+    method: mathjax
+    url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 knitr:
     opts_chunk:
         out-width: 75%
@@ -17,20 +18,311 @@ knitr:
 
 # Introduction
 
-# Randomization
+## Experimental design
 
-# Sample size
+:::{.callout-tip}
+
+# Quote
+
+"To consult the statistician after an experiment is finished is often merely to ask him to conduct a post mortem examination. He can perhaps say what the experiment died of."
+
+R.A. Fisher
+:::
+
+## What is experimental design?
+
+Experimental design is the field of statistics dealing with how to collect data so that the results will best be able to answer the question of interest.
+
+. . .
+
+Generally, we want to compare/manipulate: e.g. try two different scenarios and see the effect on a certain response variable.
+
+. . .
+
+The term "Experiment" implies labs, test tubes, etc. but it is much broader. We refer to "experiments" whenever there is a choice by the investigator to assign one of multiple treatments to each unit in the study.
+
+## What is experimental design?
+
+[Holmes and Huber](https://www.huber.embl.de/msmb/13-chap.html#sec-design-typesexps) call experimental design _the art of good enough_.
+
+- Experimental design rationalizes the tradeoffs imposed by having finite resources.
+- Sample sizes are limited for practical, economic, and sometimes ethical reasons.
+- Our measurements may be overlaid with nuisance factors over which we have limited control.
+- There is little point in prescribing unrealistic ideals: we need to make pragmatic choices that are feasible.
+
+## Types of experiments {.smaller}
+
+In order on how much we can control.
+
+- **Experiment** (proper)
+    - Everyting is controlled
+
+- **Prospective, controlled studies**
+    - E.g., clinical trials
+    - randomization, blinding
+    - ethical constraints
+
+- **Retrospective observational studies**: we lack control on 
+    - study participants' behavior
+    - assignment of factors
+    - confounding
+
+    
+- **Meta analysis**
+    - Retrospective analysis of data that has already been collected
+    
+## Is this statistics?
+
+- In order to design a sensible experiment, one must know how they will analyze the data.
+
+- The design of an experiment is based on statistical properties of the analysis (and data).
+
+- Understanding the analysis will lead to understanding how the data should best be collected.
+
+- **In order to correctly analyze, we must understand the design**.
+
+## Is this statistics?
+
+- Much of applied statistics involves more than just analysis.
+
+- Even if you are not involved in the design (or there is no design at all) experimental design can help analyze the data.
+
+- What would a well-designed experiment look like? 
+
+- What can/cannot answer with this design? (Maybe nothing at all!)
 
 # Confounding
 
-# Blocking
+## A toy example
 
-# Power gain of blocking
+- Assume that we want to study whether a certain _treatment_ affect a certain protein expression.
+
+- We may design an experiment in which we give the treatment to a certain number of mice, say six, and measure the protein expression.
+
+- To minimize variability, all mice come from the same litter.
+
+- What can we conclude from the results in the next slide?
+
+## A toy example
+
+```{r}
+#| fig-width: 4
+#| fig-height: 5
+#| fig-align: center
+
+library(tidyverse)
+theme_set(theme_minimal(base_size = 20))
+
+set.seed(1520)
+
+expression <- c(rnorm(6, mean=1.5), rnorm(6, mean=4))
+treatment <- factor(rep(c("treated", "control"), each=6),
+                    levels = c("treated", "control")) 
+litter <- factor(rep(c("litterA", "litterB"), each=6),
+                    levels = c("litterA", "litterB")) 
+
+df <- data.frame(expression, treatment, litter)
+
+df |>
+    filter(treatment == "treated") |>
+    ggplot(aes(y = expression, x = 1)) +
+    geom_boxplot() +
+    geom_point(aes(color = treatment), size = 3)
+```
+
+## A toy example (with controls)
+
+- We need a reference point to understand if the expression is high or low.
+
+- We can measure the protein expression on another six mice (from another litter), to which we did not give the treatment.
+
+- What can we conclude from the results in the next slide?
+
+## A toy example (with controls)
+
+```{r}
+df |>
+    ggplot(aes(y = expression, x = treatment)) +
+    geom_boxplot() +
+    geom_point(aes(color = treatment), size = 3)
+```
+
+## A toy example (with controls)
+
+```{r}
+summary(lm(expression ~ treatment))
+```
+
+## Are you sure?
+
+- We need a reference point to understand if the expression is high or low.
+
+- We can measure the protein expression on another six mice (**from another litter**), to which we did not give the treatment.
+
+- What can we **really** conclude from the results in the next slide?
+
+
+## A toy example (with confounding)
+
+```{r}
+df |>
+    ggplot(aes(y = expression, x = treatment)) +
+    geom_boxplot() +
+    geom_point(aes(color = litter), size = 3) +
+    scale_color_brewer(type = "qual")
+```
+
+## A toy example (with confounding)
+
+```{r}
+summary(lm(expression ~ treatment + litter, data=df))
+```
+
+## A more realistic example
+
+- [Lin et al. (2014)](https://www.pnas.org/doi/10.1073/pnas.1413624111) studied the gene expression of several tissues across mice and humans
+
+- The question they asked was whether the transcriptome is more similar for a tissue across species or for a species across tissues.
+
+- Perhaps surprisingly, the study concluded that "differences dominate similarities between the two species [...] likely reflecting the fundamental physiological differences between these two organisms".
+
+## A more realistic example
+
+![](img/lin_pnas1.png){fig-align="center"}
+
+## A more realistic example
+
+[Gilad & Mizrahi-Man](https://f1000research.com/articles/4-121) reanalyzed the data and found that _species is confounded with sequencing batch_.
+
+![](img/gilad1.gif){fig-align="center"}
+
+## A more realistic example
+
+If we adjust for the "batch effect", we remove the species difference, but is this real?
+
+![](img/gilad2.png){fig-align="center"}
+
+## What can we conclude?
+
+![](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGM2Y3VwcXFiemVwZTE0Mmhybzl6MGR1d2xmZmZqZHpsbWJqbzdjaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/K6VhXtbgCXqQU/giphy.gif)
+
+# Principles of experimental design
+
+## The steps of experimental design
+
+1. **Design** -- choices you make _before_ collecting the data
+    - What measurement to make (the response)?
+    - What conditions to compare (the treatment)?
+    - What is a unit that will get a treatment (individual person? groups of people, like a hospital?)
+    - How many samples do I need?
+    - Which units get which (combination) of treatments?
+
+2. **Running the experiment**
+
+3. **Analysis** -- how you analyze the data created from a particular design to answer the scientific question.
+
+## Back to the toy example
+
+- What measurement to make (the response)?
+- What conditions to compare (the treatment)?
+- What is a unit that will get a treatment?
+- How many samples do I need?
+- Which units get which (combination) of treatments?
+
+## Better ways to design the experiment
+
+Now that we know that litter may cause confounding, we have three options.
+
+1. _Reduce technical variance_: we use for our experiments only mice from the same litter.
+2. _Randomization_: instead of assigning all mice from one litter to each treatment, we randomize the order.
+3. _Blocking_: we take pairs of mice from several litters and give the treatment to one of the two, randomly.
+
+. . .
+
+**What are the pros and cons of each option?**
+
+## A better experiment: randomization
+
+```{r}
+set.seed(1632)
+
+df <- mutate(df, litter = rep(paste0("litter", LETTERS[1:2]), 6))
+df <- mutate(df, expression = c(rnorm(6, mean=1.5, sd=2), rnorm(6, mean=4, sd=2)))
+df |>
+    ggplot(aes(y = expression, x = treatment)) +
+    geom_boxplot() +
+    geom_point(aes(color = litter), size = 3) +
+    scale_color_brewer(type = "qual")
+```
+
+## A better experiment: randomization
+
+```{r}
+summary(lm(expression ~ treatment + litter, data=df))
+```
+
+## A better experiment: blocking
+
+```{r}
+set.seed(1655)
+
+x1 <- rnorm(6, mean=2)
+x2 <- x1 + rnorm(6, mean=.7, sd=0.1)
+df <- mutate(df, expression = c(x1, x2))
+df <- mutate(df, litter = rep(paste0("litter", LETTERS[1:6]), 2))
+
+df |>
+    ggplot(aes(y = expression, x = treatment, color = litter)) +
+    geom_point(size = 3) +
+    geom_line(aes(group = litter)) +
+    scale_color_brewer(type = "qual")
+```
+
+
+## A better experiment: blocking
+
+```{r}
+summary(lm(expression ~ treatment + litter, data=df))
+```
+
+## A better experiment: blocking
+
+If we don't include litter, we lose power, but the treatment effect is correctly estimated.
+
+```{r}
+summary(lm(expression ~ treatment, data=df))
+```
+
+## Side note {.smaller}
+
+**This is exactly the difference between a two-sample and a paired t-test!**
+
+```{r}
+df_wide <- pivot_wider(df, names_from = "treatment", values_from = "expression")
+t.test(df_wide$treated, df_wide$control)
+t.test(df_wide$treated, df_wide$control, paired=TRUE)
+```
+
+## What have we done?
+
+An experiment like this is called **randomized block design**.
+
+. . .
+
+The variable _litter_ is the **blocking variable**.
+
+. . .
+
+Each treatment is applied within each block.
+
+. . .
+
+_Randomization_ and _blocking_ are the two main devices of experimental design.
+
+# Randomization vs Blocking
+
+# Sample size
 
 # Nested designs
 
 # Levels of replication
-
-# Sample size and power
-
-Here we need a lot of examples / labs.
