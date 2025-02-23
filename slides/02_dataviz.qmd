@@ -5,6 +5,7 @@ author: "Davide Risso"
 format: 
     revealjs:
         theme: default
+        scrollable: true
         
 html-math-method:
     method: mathjax

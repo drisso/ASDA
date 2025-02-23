@@ -110,6 +110,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -390,7 +391,7 @@ X_{1,p} &amp; \ldots &amp; X_{n,p}
 </div>
 </div>
 </section>
-<section id="properties-of-matrix-multiplication" class="slide level2">
+<section id="properties-of-matrix-multiplication" class="slide level2 scrollable">
 <h2>Properties of matrix multiplication</h2>
 <p>In general, the matrix multiplication operator is</p>
 <ol type="1">
@@ -527,13 +528,13 @@ X_n
 <span id="cb23-2"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
 <span id="cb23-3"><a href=""></a><span class="fu">mean</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.1937609</code></pre>
+<pre><code>[1] 0.4672474</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>A <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, n)</span>
 <span id="cb25-2"><a href=""></a><span class="dv">1</span><span class="sc">/</span>n <span class="sc">*</span> <span class="fu">t</span>(A) <span class="sc">%*%</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]
-[1,] 0.1937609</code></pre>
+[1,] 0.4672474</code></pre>
 </div>
 </div>
 </section>
@@ -557,13 +558,13 @@ X_n - \bar{X}
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">var</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9192912</code></pre>
+<pre><code>[1] 0.9345514</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>r <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
 <span id="cb29-2"><a href=""></a><span class="dv">1</span><span class="sc">/</span>(n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">t</span>(r) <span class="sc">%*%</span> r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]
-[1,] 0.9192912</code></pre>
+[1,] 0.9345514</code></pre>
 </div>
 </div>
 </section>
@@ -575,15 +576,15 @@ X_n - \bar{X}
 <span id="cb31-2"><a href=""></a>B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb31-3"><a href=""></a><span class="fu">t</span>(A) <span class="sc">%*%</span> B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           [,1]      [,2]
-[1,] -0.9393585 -1.942481
-[2,] -0.4955423 -0.470733</code></pre>
+<pre><code>          [,1]       [,2]
+[1,] -0.704367  0.6050073
+[2,]  0.375773 -0.1231196</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="fu">crossprod</span>(A, B)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           [,1]      [,2]
-[1,] -0.9393585 -1.942481
-[2,] -0.4955423 -0.470733</code></pre>
+<pre><code>          [,1]       [,2]
+[1,] -0.704367  0.6050073
+[2,]  0.375773 -0.1231196</code></pre>
 </div>
 </div>
 </section>
@@ -593,12 +594,12 @@ X_n - \bar{X}
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">var</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9192912</code></pre>
+<pre><code>[1] 0.9345514</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a><span class="fu">crossprod</span>(r)<span class="sc">/</span>(n<span class="dv">-1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]
-[1,] 0.9192912</code></pre>
+[1,] 0.9345514</code></pre>
 </div>
 </div>
 <p>Note that <code>crossprod(r)</code> is a further shortcut for <code>crossprod(r, r)</code>.</p>
@@ -934,7 +935,7 @@ Y = \beta_0 + \beta_1 \log X + \varepsilon
 <p>This is often referred to as the <em>non collinearity</em> condition.</p>
 </div>
 </section>
-<section id="assumptions" class="slide level2">
+<section id="assumptions" class="slide level2 scrollable">
 <h2>Assumptions</h2>
 <p>As with all the statistical models, we need some assumptions.</p>
 <ol type="1">
@@ -1014,7 +1015,7 @@ E[Y | X] = X\beta.
 </div>
 </div>
 </section>
-<section id="to-solve-now" class="slide level2">
+<section id="to-solve-now" class="slide level2 scrollable">
 <h2>To solve now</h2>
 <ol type="1">
 <li class="fragment"><p>Fitting the model: how do we estimate <span class="math inline">\((\beta, \sigma^2)\)</span>?</p></li>
@@ -1181,7 +1182,7 @@ E[s^2 | X] = \sigma^2.
 <p>For now, notice that because we assumed that <span class="math inline">\(n &gt; p\)</span>, we do not have problems in estimating <span class="math inline">\(\sigma^2\)</span>.</p>
 <p>Also, note the similarity with the usual estimator of the variance: Here, instead of <span class="math inline">\(n - 1\)</span> we use <span class="math inline">\(n-p\)</span>, because we have <span class="math inline">\(p\)</span> parameters, and hence <span class="math inline">\(n-p\)</span> degrees of freedom.</p>
 </section>
-<section id="a-note-on-the-assumptions" class="slide level2">
+<section id="a-note-on-the-assumptions" class="slide level2 scrollable">
 <h2>A note on the assumptions</h2>
 <p>Note which assumptions we <em>did not need</em> to get to these results.</p>
 <ol type="1">
@@ -1231,7 +1232,7 @@ E[s^2 | X] = \sigma^2.
 <h1>The Normal Linear Model</h1>
 
 </section>
-<section id="normality-assumption" class="slide level2">
+<section id="normality-assumption" class="slide level2 scrollable">
 <h2>Normality assumption</h2>
 <p>Remember that for now, we did not make any assumptions about the distribution of the data. We only assumed that:</p>
 <ol type="1">
@@ -1252,7 +1253,7 @@ E[s^2 | X] = \sigma^2.
 <p>We need the normality assumption in order to make inference on the coefficients of the model, i.e., to create confidence intervals and test hypotheses on the parameter <span class="math inline">\(\beta\)</span>.</p>
 <p>The main results that we will see are the <span class="math inline">\(t\)</span>-test and the <span class="math inline">\(F\)</span>-test.</p>
 </section>
-<section id="in-the-general-model" class="slide level2">
+<section id="in-the-general-model" class="slide level2 scrollable">
 <h2>In the general model</h2>
 <p>It can be proved that:</p>
 <ul>
@@ -1423,7 +1424,7 @@ x      12525      4217364 1.597455e+09 6.454018e+11
 <span id="cb75-2"><a href=""></a>fit<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  x                     
-0.2113505 1.0154067 0.9999318 1.0000001 </code></pre>
+0.7702449 1.0043048 0.9999759 1.0000000 </code></pre>
 </div>
 </div>
 </section>
@@ -1495,15 +1496,15 @@ R \beta &amp;= Q^\top Y \\
 <span id="cb77-5"><a href=""></a><span class="fu">backsolve</span>(R, <span class="fu">crossprod</span>(Q,y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]
-[1,] 0.2113505
-[2,] 1.0154067
-[3,] 0.9999318
-[4,] 1.0000001</code></pre>
+[1,] 0.7702449
+[2,] 1.0043048
+[3,] 0.9999759
+[4,] 1.0000000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href=""></a>fit<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  x                     
-0.2113505 1.0154067 0.9999318 1.0000001 </code></pre>
+0.7702449 1.0043048 0.9999759 1.0000000 </code></pre>
 </div>
 </div>
 </section>
