@@ -26,7 +26,7 @@ knitr:
 
 "To consult the statistician after an experiment is finished is often merely to ask him to conduct a post mortem examination. He can perhaps say what the experiment died of."
 
-R.A. Fisher
+R.A. Fisher (1938)
 :::
 
 ## What is experimental design?
@@ -321,8 +321,175 @@ _Randomization_ and _blocking_ are the two main devices of experimental design.
 
 # Randomization vs Blocking
 
-# Sample size
+## Randomization vs Blocking
 
-# Nested designs
+:::{.callout-tip}
 
-# Levels of replication
+# Quote
+
+"Block what you can, randomize what you cannot."
+
+George Box (1978)
+:::
+
+In a **Randomized Complete Block Design** the _experimental units_ are blocks sampled at random from the population.
+
+Treatments are then assigned at random to the _observational units_ within each block.
+
+## Randomized Complete Block Designs
+
+**Each treatment is applied to each block exactly once**.
+
+![](img/CompleteRB3.png){fig-algin="center"}
+
+Paired designs are a special case with two treatments.
+
+## Completely Randomized Design
+
+- Sometimes it is not possible or practicle to block, e.g., \
+    - we do not know the nuisance factor in advance
+    - we cannot assign a treatment to a block more than once
+    
+- In such cases, we can use _randomization_, i.e., assign the treatment randomly to each experimental unit.
+
+- Randomization decreases (unconscious) bias and helps with _unknown_ nuisance factors.
+
+## Blocking leads to more power
+
+- We have seen in the mouse toy example that blocking for the litter effect led to a smaller p-value.
+
+- In general, blocking leads to **more power** than randomization.
+
+- We can simulate some data to empirically show this effect.
+
+## Simulation study
+
+```{r, echo=TRUE}
+set.seed(1547)
+B <- 1000
+alpha <- 0.05
+n <- 15
+effect <- 0.2
+pvals <- replicate(B, {
+    litters <- rnorm(n, 0, 1)
+    noiset <- rnorm(n, 0, 0.25)
+    noisec <- rnorm(n, 0, 0.25)
+    treated <- litters + effect + noiset
+    controls  <- litters + noisec
+    
+    c(t.test(treated, controls, paired=FALSE)$p.value,
+      t.test(treated, controls, paired=TRUE)$p.value)
+})
+rowMeans(pvals <= alpha)
+```
+
+## Simulation study
+
+```{r}
+pvals <- as.data.frame(t(pvals))
+colnames(pvals) <- c("False", "True")
+tidyr::pivot_longer(pvals, cols = everything(), names_to = "paired") |>
+  ggplot(aes(x = value, fill = paired)) +
+  geom_histogram(binwidth = 0.01, boundary = 0, alpha = 1/3)
+```
+
+# Replication
+
+## How many replicates do I need?
+
+{{< video https://www.youtube.com/watch?v=Hz1fyhVOjr4 width="100%" height="85%" >}}
+
+## The right question to ask
+
+- How many replicates do I need to detect _this_ effect given that the data exhibit _this_ variability?
+
+- In other words, the power to detect a difference depends on the effect size and the variance, in addition to sample size.
+
+- Intuitively, we need few replicates when comparing well-controlled cell lines, many more when performing an observational studies in a heterogeneous human population.
+
+## Power calculations
+
+```{r, echo=TRUE}
+power.t.test(n = 3, delta = 1, sd = 0.5)
+```
+
+## Sample size calculations
+
+```{r, echo=TRUE}
+power.t.test(delta = 1, sd = 0.5, power = 0.9)
+```
+## Sample size calculation
+
+It may not be obvious what are the expected effect size and variability.
+
+In such cases, **pilot experiments** may be useful.
+
+## Technical vs. biological replicates
+
+Not all replicates are equal!
+
+![](img/tech_bio.png){fig-align="center"}
+
+## Experimental vs. observational units
+
+- **Experimental units** are the smallest entities that can be _independently_ assigned to a treatment (e.g., animal, litter, ...)
+
+- **Observational units** are the units at which measurements are made.
+
+. . .
+
+Think of single-cell molecular assays: we measure e.g. gene expression at the individual cell level, but we are typically interested in treatments at the animal or tissue level.
+
+## Technical vs. biological replicates
+
+- Biological replication is required to make a general statement of the effect of a treatment 
+
+- You can't draw a conclusion about the effect of a compound on people in general by observing the effect in one person.
+
+- **Only replication of experimental units is true replication (independent error terms).**
+
+## Pseudo replication
+
+- Only experimental units are independent.
+    - E.g., cells from the same mouse are more correlated to each other than to cells from a different mouse.
+    
+- A sample of _independent_ observations is more informative than one of _dependent_ ones.
+
+- Example: ask the political opinion of $n$ people randomly picked from $n$ independent locations vs. $3$ randomly picked locations and $n/3$ people randomly picked at each location.
+
+## Nested designs
+
+- Although less ideal than Randomized Complete Block Designs, _nested_ (or _split-plot_) designs are common and describe a situation similar to what we just described.
+
+- Nested designs may be more convenient, for instance in education we are interested in measuring effects on children, but children are taught in classrooms, hence we often cannot apply treatments at the child level, but at the school or teacher level.
+
+
+## Nested design: an example
+
+An experiment compares the ability of two technologies to detect diabetes in dogs.
+Ten dogs are randomly divided into two groups: in one group they induce diabetes.
+
+**What kind of design can we use?**
+
+
+## Nested design: an example
+
+1. **Completely Randomized**: 2 technologies $\times$ diabetic or not, hence 4 treatment combinations: randomly assign a treatment combination to a dog. Don't we want to block for the dog effect (individual effects are important!)?
+
+2. **Complete Block**: for each dog, randomly assign each treatment combinations. Ideal but not possible, a dog is either diabetic or not.
+
+3. **Nested Design**: each dog gets randomly assign diabetes or not, but then measure each dog with both technology.
+
+## Designs are about constraints
+
+- We have a nested design because we cannot perform a complete block design.
+
+- The consequence is that we now have pseudo-replication: we measure each dog twice, but the treatment is at the dog level.
+
+- We will see that _random effect_ and _mixed effect_ models are one way to deal with pseudo-replication.
+
+- One particular case of pseudo-replication is _longitudinal data_, in which each experimental unit is measured across time.
+
+
+
+

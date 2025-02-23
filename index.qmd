@@ -19,9 +19,9 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 | 1    | 24/2/2025 | Intro to course and statistics recap | 2     |
 |      | 25/2/2025 | Data wrangling and visualization     | 2     |
 |      | 26/2/2025 | Statistical Modeling                 | 2     |
-|      | 27/2/2025 | Statistical Modeling                 | 2     |
-|      | 28/2/2025 | Linear Models                        | 2     |
-| 2    | 10/3/2025 | Linear Models (part 2)               | 2     |
+|      | 27/2/2025 | Linear Models                        | 2     |
+|      | 28/2/2025 | Linear Models (part 2)               | 2     |
+| 2    | 10/3/2025 | Experimental design.                 | 2     |
 |      | ...       |                                      |       |
 
 ### Labs
