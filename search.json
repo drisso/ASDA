@@ -24,7 +24,7 @@
     "href": "index.html#timeline",
     "title": "Advanced Statistics and Data Analysis",
     "section": "Timeline",
-    "text": "Timeline\n\nLectures\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n24/2/2025\nIntro to course and statistics recap\n2\n\n\n\n25/2/2025\nData wrangling and visualization\n2\n\n\n\n26/2/2025\nStatistical Modeling\n2\n\n\n\n27/2/2025\nStatistical Modeling\n2\n\n\n\n28/2/2025\nLinear Models\n2\n\n\n2\n10/3/2025\nLinear Models (part 2)\n2\n\n\n\n…\n\n\n\n\n\n\n\nLabs\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n26/2/2025\nData wrangling and visualization (part 1)\n4\n\n\n\n27/2/2025\nData wrangling and visualization (part 2)\n4\n\n\n\n28/2/2025\nLinear models\n4\n\n\n\n…",
+    "text": "Timeline\n\nLectures\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n24/2/2025\nIntro to course and statistics recap\n2\n\n\n\n25/2/2025\nData wrangling and visualization\n2\n\n\n\n26/2/2025\nStatistical Modeling\n2\n\n\n\n27/2/2025\nLinear Models\n2\n\n\n\n28/2/2025\nLinear Models (part 2)\n2\n\n\n2\n10/3/2025\nExperimental design.\n2\n\n\n\n…\n\n\n\n\n\n\n\nLabs\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n26/2/2025\nData wrangling and visualization (part 1)\n4\n\n\n\n27/2/2025\nData wrangling and visualization (part 2)\n4\n\n\n\n28/2/2025\nLinear models\n4\n\n\n\n…",
     "crumbs": [
       "Introduction"
     ]
@@ -54,7 +54,7 @@
     "href": "index.html#acknowledgments",
     "title": "Advanced Statistics and Data Analysis",
     "section": "Acknowledgments",
-    "text": "Acknowledgments\nI wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, the following people either directly or indirectly inspired the materials developed for this course: Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham, Lieven Clement, Milan Malfait, Karl Broman, Rafael Irizarry, Mike Love, Jeff Leek.\nIn the same spirit, I am sharing openly online this course.\nSpecific resources that can be used as additional readings are noted in the relevant chapters.",
+    "text": "Acknowledgments\nI wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, the following people either directly or indirectly inspired the materials developed for this course: Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham, Lieven Clement, Milan Malfait, Karl Broman, Rafael Irizarry, Mike Love, Jeff Leek, Brian Caffo, Charlotte Soneson.\nIn the same spirit, I am sharing openly online this course.\nSpecific resources that can be used as additional readings are noted in the relevant chapters.",
     "crumbs": [
       "Introduction"
     ]
@@ -284,7 +284,7 @@
     "href": "linmod.html#references",
     "title": "5  Linear models",
     "section": "References",
-    "text": "References\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.\n\n\nLittle, Max A, Patrick E McSharry, Eric J Hunter, Jennifer Spielman, and\nLorraine O Ramig. 2009. “Suitability of Dysphonia Measurements for\nTelemonitoring of Parkinson’s Disease.” IEEE Transactions on\nBiomedical Engineering 56 (4): 1015–22.\n\n\nSotiriou, Christos, Pratyaksha Wirapati, Sherene Loi, Adrian Harris,\nSteve Fox, Johanna Smeds, Hans Nordgren, et al. 2006. “Gene\nExpression Profiling in Breast Cancer: Understanding the Molecular Basis\nof Histologic Grade to Improve Prognosis.” Journal of the\nNational Cancer Institute 98 (4): 262–72.",
+    "text": "References\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.\n\n\nLittle, Max A, Patrick E McSharry, Eric J Hunter, Jennifer Spielman, and\nLorraine O Ramig. 2009. “Suitability of Dysphonia Measurements for\nTelemonitoring of Parkinson’s Disease.” IEEE Transactions on\nBiomedical Engineering 56 (4): 1015–22.\n\n\nSotiriou, Christos, Pratyaksha Wirapati, Sherene Loi, Adrian Harris,\nSteve Fox, Johanna Smeds, Hans Nordgren, et al. 2006. “Gene\nExpression Profiling in Breast Cancer: Understanding the Molecular Basis\nof Histologic Grade to Improve Prognosis.” Journal of the\nNational Cancer Institute 98 (4): 262–72.\n\n\nWolff, Jonas O, and Stanislav N Gorb. 2013. “Radial Arrangement of\nJanus-Like Setae Permits Friction Control in Spiders.”\nScientific Reports 3 (1): 1101.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear models</span>"
     ]
@@ -297,6 +297,116 @@
     "text": "this example is from the Practical Statistics for the Life Sciences course↩︎\nthis example is from the Practical Statistics for the Life Sciences course↩︎\nThis homework is based on data from the UC Irvine Machine Learning Repository.↩︎",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear models</span>"
+    ]
+  },
+  {
+    "objectID": "linmod2.html",
+    "href": "linmod2.html",
+    "title": "6  Linear models (part 2)",
+    "section": "",
+    "text": "6.1 Lecture Slides\nView slides in full screen",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "linmod2.html#lab-confounding-and-adjustment-1",
+    "href": "linmod2.html#lab-confounding-and-adjustment-1",
+    "title": "6  Linear models (part 2)",
+    "section": "6.2 Lab: confounding and adjustment 1",
+    "text": "6.2 Lab: confounding and adjustment 1\nIn this Lab, we will use simulations to show the effect of modelling choices on inference.\nLet’s consider this rather general situation, in which a continuous outcome is influenced by a binary treatment \\(z\\) (that we are interested in studying) and a continuous confounder \\(x\\): \\[\ny_i = \\beta_0 + \\beta_1 x_i + \\beta_2 z_i + \\varepsilon_i.\n\\]\nNote that here we are using the outcome/treatment/confounder terminology, typical of epidemiology.\n\n6.2.1 Experiment 1\nLet’s simulate some data, starting from an ideal situation.\n\nset.seed(1503)\n\nn &lt;- 200\nz &lt;- rep(c(0, 1), each=n/2)\nx &lt;- runif(n)\nbeta0 &lt;- 0\nbeta1 &lt;- 2\nbeta2 &lt;- 1\nsigma &lt;- .2\n\ny &lt;- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)\n\nLet’s plot the data.\n\ndf &lt;- data.frame(x, y, z=factor(z))\nggplot(df, aes(x = x, y = y, color = z)) +\n    geom_point() +\n    geom_smooth(method = \"lm\", se = FALSE, color = \"black\") +\n    geom_smooth(method = \"lm\", se = FALSE)\n\n\n\n\n\n\n\n\nLet’s look at the marginal relation between \\(y\\) and \\(z\\).\n\nggplot(df, aes(y = y, x = z, fill=z)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n\n:::\nLet’s finally look at the relation between \\(x\\) and \\(z\\).\n\nggplot(df, aes(y = x, x = z, fill=z)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n\nThe marginal relation between \\(z\\) and \\(y\\) is consistent with the conditional relation. This is because \\(x\\) and \\(z\\) are independent.\nLet’s fit a linear model.\n\nfit1 &lt;- lm(y ~ z + x)\nsummary(fit1)\n\n\nCall:\nlm(formula = y ~ z + x)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-0.4650 -0.1437 -0.0031  0.1498  0.4484 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) -0.02005    0.03073  -0.652    0.515    \nz            1.99099    0.02751  72.385   &lt;2e-16 ***\nx            1.04417    0.04888  21.362   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.1945 on 197 degrees of freedom\nMultiple R-squared:  0.9668,    Adjusted R-squared:  0.9665 \nF-statistic:  2869 on 2 and 197 DF,  p-value: &lt; 2.2e-16\n\n\nWe can see that the estimates are not far from the true estimated values.\n\ndata.frame(estimate = round(fit1$coefficients, 2),\n           true =c(beta0, beta1, beta2))\n\n            estimate true\n(Intercept)    -0.02    0\nz               1.99    2\nx               1.04    1\n\n\nWhat happens if we omit \\(x\\) from the model?\n\nfit1b &lt;- lm(y ~ z)\nsummary(fit1b)\n\n\nCall:\nlm(formula = y ~ z)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-0.78648 -0.26678  0.00481  0.26019  0.80658 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  0.48822    0.03533   13.82   &lt;2e-16 ***\nz            1.99867    0.04996   40.01   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.3533 on 198 degrees of freedom\nMultiple R-squared:  0.8899,    Adjusted R-squared:  0.8894 \nF-statistic:  1600 on 1 and 198 DF,  p-value: &lt; 2.2e-16\n\n\nIn this case the estimate of the coefficient for \\(z\\) is still good, since \\(x\\) does not confound the relation between \\(z\\) and \\(y\\).\n\ndata.frame(estimate = round(fit1b$coefficients, 2),\n           true =c(beta0, beta1))\n\n            estimate true\n(Intercept)     0.49    0\nz               2.00    2\n\n\n\n\n6.2.2 Experiment 2\nLet’s now include some dependence in the data generation, e.g., by estimating \\(x\\) differently for the two categories of \\(z\\).\n\nset.seed(1538)\n\nn &lt;- 200\nz &lt;- rep(c(0, 1), each=n/2)\nx &lt;- c(runif(n/2), runif(n/2, min = 1.5, max = 2.5))\nbeta0 &lt;- 0\nbeta1 &lt;- 2\nbeta2 &lt;- 1\nsigma &lt;- .2\n\ny &lt;- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)\n\nLet’s plot the data.\n\ndf &lt;- data.frame(x, y, z=factor(z))\nggplot(df, aes(x = x, y = y, color = z)) +\n    geom_point() +\n    geom_smooth(method = \"lm\", se = FALSE, color = \"black\") +\n    geom_smooth(method = \"lm\", se = FALSE)\n\n\n\n\n\n\n\n\nNow we can see that, as expected, \\(x\\) depends on \\(z\\).\n\nggplot(df, aes(y = x, x = z, fill=z)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n\nThis translates into a difference between the marginal and conditional relation between \\(z\\) and \\(y\\).\n\nggplot(df, aes(y = y, x = z, fill=z)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n\nNotice the “compound effect” of \\(x\\) and \\(z\\) on \\(y\\).\nLet’s fit the correct model.\n\nfit2 &lt;- lm(y ~ z + x)\nsummary(fit2)\n\n\nCall:\nlm(formula = y ~ z + x)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-0.45873 -0.14348  0.01642  0.12145  0.49850 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) -0.03663    0.03300   -1.11    0.268    \nz            1.99659    0.07518   26.56   &lt;2e-16 ***\nx            1.02294    0.04944   20.69   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.1988 on 197 degrees of freedom\nMultiple R-squared:  0.9874,    Adjusted R-squared:  0.9872 \nF-statistic:  7694 on 2 and 197 DF,  p-value: &lt; 2.2e-16\n\n\nAs expected, we get good estimates of the coefficients.\n\ndata.frame(estimate=round(fit2$coefficients, 2), \n           true=round(c(beta0, beta1, beta2), 2))\n\n            estimate true\n(Intercept)    -0.04    0\nz               2.00    2\nx               1.02    1\n\n\nWhat happens if we now omit the \\(x\\) confounder?\n\nfit2b &lt;- lm(y ~ z)\nsummary(fit2b)\n\n\nCall:\nlm(formula = y ~ z)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-0.68982 -0.25933  0.00184  0.25912  0.92836 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  0.50825    0.03533   14.39   &lt;2e-16 ***\nz            3.43924    0.04996   68.84   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.3533 on 198 degrees of freedom\nMultiple R-squared:  0.9599,    Adjusted R-squared:  0.9597 \nF-statistic:  4739 on 1 and 198 DF,  p-value: &lt; 2.2e-16\n\n\nWe are overestimating the treatment effect!\n\ndata.frame(estimate=round(fit2b$coefficients, 2), \n           true=c(beta0, beta1))\n\n            estimate true\n(Intercept)     0.51    0\nz               3.44    2\n\n\n\n\n6.2.3 Experiment 3\nThings get more complicated when we simulate coefficients with opposite signs.\n\nset.seed(1547)\n\nn &lt;- 200\nz &lt;- rep(c(0, 1), each=n/2)\nx &lt;- c(runif(n/2), runif(n/2, min = 1, max = 2))\nbeta0 &lt;- 0\nbeta1 &lt;- -1\nbeta2 &lt;- 1\nsigma &lt;- .2\n\ny &lt;- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)\n\nLet’s plot the data.\n\ndf &lt;- data.frame(x, y, z=factor(z))\nggplot(df, aes(x = x, y = y, color = z)) +\n    geom_point() +\n    geom_smooth(method = \"lm\", se = FALSE, color = \"black\") +\n    geom_smooth(method = \"lm\", se = FALSE)\n\n\n\n\n\n\n\n\nNow that the effects of two correlated variables are opposite to each other, the marginal effect of \\(z\\) on \\(y\\) becomes almost 0.\n\nggplot(df, aes(y = y, x = z, fill=z)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n\nLet’s fit a linear model.\n\nfit3 &lt;- lm(y ~ z + x)\nsummary(fit3)\n\n\nCall:\nlm(formula = y ~ z + x)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-0.48522 -0.15172 -0.00461  0.14135  0.54230 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) -0.01783    0.03188  -0.559    0.577    \nz           -0.98838    0.05627 -17.566   &lt;2e-16 ***\nx            1.00277    0.04980  20.138   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.193 on 197 degrees of freedom\nMultiple R-squared:  0.673, Adjusted R-squared:  0.6697 \nF-statistic: 202.8 on 2 and 197 DF,  p-value: &lt; 2.2e-16\n\n\nAgain, the correct model correctly estimates the parameters.\n\ndata.frame(estimate=round(fit3$coefficients, 2), \n           true=c(beta0, beta1, beta2))\n\n            estimate true\n(Intercept)    -0.02    0\nz              -0.99   -1\nx               1.00    1\n\n\nBut when omitting \\(x\\), we lose the significant association between \\(z\\) and \\(y\\).\n\nfit3b &lt;- lm(y ~ z)\nsummary(fit3b)\n\n\nCall:\nlm(formula = y ~ z)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-0.80393 -0.25652  0.04517  0.22719  0.84438 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 0.493279   0.033660  14.655   &lt;2e-16 ***\nz           0.002515   0.047602   0.053    0.958    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.3366 on 198 degrees of freedom\nMultiple R-squared:  1.41e-05,  Adjusted R-squared:  -0.005036 \nF-statistic: 0.002792 on 1 and 198 DF,  p-value: 0.9579\n\n\nIn fact we are overestimating the treatment effect to essentially 0!\n\ndata.frame(estimate=round(fit3b$coefficients, 2), \n           true=c(beta0, beta1))\n\n            estimate true\n(Intercept)     0.49    0\nz               0.00   -1\n\n\n\n\n6.2.4 Experiment 4\nEven more dramatic effects can be observed when the variable of interest is \\(x\\).\n\nset.seed(1547)\n\nn &lt;- 200\nz &lt;- rep(c(0, 1), each=n/2)\nx &lt;- c(runif(n/2), runif(n/2, min = 1, max = 2))\nbeta0 &lt;- 0\nbeta1 &lt;- -2\nbeta2 &lt;- 1\nsigma &lt;- .2\n\ny &lt;- beta0 + beta1 * z + beta2 * x + rnorm(n, sd = sigma)\n\nLet’s plot the data.\n\ndf &lt;- data.frame(x, y, z=factor(z))\nggplot(df, aes(x = x, y = y, color = z)) +\n    geom_point() +\n    geom_smooth(method = \"lm\", se = FALSE, color = \"black\") +\n    geom_smooth(method = \"lm\", se = FALSE)\n\n\n\n\n\n\n\n\nIn this case, while the conditional effect of \\(x\\) on \\(y\\) is positive, its marginal effect is negative!\nLet’s fit a linear model.\n\nfit4 &lt;- lm(y ~ z + x)\nsummary(fit4)\n\n\nCall:\nlm(formula = y ~ z + x)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-0.48522 -0.15172 -0.00461  0.14135  0.54230 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) -0.01783    0.03188  -0.559    0.577    \nz           -1.98838    0.05627 -35.339   &lt;2e-16 ***\nx            1.00277    0.04980  20.138   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.193 on 197 degrees of freedom\nMultiple R-squared:  0.8984,    Adjusted R-squared:  0.8974 \nF-statistic: 870.9 on 2 and 197 DF,  p-value: &lt; 2.2e-16\n\n\nOnce more, the correct model correctly estimates the parameters.\n\ndata.frame(estimate=round(fit4$coefficients, 2), \n           true=c(beta0, beta1, beta2))\n\n            estimate true\n(Intercept)    -0.02    0\nz              -1.99   -2\nx               1.00    1\n\n\nBut when omitting \\(z\\), we invert the sign of the \\(x\\) coefficient!\n\nfit4b &lt;- lm(y ~ x)\nsummary(fit4b)\n\n\nCall:\nlm(formula = y ~ x)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-1.28221 -0.28897  0.04716  0.35760  1.31902 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  0.53271    0.07517   7.087 2.36e-11 ***\nx           -0.53615    0.06526  -8.216 2.71e-14 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.5214 on 198 degrees of freedom\nMultiple R-squared:  0.2542,    Adjusted R-squared:  0.2505 \nF-statistic:  67.5 on 1 and 198 DF,  p-value: 2.706e-14\n\n\n\ndata.frame(estimate=round(fit4b$coefficients, 2), \n           true=c(beta0, beta2))\n\n            estimate true\n(Intercept)     0.53    0\nx              -0.54    1",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "linmod2.html#homework-2",
+    "href": "linmod2.html#homework-2",
+    "title": "6  Linear models (part 2)",
+    "section": "6.3 Homework 2",
+    "text": "6.3 Homework 2\nWolff and Gorb (2013) studied the different frictional coefficients on the different legs of a spider.\nPlease, read the article, with particular focus on the analysis described in its Figure 4.\nBriefly, the goal is to compare the pulling and pushing motions of different leg pairs.\nLoad the data available in this csv file.\nPerform the following analyses:\n\nVisual inspection of the data: use a boxplot or similar plot to compare the distribution of the different forces (pull and push) and legs.\nSpecify a linear model with friction as response and type as covariate. What is the effect of the force type on friction?\nSpecify a linear model with friction as response and type and leg as covariates. What is the effect of the force type on friction? Did it change compared to the previous model? What is the effect of leg?\nSpecify a contrast to compare leg pairs L3 and L2. Is the difference in friction significant?\nSpecify a linear model that includes, in addition to the two covariates, their interaction. Is the interaction significant? How do you interpret the coefficients?\nSpecify a contrast to compare the push and pull force of leg L2. Is the difference significant?",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "linmod2.html#further-reading",
+    "href": "linmod2.html#further-reading",
+    "title": "6  Linear models (part 2)",
+    "section": "6.4 Further reading",
+    "text": "6.4 Further reading\n\nR. A. Irizarry and M. I. Love. Data Analysis for the Life Sciences",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "linmod2.html#references",
+    "href": "linmod2.html#references",
+    "title": "6  Linear models (part 2)",
+    "section": "References",
+    "text": "References\n\n\nWolff, Jonas O, and Stanislav N Gorb. 2013. “Radial Arrangement of Janus-Like Setae Permits Friction Control in Spiders.” Scientific Reports 3 (1): 1101.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "linmod2.html#footnotes",
+    "href": "linmod2.html#footnotes",
+    "title": "6  Linear models (part 2)",
+    "section": "",
+    "text": "This lab was inspired by Regression Models for Data Science in R↩︎\nThis homework is from Data Analysis for the Life Sciences. Please try to solve this yourself before looking at the solution there.↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "design.html",
+    "href": "design.html",
+    "title": "7  Experimental design",
+    "section": "",
+    "text": "7.1 Lecture Slides\nView slides in full screen",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Experimental design</span>"
+    ]
+  },
+  {
+    "objectID": "design.html#lab",
+    "href": "design.html#lab",
+    "title": "7  Experimental design",
+    "section": "7.2 Lab",
+    "text": "7.2 Lab",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Experimental design</span>"
+    ]
+  },
+  {
+    "objectID": "design.html#homework",
+    "href": "design.html#homework",
+    "title": "7  Experimental design",
+    "section": "7.3 Homework",
+    "text": "7.3 Homework",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Experimental design</span>"
+    ]
+  },
+  {
+    "objectID": "design.html#further-reading",
+    "href": "design.html#further-reading",
+    "title": "7  Experimental design",
+    "section": "7.4 Further reading",
+    "text": "7.4 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 13.\nNature Methods Points of Significance.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Experimental design</span>"
+    ]
+  },
+  {
+    "objectID": "design.html#references",
+    "href": "design.html#references",
+    "title": "7  Experimental design",
+    "section": "References",
+    "text": "References",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Experimental design</span>"
     ]
   }
 ]

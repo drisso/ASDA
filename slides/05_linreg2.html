@@ -254,7 +254,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="anova-as-a-linear-model" class="slide level2">
 <h2>ANOVA as a linear model</h2>
 <p>In fact, we can perform the same analysis as a linear regression, choosing <code>mpg</code> as the response and <code>cyl</code> as a <em>categorical</em> covariate.</p>
-<p>Remember that for categorical covariates, we need to define <em>dummy variables</em>.</p>
+<div class="fragment">
+<p>For categorical covariates, we need to define <em>dummy variables</em>.</p>
+</div>
+<div class="fragment">
 <p>In the case of <code>cyl</code>, which has three levels, we need two dummies (plus the intercept).</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
@@ -270,6 +273,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>Why do we need only two dummy variables?</li>
 <li>What would happen if we include all three in the regression?</li>
 </ul>
+</div>
 </div>
 </div>
 </div>
@@ -312,8 +316,12 @@ F-statistic:  39.7 on 2 and 29 DF,  p-value: 4.979e-09</code></pre>
 <section id="the-design-matrix" class="slide level2">
 <h2>The design matrix</h2>
 <p>To understand mathematically why this is the same thing, we have to introduce the <em>design matrix</em>, which is just another name for the matrix <span class="math inline">\(X\)</span> whose columns contain the covariates that we include in the model.</p>
+<div class="fragment">
 <p>When we perform a regression against categorical variables, <code>lm</code> implicitly defines a set of dummy variables to include in the design matrix.</p>
+</div>
+<div class="fragment">
 <p>We can see what happens internally, by using the <code>model.matrix</code> function, which transforms the formula we feed into <code>lm</code> into a design matrix.</p>
+</div>
 </section>
 <section id="the-design-matrix-1" class="slide level2">
 <h2>The design matrix</h2>
@@ -327,6 +335,21 @@ Datsun 710                  1            0            0
 Hornet 4 Drive              1            1            0
 Hornet Sportabout           1            0            1
 Valiant                     1            1            0</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p>Dummy variables are binary variables that indicate whether each observation belongs to a given category.</p>
+</div>
+</div>
 </div>
 </div>
 </section>
@@ -486,9 +509,9 @@ y = \beta_0 X^{(1)} + \beta_1 X^{(2)} + \beta_2 X^{(3)} + \varepsilon,
 <p>Hence, <span class="math display">\[
 y_i =
 \begin{cases}
-\beta_0 &amp;\text{if obs. } i \text{ is in group 1} \\
-\beta_0 + \beta_1 &amp; \text{if obs. } i \text{ is in group 2} \\
-\beta_0 + \beta_2 &amp; \text{if obs. } i \text{ is in group 3}
+\beta_0 + \varepsilon_i &amp;\text{if obs. } i \text{ is in group 1} \\
+\beta_0 + \beta_1 + \varepsilon_i &amp; \text{if obs. } i \text{ is in group 2} \\
+\beta_0 + \beta_2 + \varepsilon_i &amp; \text{if obs. } i \text{ is in group 3}
 \end{cases}
 \]</span></p>
 </section>
@@ -500,7 +523,9 @@ y_i =
 <li class="fragment"><p><span class="math inline">\(\mu_2 = \beta_0 + \beta_1 \implies \beta_1 = \mu_2 - \mu_1\)</span>;</p></li>
 <li class="fragment"><p><span class="math inline">\(\mu_3 = \beta_0 + \beta_2 \implies \beta_2 = \mu_3 - \mu_1\)</span>;</p></li>
 </ul>
+<div class="fragment">
 <p>This gives an intuitive interpretation of the regression coefficients in the case of dummy variables.</p>
+</div>
 </section>
 <section id="anova-and-linear-regression-6" class="slide level2">
 <h2>ANOVA and linear regression</h2>
@@ -526,19 +551,39 @@ y_i =
 <section id="contrasts" class="slide level2">
 <h2>Contrasts</h2>
 <p>But what is the average difference between the MPG of 6 and 8 cylinder cars?</p>
+<div class="fragment">
 <p>Is this difference statistically significant?</p>
+</div>
+<div class="fragment">
 <p>To answer this question, we need to compute a linear combination of the parameters, called <em>a contrast</em>.</p>
+</div>
+<div class="fragment">
 <p>In fact, <span class="math display">\[
 \mu_3 - \mu_2 = (\beta_0 + \beta_2) - (\beta_0 + \beta_1) = \beta_2 - \beta_1
 \]</span></p>
+</div>
+<div class="fragment">
 <p>We can apply the usual t-test to test the significance of <em>any linear combination of the coefficients</em>.</p>
-<p><strong>Add example in R</strong></p>
+</div>
+</section>
+<section id="contrasts-1" class="slide level2">
+<h2>Contrasts</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="fu">library</span>(contrast)</span>
+<span id="cb19-2"><a href=""></a><span class="fu">contrast</span>(fit, <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"8"</span>), <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"6"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lm model parameter contrast
+
+   Contrast     S.E.    Lower     Upper     t df Pr(&gt;|t|)
+1 -4.642857 1.492005 -7.69435 -1.591365 -3.11 29   0.0042</code></pre>
+</div>
+</div>
 </section>
 <section id="advantages-of-linear-modeling" class="slide level2">
 <h2>Advantages of linear modeling</h2>
 <p>The advantage of the linear model formulation is that we can now include multiple covariates, including continuous ones, and even interactions.</p>
 
-<img data-src="05_linreg2_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<img data-src="05_linreg2_files/figure-revealjs/unnamed-chunk-10-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
 <section id="including-weight-in-the-model" class="slide level2 smaller">
 <h2>Including weight in the model</h2>
 <p>If we include weight in the model, we have to include an additional column in the design matrix.</p>
@@ -588,9 +633,9 @@ y_{n} \\
 <p>Now we have: <span class="math display">\[
 y_i =
 \begin{cases}
-\beta_0 + \beta_3 w_i &amp;\text{if obs. } i \text{ is in group 1} \\
-\beta_0 + \beta_1 + \beta_3 w_i &amp; \text{if obs. } i \text{ is in group 2} \\
-\beta_0 + \beta_2 + \beta_3 w_i &amp; \text{if obs. } i \text{ is in group 3}
+\beta_0 + \beta_3 w_i + \varepsilon_i &amp;\text{if group 1} \\
+\beta_0 + \beta_1 + \beta_3 w_i + \varepsilon_i &amp; \text{if group 2} \\
+\beta_0 + \beta_2 + \beta_3 w_i + \varepsilon_i &amp; \text{if group 3}
 \end{cases}
 \]</span></p>
 <p>This means that the relationship between MPG and weight has the same slope across groups, but start from a different intercept.</p>
@@ -702,9 +747,9 @@ F-statistic: 32.36 on 5 and 26 DF,  p-value: 2.258e-10</code></pre>
 <p>Now we have: <span class="math display">\[
 y_i =
 \begin{cases}
-\beta_0 + \beta_3 w_i &amp;\text{if obs. } i \text{ is in group 1} \\
-(\beta_0 + \beta_1) + (\beta_3 + \beta_4) w_i &amp; \text{if obs. } i \text{ is in group 2} \\
-(\beta_0 + \beta_2) + (\beta_3 + \beta_5) w_i &amp; \text{if obs. } i \text{ is in group 3}
+\beta_0 + \beta_3 w_i + \varepsilon_i &amp;\text{if group 1} \\
+(\beta_0 + \beta_1) + (\beta_3 + \beta_4) w_i + \varepsilon_i &amp; \text{if group 2} \\
+(\beta_0 + \beta_2) + (\beta_3 + \beta_5) w_i + \varepsilon_i &amp; \text{if group 3}
 \end{cases}
 \]</span></p>
 <p>This means that the relationship between MPG and weight changes both in terms of slope and intercept across groups.</p>
@@ -721,36 +766,181 @@ y_i =
 </div>
 </div>
 </div>
-</section>
-<section id="contrasts-1" class="slide level2">
-<h2>Contrasts</h2>
-</section>
-<section id="contrasts-2" class="slide level2">
-<h2>Contrasts</h2>
-<p>A more formal definition (see bcb)</p>
 </section></section>
 <section>
-<section id="the-math-behind-lm" class="title-slide slide level1 center">
-<h1>The math behind <code>lm()</code></h1>
+<section id="confounding" class="title-slide slide level1 center">
+<h1>Confounding</h1>
 
 </section>
-<section id="least-squares-estimates" class="slide level2">
-<h2>Least squares estimates</h2>
+<section id="google-and-elon-musk" class="slide level2">
+<h2>Google and Elon Musk</h2>
+
+<img data-src="img/20515_google-searches-for-who-is-elon-musk_correlates-with_alphabets-stock-price-googl.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="cause-or-effect" class="slide level2">
+<h2>Cause or effect?</h2>
+
+<img data-src="05_linreg2_files/figure-revealjs/unnamed-chunk-13-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="cause-or-effect-1" class="slide level2">
+<h2>Cause or effect?</h2>
+
+<img data-src="05_linreg2_files/figure-revealjs/unnamed-chunk-14-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="cats-vote-democrat" class="slide level2">
+<h2>Cats vote Democrat!</h2>
+
+<img data-src="img/4598_google-searches-for-cat-memes_correlates-with_democrat-votes-for-senators-in-california.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="is-this-real" class="slide level2">
+<h2>Is this real?</h2>
+<div class="r-fit-text">
+<p><a href="https://tylervigen.com/spurious/correlation/4598_google-searches-for-cat-memes_correlates-with_democrat-votes-for-senators-in-california">Let’s ask AI!</a></p>
+</div>
 </section>
-<section id="the-qr-decomposition" class="slide level2">
-<h2>The QR decomposition</h2>
+<section id="confounding-and-spurious-correlations" class="slide level2">
+<h2>Confounding and spurious correlations</h2>
+<p>One needs to be careful when interpreting linear models.</p>
+<div class="fragment">
+<p><em>Confounding</em> may lead to significant associations that turn out not to be significant or may even be opposite effects!</p>
+</div>
+<div class="fragment">
+<p>This is known as the <strong>Simpson’s paradox</strong>.</p>
+</div>
+<div class="fragment">
+<p><strong>Association does not imply causation</strong></p>
+</div>
+</section>
+<section id="a-more-realistic-example" class="slide level2">
+<h2>A more realistic example</h2>
+<p>We want to study the fertility rates in Swiss provinces and their relations with some socio-economic indicators.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>             Fertility Agriculture Examination Education Catholic
+Courtelary        80.2        17.0          15        12     9.96
+Delemont          83.1        45.1           6         9    84.84
+Franches-Mnt      92.5        39.7           5         5    93.40
+Moutier           85.8        36.5          12         7    33.77
+Neuveville        76.9        43.5          17        15     5.16
+Porrentruy        76.1        35.3           9         7    90.57
+             Infant.Mortality
+Courtelary               22.2
+Delemont                 22.2
+Franches-Mnt             20.2
+Moutier                  20.3
+Neuveville               20.6
+Porrentruy               26.6</code></pre>
+</div>
+</div>
+</section>
+<section id="a-more-realistic-example-1" class="slide level2">
+<h2>A more realistic example</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Fertility ~ Agriculture, data = swiss)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-25.5374  -7.8685  -0.6362   9.0464  24.4858 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 60.30438    4.25126  14.185   &lt;2e-16 ***
+Agriculture  0.19420    0.07671   2.532   0.0149 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 11.82 on 45 degrees of freedom
+Multiple R-squared:  0.1247,    Adjusted R-squared:  0.1052 
+F-statistic: 6.409 on 1 and 45 DF,  p-value: 0.01492</code></pre>
+</div>
+</div>
+</section>
+<section id="a-more-realistic-example-2" class="slide level2">
+<h2>A more realistic example</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Fertility ~ Agriculture + Education + Catholic, 
+    data = swiss)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-15.178  -6.548   1.379   5.822  14.840 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 86.22502    4.73472  18.211  &lt; 2e-16 ***
+Agriculture -0.20304    0.07115  -2.854  0.00662 ** 
+Education   -1.07215    0.15580  -6.881 1.91e-08 ***
+Catholic     0.14520    0.03015   4.817 1.84e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.728 on 43 degrees of freedom
+Multiple R-squared:  0.6423,    Adjusted R-squared:  0.6173 
+F-statistic: 25.73 on 3 and 43 DF,  p-value: 1.089e-09</code></pre>
+</div>
+</div>
 </section></section>
 <section>
-<section id="hypothesis-testing" class="title-slide slide level1 center">
-<h1>Hypothesis testing</h1>
+<section id="almost-everything-is-a-linear-model" class="title-slide slide level1 center">
+<h1>(Almost) everything is a linear model!</h1>
 
 </section>
-<section id="the-t-test-and-its-friends" class="slide level2">
-<h2>The t-test and its friends</h2>
-<p>Consider introducing ranks and show that the nonparametric tests can also be written as linear models (perhaps as exercise/homework).</p>
+<section id="the-flexibility-of-linear-models" class="slide level2">
+<h2>The flexibility of linear models</h2>
+<p>As nicely shown by Jonas Kristoffer Lindelov in his blog post, <a href="https://lindeloev.github.io/tests-as-linear/">common statistical tests are linear models</a>:</p>
+
+<img data-src="img/linear_tests_cheat_sheet.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="example-t-test" class="slide level2">
+<h2>Example: t-test</h2>
+<p>Assume that we have measured gene ESR1 in a cohort of patients with breast cancer and we want to test if its expression is the same or different between patients with grade 1 or grade 3 tumors.</p>
+
+<img data-src="05_linreg2_files/figure-revealjs/unnamed-chunk-18-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="example-t-test-1" class="slide level2">
+<h2>Example: t-test</h2>
+<p>Assuming that the data are normal, we can use a t-test.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  ESR1 by grade
+t = 2.013, df = 30, p-value = 0.05316
+alternative hypothesis: true difference in means between group 1 and group 3 is not equal to 0
+95 percent confidence interval:
+  -10.45303 1448.48516
+sample estimates:
+mean in group 1 mean in group 3 
+       2349.383        1630.367 </code></pre>
+</div>
+</div>
 </section>
-<section id="paired-data" class="slide level2">
-<h2>Paired data</h2>
+<section id="example-t-test-2" class="slide level2">
+<h2>Example: t-test</h2>
+<p>An equivalent way to perform this test is by fitting a linear model, using the gene expression as response variable and grade as a categorical (binary) covariate.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = ESR1 ~ grade, data = brca)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1970.2  -589.6   195.4   572.7  1617.8 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   2349.4      252.6   9.302  2.4e-10 ***
+grade3        -719.0      357.2  -2.013   0.0532 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1010 on 30 degrees of freedom
+Multiple R-squared:  0.119, Adjusted R-squared:  0.08963 
+F-statistic: 4.052 on 1 and 30 DF,  p-value: 0.05316</code></pre>
+</div>
+</div>
 
 </section></section>
     </div>

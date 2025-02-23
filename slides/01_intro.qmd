@@ -41,9 +41,9 @@ single-cell and spatial transcriptomics.
 2. Experimental deisgn
 3. The generalized linear model
 4. Likelihood estimation and inference
-5. Nonparametric methods: permutaions and the bootstrap 
+5. Nonparametric methods: permutations and the bootstrap 
 6. Multivariate analysis: PCA and more
-7. Advanced statistical models: random effects, Bayesian models, discrete states
+7. Advanced statistical models: random effects, Bayesian models, discrete states, ...
 
 ## Program outline
 
@@ -58,7 +58,7 @@ single-cell and spatial transcriptomics.
 
 - **There is no textbook.**
 
-- Lecture slides and the companion website are the main resource.
+- Lecture slides and the companion website are the main resources.
 
 - In specific lectures I will give you additional materials, including suggested readings from books, journal articles, and more.
 
@@ -70,11 +70,14 @@ single-cell and spatial transcriptomics.
 - The exam will be in the computer lab, with R
 - It will consist of both practical matters (data exploration and analysis) as well as theoretical questions
 - The structure of the exam will be similar to the lab sessions
-- There will be a mock exam session
 
-## Wooclap
+## Wooclap Survey
 
-Wooclap survey.
+![](img/wooclap.png){fig-align="center"}
+
+[https://app.wooclap.com/BIYGFA?from=instruction-slide](https://app.wooclap.com/BIYGFA?from=instruction-slide)
+
+
 
 
 
