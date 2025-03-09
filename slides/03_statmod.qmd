@@ -642,16 +642,8 @@ loglik <- function(lambda, x = e100) {
 # Define a grid of lambdas
 lambdas = seq(0.05, 0.95, length = 100)
 
-for(lambda in lambdas) {
-    print(loglik(lambda))
-}
-
-
 # Compute the log-likelihood
 loglikelihood = vapply(lambdas, loglik, numeric(1))
-
-which.max(loglikelihood)
-lambdas[which.max(loglikelihood)]
 
 # Find the value that maximizes the log-likelihood
 lambda_hat <- lambdas[which.max(loglikelihood)]
