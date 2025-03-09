@@ -772,7 +772,7 @@ p(x) = \frac{1}{x!}\lambda^x e^{-\lambda}.
 <li class="fragment">Use the <code>dbinom</code> function in R to compute the likelihood for a grid of values of <span class="math inline">\(p\)</span> and determine numerically the MLE.</li>
 <li class="fragment">Plot the log-likelihood function.</li>
 <li class="fragment">Recall that the binomial pdf is <span class="math display">\[
-p(x) = \binom{n}{x} p^x (1-p)^x
+p(x) = \binom{n}{x} p^x (1-p)^{(n-x)}
 \]</span></li>
 <li class="fragment">Use the derivative of the log-likelihood to compute the MLE.</li>
 </ul>
@@ -782,7 +782,7 @@ p(x) = \binom{n}{x} p^x (1-p)^x
 <ul>
 <li class="fragment"><p>A statistical model uses probability distributions and random variables to provide a <em>generative mechanism</em> for the data that we observe.</p></li>
 <li class="fragment"><p>Random variables are used to account for the statistical randomness that we have in our observed samples.</p></li>
-<li class="fragment"><p>It is important to think carefully about what <em>assumptions</em> we are relying on when specificying a statistical model.</p></li>
+<li class="fragment"><p>It is important to think carefully about what <em>assumptions</em> we are relying on when specifying a statistical model.</p></li>
 </ul>
 </section>
 <section id="to-sum-up-1" class="slide level2">

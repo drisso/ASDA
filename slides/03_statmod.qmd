@@ -731,7 +731,7 @@ table(cb)
 - Plot the log-likelihood function.
 - Recall that the binomial pdf is
 $$
-p(x) = \binom{n}{x} p^x (1-p)^x
+p(x) = \binom{n}{x} p^x (1-p)^{(n-x)}
 $$
 - Use the derivative of the log-likelihood to compute the MLE.
 
@@ -741,7 +741,7 @@ $$
 
 - Random variables are used to account for the statistical randomness that we have in our observed samples.
 
-- It is important to think carefully about what _assumptions_ we are relying on when specificying a statistical model.
+- It is important to think carefully about what _assumptions_ we are relying on when specifying a statistical model.
 
 ## To sum up
 
