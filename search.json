@@ -24,7 +24,7 @@
     "href": "index.html#timeline",
     "title": "Advanced Statistics and Data Analysis",
     "section": "Timeline",
-    "text": "Timeline\n\nLectures\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n24/2/2025\nIntro to course and statistics recap\n2\n\n\n\n25/2/2025\nData wrangling and visualization\n2\n\n\n\n26/2/2025\nStatistical Modeling\n2\n\n\n\n27/2/2025\nLinear Models\n2\n\n\n\n28/2/2025\nLinear Models (part 2)\n2\n\n\n2\n10/3/2025\nExperimental design.\n2\n\n\n\n…\n\n\n\n\n\n\n\nLabs\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n26/2/2025\nData wrangling and visualization (part 1)\n4\n\n\n\n27/2/2025\nData wrangling and visualization (part 2)\n4\n\n\n\n28/2/2025\nLinear models\n4\n\n\n\n…",
+    "text": "Timeline\n\nLectures\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n24/2/2025\nIntro to course and statistics recap\n2\n\n\n\n25/2/2025\nData wrangling and visualization\n2\n\n\n\n26/2/2025\nVisualizing distributions\n2\n\n\n\n27/2/2025\nVisualizing multiple variables\n2\n\n\n\n28/2/2025\nStatistical modeling\n2\n\n\n2\n10/3/2025\nLeast squares regression\n2\n\n\n\n11/3/2025\nLinear models (part 1)\n4\n\n\n\n12/3/2025\nLinear models (part 2)\n2\n\n\n\n13/3/2025\nThe design matrix\n2\n\n\n\n14/3/2025\nConfounding and interactions\n2\n\n\n\n15/3/2025\nExperimental design (part 1)\n2\n\n\n3\n17/3/2025\nExperimental design (part 2)\n2\n\n\n\n18/3/2025\nGenralized Linear Models\n2\n\n\n\n\n\nLabs\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n26/2/2025\nData wrangling and visualization (part 1)\n4\n\n\n\n27/2/2025\nData wrangling and visualization (part 2)\n4\n\n\n\n28/2/2025\nData wrangling and visualization (part 3)\n4\n\n\n2\n13/3/2025\nLinear models (part 1)\n4\n\n\n\n14/3/2025\nLinear models (part 2)\n4\n\n\n3\n17/3/2025\nLinear models (part 3)\n4",
     "crumbs": [
       "Introduction"
     ]
@@ -407,6 +407,46 @@
     "text": "References",
     "crumbs": [
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Experimental design</span>"
+    ]
+  },
+  {
+    "objectID": "glm.html",
+    "href": "glm.html",
+    "title": "8  Generalized Linear Models",
+    "section": "",
+    "text": "8.1 Lecture Slides\nView slides in full screen",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Generalized Linear Models</span>"
+    ]
+  },
+  {
+    "objectID": "glm.html#lab",
+    "href": "glm.html#lab",
+    "title": "8  Generalized Linear Models",
+    "section": "8.2 Lab",
+    "text": "8.2 Lab",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Generalized Linear Models</span>"
+    ]
+  },
+  {
+    "objectID": "glm.html#homework",
+    "href": "glm.html#homework",
+    "title": "8  Generalized Linear Models",
+    "section": "8.3 Homework",
+    "text": "8.3 Homework",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Generalized Linear Models</span>"
+    ]
+  },
+  {
+    "objectID": "glm.html#further-reading",
+    "href": "glm.html#further-reading",
+    "title": "8  Generalized Linear Models",
+    "section": "8.4 Further reading",
+    "text": "8.4 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 8.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Generalized Linear Models</span>"
     ]
   }
 ]

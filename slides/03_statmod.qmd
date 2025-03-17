@@ -674,7 +674,7 @@ $$
 
 - Hence
 $$
-\ell(\lambda, x) = \sum_{i=1}^n -\lambda + x_i \log \lambda - \log(x!)
+\ell(\lambda, x) = \sum_{i=1}^n -\lambda + x_i \log \lambda - \log(x_i!)
 $$
 
 ## Classical statistics {.smaller}
