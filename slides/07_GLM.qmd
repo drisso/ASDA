@@ -116,7 +116,7 @@ We can think of GLMs as a two-way generalization of linear models:
 
 ## Likelihood estimation
 
-Recall that ordinary least squares can be seen as a _maximum likelihood estimate_ of the linear regression parameters.
+Recall that ordinary least squares can be seen as the _maximum likelihood estimate_ of the linear regression parameters.
 
 . . .
 
@@ -183,6 +183,41 @@ $$
 \mu = \frac{\exp(X \beta)}{1 + \exp(X\beta)}.
 $$
 
+## Example: logistic regression
+
+- Assume that we have collected data from 299 patients that had heart failure.
+
+- For each patient we measure if they died or survived after a follow-up period.
+
+- We can use a set of 13 clinical features to try to predict patient survival.
+
+```{r}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 20))
+
+heart <- read_csv("data/heart_failure_clinical_records_dataset.csv")
+```
+
+- In total, `r sum(heart$DEATH_EVENT)` patients out of `r nrow(heart)` died.
+
+
+## Example: logistic regression
+
+```{r}
+ggplot(heart, aes(x = time, y = DEATH_EVENT)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+## Example: logistic regression
+
+```{r}
+ggplot(heart, aes(x = time, y = DEATH_EVENT)) +
+    geom_point() +
+    geom_smooth(method = "glm", method.args = list(family=binomial), se = FALSE)
+```
+
+
 ## Example: Poisson regression
 
 Poisson regression (or log-linear regression) assumes that:
@@ -214,7 +249,51 @@ $$
 The log is called the _canonical link function_ because it is equal to the function that transforms the mean into the _canonical parameter_ in the exponential family formulation.
 :::
 
-## Quasi Likelihood
+## Example: Poisson regression
+
+- We measure the expression of two genes, DUSP1 and VCAM1, in airway smooth muscle (ASM) cell lines.
+
+- The DUSP1 gene plays an important role in the human cellular response to environmental stress.
+
+- The VCAM1 gene is involved in cell adhesion and signal transduction.
+
+- The genes are measured with an assay that yields counts as a measure of gene expression.
+
+## Example: Poisson regression
+
+```{r}
+library(airway)
+data("airway")
+y <- assay(airway)["ENSG00000120129",]
+df <- as.data.frame(colData(airway))
+df$DUSP1 <- y
+y <- assay(airway)["ENSG00000162692",]
+df$VCAM1 <- y
+
+
+ggplot(df, aes(x = VCAM1, y = DUSP1)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+## Example: Poisson regression
+
+```{r}
+library(airway)
+data("airway")
+y <- assay(airway)["ENSG00000120129",]
+df <- as.data.frame(colData(airway))
+df$DUSP1 <- y
+y <- assay(airway)["ENSG00000162692",]
+df$VCAM1 <- y
+
+
+ggplot(df, aes(x = VCAM1, y = DUSP1)) +
+    geom_point() +
+    geom_smooth(method = "glm", method.args = list(family=poisson), se = FALSE)
+```
+
+## Quasi Likelihood {visibility="hidden"}
 
 To completely define a GLM it is sufficient to specify:
 
@@ -279,7 +358,7 @@ $$
 S(\beta) = X^\top (Y - \mu).
 $$
 
-## Derivation {.smaller}
+## Derivation {.smaller} {visibility="hidden"}
 
 The log-likelihood is
 $$
@@ -316,9 +395,6 @@ We hence need numerical algorithms to find the values of $\beta$ that solve this
 ## Newton-Raphson
 
 ```{r}
-library(ggplot2)
-theme_set(theme_minimal(base_size = 20))
-
 S <- function(beta) (beta - 3)^2 
 dS <- function(beta) 2*(beta-3)
 dSline <- function(beta, betak) dS(betak) *beta + S(betak) - dS(betak) * betak
@@ -356,7 +432,7 @@ pNR +
 
 ## Newton-Raphson
 
-The Newton-Raphson algorithm is a numeric algorithm to find the "root" of a function, i.e., to find the value for which that function is equal to 0.
+The Newton-Raphson algorithm is a numerical algorithm to find the "root" of a function, i.e., to find the value for which that function is equal to 0.
 
 . . . 
 
@@ -368,7 +444,7 @@ Specifically:
 
 1. Choose an initial parameter estimate $\beta_k$;
 2. Calculate the score $S(\beta_k)$;
-3. Caluclate the derivative $\frac{\partial S(\beta)}{\partial \beta}$ at the value $\beta_k$;
+3. Calculate the derivative $\frac{\partial S(\beta)}{\partial \beta}$ at the value $\beta_k$;
 4. Go in the direction of the derivative until the point, $\beta_{k+1}$ in which it crosses the zero line;
 5. Update the value of $\beta$ to $\beta_{k+1}$;
 6. Iterate 2-5 until convergence.
@@ -403,7 +479,7 @@ $$
 Z = X \beta_k + \frac{\partial \eta}{\partial \mu} (Y - \mu).
 $$
 
-## Poisson example
+## Poisson example {visibility="hidden"}
 
 For Poisson data, we can see that
 
@@ -412,9 +488,110 @@ For Poisson data, we can see that
 
 ## Interpretation of IRLS
 
-Note that the estimate of $\beta$ at iteration $k$ is similar to the least squares estimator, but its weighted by a function of the variance.
+Note that the estimate of $\beta$ at iteration $k$ is similar to the least squares estimator, but it is weighted by a function of the variance.
 
 This is a way to account for the heteroschedasticity of the data.
+
+## Example: Poisson regression {visibility="hidden"}
+
+Let's go back to the example of the two genes.
+
+We can fit the model:
+$$
+\log E[Y | X] = \beta_0 + \beta_1 X,
+$$
+where $Y$ is the expression of DUSP1 and $X$ is the expression of VCAM1.
+
+## Example: Poisson regression {.smaller} {visibility="hidden"}
+
+We can now iteratively fit the model by:
+
+1. Choose initial values of $\beta^0 = [\beta_0 \, \beta_1] = [0 \, 1]$
+2. Calculate the score $S(\beta^0) = $
+
+## In R: the `glm()` function
+
+In R there is a very convenient function that implements the IRLS algorithm and has a syntax very similar to the `lm()` function.
+
+In addition to the formula, you need to specify the `family` of distributions you want to specify for the response variable and (implicitly or explicitly) the link function.
+
+```{r}
+#| echo: true
+#| eval: false
+
+fit <- glm(y ~ x, family = poisson)
+
+fit <- glm(y ~ x, family = poisson(link = "log"))
+```
+
+
+## Example: Poisson regression
+
+In the airway smooth muscle (ASM) cell lines, we have two additional variables to consider:
+
+1. The cell lines were either untreated or treated with dexamethasone (`dex`).
+
+2. The cell lines were derived from four distinct donors (`cell`).
+
+. . .
+
+It is of interest to check whether the DUSP1 gene changes between treated and control cells, potentially accounting for the differences in cell lines.
+
+## Example: Poisson regression
+
+```{r}
+df$dex <- relevel(df$dex, ref="untrt")
+fit <- glm(DUSP1 ~ dex, family = poisson, data = df)
+fit
+```
+
+## Interpretation of the parameters {.smaller}
+
+The Poisson regression model can be written as
+$$
+\log \mu_i = \beta_0 + \beta_1 x_{i},
+$$
+where $x_i=1$ if the cells are treated and $x_i=0$ if untreated.
+
+Hence,
+$$
+\log(\mu_i | x_i = 1) - \log(\mu_i | x_i = 0) = \beta_1
+$$
+
+which leads to
+$$
+\beta_1 = \log \left(\frac{\mu_i | x_i = 1}{\mu_i | x_i = 0}\right).
+$$
+
+## Example: logistic regression
+
+In the heart failure dataset, we may be interested in the relation between diabetes and heart failure.
+
+## Example: logistic regression
+
+```{r}
+fit <- glm(DEATH_EVENT ~ diabetes, family = binomial, data = heart)
+fit
+```
+
+## Interpretation of the parameters {.smaller}
+
+The logistic regression model can be written as
+$$
+\log \left( \frac{\mu_i}{1-\mu_i} \right)= \beta_0 + \beta_1 x_{i},
+$$
+where $x_i=1$ if the subject has diabetes and $x_i=0$ if not.
+
+Hence,
+$$
+\log \left( \frac{\mu_1}{1-\mu_1} \right) - \log \left( \frac{\mu_0}{1-\mu_0} \right) = \beta_1,
+$$
+where we indicate with $\mu_1 = E[Y|x=1]$ and $\mu_0 =  E[Y|x=0]$.
+
+We can thus interpret $\beta_1$ as the _log odds ratio_
+$$
+\beta_1 = \log OR = \log \left(\frac{\mu_1 / (1-\mu_1)}{\mu_0 / (1-\mu_0)}\right).
+$$
 
 # Inference
 
@@ -428,7 +605,7 @@ We can use the likelihood to compare two models, as we have done with the F stat
 
 . . .
 
-One can show that, _asyntotically_,
+One can show that, when $n \to \infty$,
 $$
 D = 2 [\ell(\hat\beta) - \ell(\hat\beta^0)] \stackrel{H_0}{\sim} \chi^2_{df-df_0},
 $$
@@ -437,15 +614,59 @@ where $\hat\beta$ and $\hat\beta^0$ are the estimates of the coefficient under t
 
 ## Wald Test {.smaller}
 
-An alternative to the LRT is the Wald test, that leverages the fact that asyntotically, i.e., when the sample size grows to infinity, 
+An alternative to the LRT is the Wald test, that leverages the fact that when $n \to \infty$, 
 $$
-\hat\beta \sim \mathcal{N}(\beta, (X^\top W X)^{-1}).
+\hat\beta \stackrel{H_0}{\sim} \mathcal{N}(\beta, (X^\top W X)^{-1}).
 $$
 
 Hence, the statistic
 $$
-t = \frac{\hat\beta_k}{\sqrt{[(X^\top W X)^{-1}]_{kk}}} \sim N(0, 1)
+t = \frac{\hat\beta_k}{\sqrt{[(X^\top W X)^{-1}]_{kk}}} \stackrel{H_0}{\sim} N(0, 1)
 $$
 can be used to compute confidence intervals and test the null hypothesis $\beta_k = 0$.
 
+## Example: Poisson regression
 
+In the airway smooth muscle (ASM) cell lines, we have two additional variables to consider:
+
+1. The cell lines were either untreated or treated with dexamethasone (`dex`).
+
+2. The cell lines were derived from four distinct donors (`cell`).
+
+. . .
+
+It is of interest to check whether the DUSP1 gene changes between treated and control cells, potentially accounting for the differences in cell lines.
+
+## Poisson regression: Wald test
+
+```{r}
+fit <- glm(DUSP1 ~ dex, family = poisson, data = df)
+summary(fit)
+```
+
+## Poisson regression: Wald Test
+
+```{r}
+fit2 <- glm(DUSP1 ~ dex + cell, family = poisson, data = df)
+summary(fit2)
+```
+
+## Poisson regression: LRT
+
+```{r}
+anova(fit, fit2)
+```
+
+## Logistic regression: 
+
+```{r}
+fit <- glm(DEATH_EVENT ~ . - time, family = binomial, data = heart)
+summary(fit)
+```
+
+## Logistic regression: Wald test
+
+```{r}
+fit0 <- glm(DEATH_EVENT ~ age + sex + smoking, family = binomial, data = heart)
+anova(fit0, fit)
+```

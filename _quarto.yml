@@ -16,6 +16,7 @@ book:
     - linmod.qmd
     - linmod2.qmd
     - design.qmd
+    - glm.qmd
 
 bibliography: references.bib
 

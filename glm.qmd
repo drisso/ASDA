@@ -1,0 +1,20 @@
+---
+title: "Generalized Linear Models"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< revealjs "slides/07_GLM.html" >}}
+
+## Lab
+
+## Homework 
+
+## Further reading
+
+- S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 8](https://www.huber.embl.de/msmb/08-chap.html).
+
