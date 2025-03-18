@@ -24,7 +24,7 @@
     "href": "index.html#timeline",
     "title": "Advanced Statistics and Data Analysis",
     "section": "Timeline",
-    "text": "Timeline\n\nLectures\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n24/2/2025\nIntro to course and statistics recap\n2\n\n\n\n25/2/2025\nData wrangling and visualization\n2\n\n\n\n26/2/2025\nVisualizing distributions\n2\n\n\n\n27/2/2025\nVisualizing multiple variables\n2\n\n\n\n28/2/2025\nStatistical modeling\n2\n\n\n2\n10/3/2025\nLeast squares regression\n2\n\n\n\n11/3/2025\nLinear models (part 1)\n4\n\n\n\n12/3/2025\nLinear models (part 2)\n2\n\n\n\n13/3/2025\nThe design matrix\n2\n\n\n\n14/3/2025\nConfounding and interactions\n2\n\n\n\n15/3/2025\nExperimental design (part 1)\n2\n\n\n3\n17/3/2025\nExperimental design (part 2)\n2\n\n\n\n18/3/2025\nGenralized Linear Models\n2\n\n\n\n\n\nLabs\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n26/2/2025\nData wrangling and visualization (part 1)\n4\n\n\n\n27/2/2025\nData wrangling and visualization (part 2)\n4\n\n\n\n28/2/2025\nData wrangling and visualization (part 3)\n4\n\n\n2\n13/3/2025\nLinear models (part 1)\n4\n\n\n\n14/3/2025\nLinear models (part 2)\n4\n\n\n3\n17/3/2025\nLinear models (part 3)\n4",
+    "text": "Timeline\n\nLectures\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n24/2/2025\nIntro to course and statistics recap\n2\n\n\n\n25/2/2025\nData wrangling and visualization\n2\n\n\n\n26/2/2025\nVisualizing distributions\n2\n\n\n\n27/2/2025\nVisualizing multiple variables\n2\n\n\n\n28/2/2025\nStatistical modeling\n2\n\n\n2\n10/3/2025\nLeast squares regression\n2\n\n\n\n11/3/2025\nLinear models (part 1)\n4\n\n\n\n12/3/2025\nLinear models (part 2)\n2\n\n\n\n13/3/2025\nConfounding and interactions\n2\n\n\n\n14/3/2025\nExperimental design (part 1)\n2\n\n\n3\n17/3/2025\nExperimental design (part 2)\n2\n\n\n\n18/3/2025\nGenralized Linear Models\n2\n\n\n\n\n\nLabs\n\n\n\nWeek\nDate\nTopic\nHours\n\n\n\n\n1\n26/2/2025\nData wrangling and visualization (part 1)\n4\n\n\n\n27/2/2025\nData wrangling and visualization (part 2)\n4\n\n\n\n28/2/2025\nData wrangling and visualization (part 3)\n4\n\n\n2\n13/3/2025\nLinear models (part 1)\n4\n\n\n\n14/3/2025\nLinear models (part 2)\n4\n\n\n3\n17/3/2025\nLinear models (part 3)\n4",
     "crumbs": [
       "Introduction"
     ]
@@ -447,6 +447,46 @@
     "text": "8.4 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 8.",
     "crumbs": [
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Generalized Linear Models</span>"
+    ]
+  },
+  {
+    "objectID": "hdr.html",
+    "href": "hdr.html",
+    "title": "9  High-dimensional regression",
+    "section": "",
+    "text": "9.1 Lecture Slides\nView slides in full screen",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>High-dimensional regression</span>"
+    ]
+  },
+  {
+    "objectID": "hdr.html#lab",
+    "href": "hdr.html#lab",
+    "title": "9  High-dimensional regression",
+    "section": "9.2 Lab",
+    "text": "9.2 Lab",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>High-dimensional regression</span>"
+    ]
+  },
+  {
+    "objectID": "hdr.html#homework",
+    "href": "hdr.html#homework",
+    "title": "9  High-dimensional regression",
+    "section": "9.3 Homework",
+    "text": "9.3 Homework",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>High-dimensional regression</span>"
+    ]
+  },
+  {
+    "objectID": "hdr.html#further-reading",
+    "href": "hdr.html#further-reading",
+    "title": "9  High-dimensional regression",
+    "section": "9.4 Further reading",
+    "text": "9.4 Further reading\n\nJames, Witten, Hastie, Tibshirani. An introduction to statistical learning. Chapter 6\nEfron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. Chapter 16",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>High-dimensional regression</span>"
     ]
   }
 ]
