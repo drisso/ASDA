@@ -24,9 +24,8 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 | 2    | 10/3/2025 | Least squares regression             | 2     |
 |      | 11/3/2025 | Linear models (part 1)               | 4     |
 |      | 12/3/2025 | Linear models (part 2)               | 2     |
-|      | 13/3/2025 | The design matrix                    | 2     |
-|      | 14/3/2025 | Confounding and interactions         | 2     |
-|      | 15/3/2025 | Experimental design (part 1)         | 2     |
+|      | 13/3/2025 | Confounding and interactions         | 2     |
+|      | 14/3/2025 | Experimental design (part 1)         | 2     |
 | 3    | 17/3/2025 | Experimental design (part 2)         | 2     |
 |      | 18/3/2025 | Genralized Linear Models             | 2     |
 

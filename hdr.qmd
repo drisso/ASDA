@@ -1,0 +1,20 @@
+---
+title: "High-dimensional regression"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< revealjs "slides/08_Lasso.html" >}}
+
+## Lab
+
+## Homework 
+
+## Further reading
+
+- James, Witten, Hastie, Tibshirani. An introduction to statistical learning. [Chapter 6](https://www.statlearning.com/)
+- Efron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. [Chapter 16](https://hastie.su.domains/CASI/)
