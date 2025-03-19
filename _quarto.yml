@@ -17,6 +17,7 @@ book:
     - linmod2.qmd
     - design.qmd
     - glm.qmd
+    - hdr.qmd
 
 bibliography: references.bib
 

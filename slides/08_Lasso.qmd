@@ -18,9 +18,9 @@ knitr:
 
 # Ridge regression
 
-## Least square estimator
+## Least squares estimator
 
-The least square estimator, given by
+The least squares estimator, given by
 $$
 \hat{\beta}=(X^\top X)^{-1} X^\top y
 $$
@@ -32,7 +32,7 @@ $$
 
 ## A possible issue: colinearity
 
-Remember that if $X$ is not full rank, $X^\top X$ is singular and we cannot compute the least square estimate.
+Remember that if $X$ is not full rank, $X^\top X$ is singular and we cannot compute the least squares estimate.
 
 . . .
 
@@ -240,7 +240,7 @@ but this is not a convex function, hence it is difficult to optimize.
 
 ## The lasso {.smaller}
 
-One soultion is to use the $\ell_1$ norm, which is a proper norm and leads to a convex problem:
+One solution is to use the $\ell_1$ norm, which is a proper norm and leads to a convex problem:
 
 $$
 \hat{\beta}(\lambda) = \text{argmin}_\beta \left\{|| y - X\beta ||^2_2 + \lambda || \beta ||_1 \right\}.
@@ -257,7 +257,7 @@ where $|| \beta ||_1 = \sum_{j=1}^p |\beta_j|$ is the $\ell_1$ norm of the coeff
 
 ## Ridge, with more sparsity
 
-Of course this is much related to ridge regression, which can be obatined by substituting the constraint $|| \beta ||_2 \leq t$.
+Of course this is much related to ridge regression, which can be obtained by substituting the constraint $|| \beta ||_2 \leq t$.
 
 . . .
 

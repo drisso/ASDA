@@ -10,11 +10,38 @@ execute:
 
 {{< revealjs "slides/07_GLM.html" >}}
 
-## Lab
+## Lab [^1]
 
-## Homework 
+In the United States, there have been significant and historical declines in cigarette smoking. In the 1970s, 75% of high school seniors were smoking, that number is below 10% now. This progress is largely due to the tobacco control movement and their focus on initiatives like ending advertising to children (like Joe Camel), passing indoor smoking laws, health communication, etc.
+
+According to a recent report, overall tobacco/nicotine use increased in youths (middle school and high school students) in the United States in 2017 and 2018, despite previous years of declining use.
+
+This major increase is attributed to an increase in the use of electronic cigarette (e-cigarette) products.
+
+The main questions are:
+
+1. How has tobacco and e-cigarette/vaping use by American youths changed since 2015?
+2. How does e-cigarette use compare between males and females?
+3. What vaping brands and flavors appear to be used the most frequently?
+4. Is there a relationship between e-cigarette/vaping use and other tobacco use?
+
+### Guided solution
+
+1. Read-in the data: because we focused on data wrangling on a previous lab, I suggest that you start from the already cleaned-up version of the data, that you can find [here](https://raw.githubusercontent.com/opencasestudies/ocs-bp-vaping-case-study/master/data/wrangled/wrangled_data_with_var_for_plots.rda). 
+    - Note that you have to use the function `load()`.
+    - The "codebook" with the explanation of the variables can be found [here](https://www.cdc.gov/tobacco/data_statistics/surveys/nyts/zip_files/2019/2019-nyts-dataset-and-codebook-microsoft-excel.zip)
+    - In addition to the variables in the cookbook, some other variables have been define that sum all the e-cigarette / non-e-cigarette products.
+    
+2. Create plots to visualize the data and answer graphically to the questions above.
+
+3. Consider only data from 2015 and fit a model to compare **current use of e-cigarettes** between males and females.
+    - Compute "by hand" the Odds Ratio (OR) of the use of e-cigarettes between males and females. Who is most likely to smoke e-cigarettes in 2015? By how much?
+    - Fit a logistic regression model. Is the difference significance? How do you interpret $\beta_1$? What is its relationship with the OR calculated above? Is it the same?
+    
+4. Go back to the full data, and fit a new logistic model that includes, in addition to Sex, year, and "non_ecig_ever". If appropriate, consider including interactions. What do you conclude?
 
 ## Further reading
 
 - S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 8](https://www.huber.embl.de/msmb/08-chap.html).
 
+[^1]: This homework is one of the [Open Case Studies](https://www.opencasestudies.org/). Please try to solve this yourself before looking at the solution there.
