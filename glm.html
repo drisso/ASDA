@@ -77,6 +77,35 @@ ul.task-list li input[type="checkbox"] {
   </style>
   
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -185,9 +214,11 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">8.1</span> Lecture Slides</a></li>
-  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">8.2</span> Lab</a></li>
-  <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">8.3</span> Homework</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">8.4</span> Further reading</a></li>
+  <li><a href="#lab-1" id="toc-lab-1" class="nav-link" data-scroll-target="#lab-1"><span class="header-section-number">8.2</span> Lab </a>
+  <ul class="collapse">
+  <li><a href="#guided-solution" id="toc-guided-solution" class="nav-link" data-scroll-target="#guided-solution"><span class="header-section-number">8.2.1</span> Guided solution</a></li>
+  </ul></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">8.3</span> Further reading</a></li>
   </ul>
 </nav>
     </div>
@@ -221,19 +252,50 @@ ul.task-list li input[type="checkbox"] {
     </div>
   
 </section>
-<section id="lab" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">8.2</span> Lab</h2>
+<section id="lab-1" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="lab-1"><span class="header-section-number">8.2</span> Lab <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h2>
+<p>In the United States, there have been significant and historical declines in cigarette smoking. In the 1970s, 75% of high school seniors were smoking, that number is below 10% now. This progress is largely due to the tobacco control movement and their focus on initiatives like ending advertising to children (like Joe Camel), passing indoor smoking laws, health communication, etc.</p>
+<p>According to a recent report, overall tobacco/nicotine use increased in youths (middle school and high school students) in the United States in 2017 and 2018, despite previous years of declining use.</p>
+<p>This major increase is attributed to an increase in the use of electronic cigarette (e-cigarette) products.</p>
+<p>The main questions are:</p>
+<ol type="1">
+<li>How has tobacco and e-cigarette/vaping use by American youths changed since 2015?</li>
+<li>How does e-cigarette use compare between males and females?</li>
+<li>What vaping brands and flavors appear to be used the most frequently?</li>
+<li>Is there a relationship between e-cigarette/vaping use and other tobacco use?</li>
+</ol>
+<section id="guided-solution" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="guided-solution"><span class="header-section-number">8.2.1</span> Guided solution</h3>
+<ol type="1">
+<li><p>Read-in the data: because we focused on data wrangling on a previous lab, I suggest that you start from the already cleaned-up version of the data, that you can find <a href="https://raw.githubusercontent.com/opencasestudies/ocs-bp-vaping-case-study/master/data/wrangled/wrangled_data_with_var_for_plots.rda">here</a>.</p>
+<ul>
+<li>Note that you have to use the function <code>load()</code>.</li>
+<li>The “codebook” with the explanation of the variables can be found <a href="https://www.cdc.gov/tobacco/data_statistics/surveys/nyts/zip_files/2019/2019-nyts-dataset-and-codebook-microsoft-excel.zip">here</a></li>
+<li>In addition to the variables in the cookbook, some other variables have been define that sum all the e-cigarette / non-e-cigarette products.</li>
+</ul></li>
+<li><p>Create plots to visualize the data and answer graphically to the questions above.</p></li>
+<li><p>Consider only data from 2015 and fit a model to compare <strong>current use of e-cigarettes</strong> between males and females.</p>
+<ul>
+<li>Compute “by hand” the Odds Ratio (OR) of the use of e-cigarettes between males and females. Who is most likely to smoke e-cigarettes in 2015? By how much?</li>
+<li>Fit a logistic regression model. Is the difference significance? How do you interpret <span class="math inline">\(\beta_1\)</span>? What is its relationship with the OR calculated above? Is it the same?</li>
+</ul></li>
+<li><p>Go back to the full data, and fit a new logistic model that includes, in addition to Sex, year, and “non_ecig_ever”. If appropriate, consider including interactions. What do you conclude?</p></li>
+</ol>
 </section>
-<section id="homework" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">8.3</span> Homework</h2>
 </section>
-<section id="further-reading" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">8.4</span> Further reading</h2>
+<section id="further-reading" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">8.3</span> Further reading</h2>
 <ul>
 <li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/08-chap.html">Chapter 8</a>.</li>
 </ul>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>This homework is one of the <a href="https://www.opencasestudies.org/">Open Case Studies</a>. Please try to solve this yourself before looking at the solution there.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->

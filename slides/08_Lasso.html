@@ -210,9 +210,9 @@ Davide Risso
 <h1>Ridge regression</h1>
 
 </section>
-<section id="least-square-estimator" class="slide level2">
-<h2>Least square estimator</h2>
-<p>The least square estimator, given by <span class="math display">\[
+<section id="least-squares-estimator" class="slide level2">
+<h2>Least squares estimator</h2>
+<p>The least squares estimator, given by <span class="math display">\[
 \hat{\beta}=(X^\top X)^{-1} X^\top y
 \]</span></p>
 <p>is the MLE of <span class="math inline">\(\beta\)</span>, unbiased and <span class="math display">\[
@@ -221,7 +221,7 @@ Davide Risso
 </section>
 <section id="a-possible-issue-colinearity" class="slide level2">
 <h2>A possible issue: colinearity</h2>
-<p>Remember that if <span class="math inline">\(X\)</span> is not full rank, <span class="math inline">\(X^\top X\)</span> is singular and we cannot compute the least square estimate.</p>
+<p>Remember that if <span class="math inline">\(X\)</span> is not full rank, <span class="math inline">\(X^\top X\)</span> is singular and we cannot compute the least squares estimate.</p>
 <div class="fragment">
 <p>When <span class="math inline">\(p&gt;n\)</span> we are guaranteed to have colinearity.</p>
 </div>
@@ -371,17 +371,17 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 <tr class="odd">
 <td style="text-align: left;">X208748_s_at</td>
 <td style="text-align: right;">0.343</td>
-<td style="text-align: right;">0.314</td>
+<td style="text-align: right;">0.311</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">X208749_x_at</td>
 <td style="text-align: right;">0.211</td>
-<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.063</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">X210142_x_at</td>
 <td style="text-align: right;">-0.291</td>
-<td style="text-align: right;">-0.175</td>
+<td style="text-align: right;">-0.171</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">X213819_s_at</td>
@@ -416,7 +416,7 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 </section>
 <section id="the-lasso-1" class="slide level2 smaller">
 <h2>The lasso</h2>
-<p>One soultion is to use the <span class="math inline">\(\ell_1\)</span> norm, which is a proper norm and leads to a convex problem:</p>
+<p>One solution is to use the <span class="math inline">\(\ell_1\)</span> norm, which is a proper norm and leads to a convex problem:</p>
 <p><span class="math display">\[
 \hat{\beta}(\lambda) = \text{argmin}_\beta \left\{|| y - X\beta ||^2_2 + \lambda || \beta ||_1 \right\}.
 \]</span></p>
@@ -429,7 +429,7 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 </section>
 <section id="ridge-with-more-sparsity" class="slide level2">
 <h2>Ridge, with more sparsity</h2>
-<p>Of course this is much related to ridge regression, which can be obatined by substituting the constraint <span class="math inline">\(|| \beta ||_2 \leq t\)</span>.</p>
+<p>Of course this is much related to ridge regression, which can be obtained by substituting the constraint <span class="math inline">\(|| \beta ||_2 \leq t\)</span>.</p>
 <div class="fragment">
 <p>A big practical difference is that the lasso’s solution typically has many <span class="math inline">\(\beta_j\)</span>’s exactly equal to 0, which is not the case for ridge.</p>
 </div>
@@ -544,31 +544,31 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>fit.cv<span class="sc">$</span>lambda.min</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7533147</code></pre>
+<pre><code>[1] 1.19949</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>fit.cv<span class="sc">$</span>lambda<span class="fl">.1</span>se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 5.314486</code></pre>
+<pre><code>[1] 6.401318</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">coef</span>(fit.cv, <span class="at">s =</span> <span class="st">"lambda.1se"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>11 x 1 sparse Matrix of class "dgCMatrix"
-                    s1
-(Intercept)  152.13348
-AGE            .      
-SEX          -33.34979
-BMI          508.14348
-BP           210.34230
-S1             .      
-S2             .      
-S3          -138.84266
-S4             .      
-S5           444.58979
-S6             .      </code></pre>
+                   s1
+(Intercept)  152.1335
+AGE            .     
+SEX            .     
+BMI          503.9295
+BP           188.5842
+S1             .     
+S2             .     
+S3          -111.3719
+S4             .     
+S5           438.1315
+S6             .     </code></pre>
 </div>
 </div>
 </section></section>
