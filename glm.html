@@ -281,6 +281,13 @@ window.Quarto = {
 </ul></li>
 <li><p>Go back to the full data, and fit a new logistic model that includes, in addition to Sex, year, and “non_ecig_ever”. If appropriate, consider including interactions. What do you conclude?</p></li>
 </ol>
+<p>BonusL</p>
+<ol start="5" type="1">
+<li>Use the <code>glmnet</code> package to fit a lasso regression that has the current use of e-cigarettes as response and any appropriate variable in the dataset as covariates.
+<ul>
+<li>Hint: use the <code>cv.glmnet</code> function to perform the cross-validation and the <code>coef(fit.cv, s = "lambda.1se")</code> to obtain the coefficient estimates.</li>
+</ul></li>
+</ol>
 </section>
 </section>
 <section id="further-reading" class="level2" data-number="8.3">
