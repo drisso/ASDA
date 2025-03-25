@@ -40,6 +40,11 @@ The main questions are:
     
 4. Go back to the full data, and fit a new logistic model that includes, in addition to Sex, year, and "non_ecig_ever". If appropriate, consider including interactions. What do you conclude?
 
+Bonus:
+
+5. Use the `glmnet` package to fit a lasso regression that has the current use of e-cigarettes as response and any appropriate variable in the dataset as covariates.
+    - Hint: use the `cv.glmnet` function to perform the cross-validation and the `coef(fit.cv, s = "lambda.1se")` to obtain the coefficient estimates.
+
 ## Further reading
 
 - S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 8](https://www.huber.embl.de/msmb/08-chap.html).

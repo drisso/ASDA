@@ -18,6 +18,7 @@ book:
     - design.qmd
     - glm.qmd
     - hdr.qmd
+    - bayes.qmd
 
 bibliography: references.bib
 

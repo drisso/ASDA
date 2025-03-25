@@ -1,0 +1,16 @@
+---
+title: "Nonparametric and Bayesian methods"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< revealjs "slides/09_nonparametrics.html" >}}
+
+## Further reading
+
+- S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 2](https://www.huber.embl.de/msmb/02-chap.html#bayesian-thinking).
+- Efron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. [Chapter 16](https://hastie.su.domains/CASI/)
