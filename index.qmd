@@ -1,6 +1,8 @@
 # Introduction {.unnumbered}
 
-This is the companion website of the "Advanced Statistics and Data Analysis" course, taught within the ["Quantitative and Computational Biosciences" Master's program](https://www.unipd.it/en/educational-offer/second-cycle-degree/science?tipo=LM&scuola=SC&ordinamento=2024&key=SC2804&cg=science) at the [University of Padova](https://www.unipd.it/).
+This is the companion website of the 2026 edition of the "Advanced Statistics and Data Analysis" course, taught within the ["Quantitative and Computational Biosciences" Master's program](https://www.unipd.it/en/educational-offer/second-cycle-degree/science?tipo=LM&scuola=SC&ordinamento=2024&key=SC2804&cg=science) at the [University of Padova](https://www.unipd.it/).
+
+If you are looking for the materials of the 2025 edition of this course, you can find them on the [2025 branch of the github repository](https://github.com/drisso/ASDA/tree/2025).
 
 ## Organization of this website
 
@@ -16,30 +18,33 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 
 | Week | Date      | Topic                                | Hours |
 |------|-----------|--------------------------------------|-------|
-| 1    | 24/2/2025 | Intro to course and statistics recap | 2     |
-|      | 25/2/2025 | Data wrangling and visualization     | 2     |
-|      | 26/2/2025 | Visualizing distributions            | 2     |
-|      | 27/2/2025 | Visualizing multiple variables       | 2     |
-|      | 28/2/2025 | Statistical modeling                 | 2     |
-| 2    | 10/3/2025 | Least squares regression             | 2     |
-|      | 11/3/2025 | Linear models (part 1)               | 4     |
-|      | 12/3/2025 | Linear models (part 2)               | 2     |
-|      | 13/3/2025 | Confounding and interactions         | 2     |
-|      | 14/3/2025 | Experimental design (part 1)         | 2     |
-| 3    | 17/3/2025 | Experimental design (part 2)         | 2     |
-|      | 18/3/2025 | Genralized Linear Models             | 2     |
+| 1    | 23/2/2026 | Intro to course  (online)            | 2     |
+|      | 24/2/2026 | Data wrangling and visualization     | 2     |
+|      | 26/2/2026 | Visualizing distributions            | 2     |
+|      | 27/2/2026 | Visualizing multiple variables       | 2     |
+| 2    | 3/3/2026 | TBA          | 2     |
+|      | 5/3/2026 | TBA              | 2     |
+|      | 6/3/2026 | TBA (online)        | 4     |
+| 3    | 9/3/2026 | TBA          | 2     |
+|      | 10/3/2026 | TBA               | 2     |
+|      | 12/3/2026 | TBA              | 2     |
+|      | 13/3/2026 | TBA         | 2     |
+| 5    | 23/3/2026 | TBA (online)         | 2     |
+|      | 24/3/2026 | TBA               | 2     |
+|      | 26/3/2026 | TBA              | 2     |
+|      | 27/3/2026 | TBA         | 2     |
 
 
 ### Labs
 
 | Week | Date      | Topic                                     | Hours |
 |------|-----------|-------------------------------------------|-------|
-| 1    | 26/2/2025 | Data wrangling and visualization (part 1) | 4     |
-|      | 27/2/2025 | Data wrangling and visualization (part 2) | 4     |
-|      | 28/2/2025 | Data wrangling and visualization (part 3) | 4     |
-| 2    | 13/3/2025 | Linear models (part 1)                    | 4     |
-|      | 14/3/2025 | Linear models (part 2)                    | 4     |
-| 3    | 17/3/2025 | Linear models (part 3)                    | 4     |
+| 1    | 25/2/2026 | Data wrangling and visualization (part 1) | 4     |
+| 2    | 4/3/2026  | TBA | 4     |
+| 3    | 11/3/2026 | TBA | 4     |
+| 4    | 18/3/2026 | TBA                   | 4     |
+| 5    | 25/3/2026 | TBA                    | 4     |
+| 6    | 30/3/2026 | TBA                    | 4     |
 
 
 ## Suggested reading materials
