@@ -2,3 +2,9 @@
 /_site/
 /_book/
 /.Rproj.user/
+slides/*.pdf
+slides/*.html
+slides/*_files/
+.DS_Store
+slides/.DS_Store
+*_files/
