@@ -10,15 +10,15 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - dataviz.qmd
-    - dataviz2.qmd
-    - git.qmd
-    - linmod.qmd
-    - linmod2.qmd
-    - design.qmd
-    - glm.qmd
-    - hdr.qmd
-    - bayes.qmd
+#    - dataviz.qmd
+#    - dataviz2.qmd
+#    - git.qmd
+#    - linmod.qmd
+#    - linmod2.qmd
+#    - design.qmd
+#    - glm.qmd
+#    - hdr.qmd
+#    - bayes.qmd
 
 bibliography: references.bib
 

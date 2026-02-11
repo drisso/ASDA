@@ -7,8 +7,8 @@ format: revealjs
 
 ## Class organization
 
--   2 hrs of lecture in the morning (9:30 or 11:30)
--   4 hrs of labs in the afternoon (14:30)
+-   2 hrs of lecture Monday through Friday (9:30 or 11:30)
+-   4 hrs of lab typically on Wednesday (9:30)
 
 Office hours to be agreed over email.
 
@@ -31,7 +31,7 @@ tering, factor analysis and dimensionality reduction, multiple hypothesis testin
 multiple sources (meta-analysis).
 - **Omics data analysis**: design and analysis of high-throughput gene expression experiments, analysis of
 single-cell and spatial transcriptomics.
-- **Statistical software development**: author of >10 Bioconductor packages, member of the Bioconductor Technical Advisory Board.
+- **Statistical software development**: author of >10 Bioconductor packages.
 
 ## Program outline
 
@@ -41,9 +41,8 @@ single-cell and spatial transcriptomics.
 2. Experimental deisgn
 3. The generalized linear model
 4. Likelihood estimation and inference
-5. Nonparametric methods: permutations and the bootstrap 
-6. Multivariate analysis: PCA and more
-7. Advanced statistical models: random effects, Bayesian models, discrete states, ...
+5. Multivariate analysis: PCA and clustering
+6. Advanced statistical models: random effects, Bayesian models, nonparametric methods, ...
 
 ## Program outline
 
