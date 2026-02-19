@@ -595,7 +595,8 @@ The *median absolute deviation* (MAD) is the median of the absolute deviations f
 
 $$
 MAD_x = \text{median}( | x_i - M_x |)
-$$ where $M_x$ is the median of $\{x_1, \ldots, x_n\}$.
+$$ 
+where $M_x$ is the median of $\{x_1, \ldots, x_n\}$.
 
 ## Quantiles
 
@@ -864,7 +865,7 @@ We can estimate a 2D density and plot the density function instead of (or in add
 
 ```{r}
 #| fig-align: center
-scp + geom_density_2d(h = 0.5, bins = 60) + coord_fixed()
+scp + geom_density_2d(h = c(0.5, 0.5), bins = 60) + coord_fixed()
 ```
 
 ## Example {.smaller}
@@ -873,6 +874,7 @@ In this case a better alternative is to use hexagonal binning of points to repre
 
 ```{r}
 #| fig-align: center
+library(hexbin)
 scp + geom_hex(binwidth = c(0.2, 0.2)) +
     scale_fill_viridis_c() +
     coord_fixed()
@@ -998,6 +1000,7 @@ Heatmaps can be used to visualize high-dimensional data.
 #| fig-width: 6
 #| fig-height: 5
 library("pheatmap")
+library("RColorBrewer")
 topGenes = order(rowVars(Biobase::exprs(x)), decreasing = TRUE)[1:500]
 rowCenter = function(x) { x - rowMeans(x) }
 dfx <- as.data.frame(Biobase::exprs(x))

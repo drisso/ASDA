@@ -10,8 +10,8 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-#    - dataviz.qmd
-#    - dataviz2.qmd
+    - dataviz.qmd
+    - dataviz2.qmd
 #    - git.qmd
 #    - linmod.qmd
 #    - linmod2.qmd

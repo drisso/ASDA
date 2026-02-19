@@ -40,7 +40,7 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 | Week | Date      | Topic                                     | Hours |
 |------|-----------|-------------------------------------------|-------|
 | 1    | 25/2/2026 | Data wrangling and visualization (part 1) | 4     |
-| 2    | 2/3/2026  | TBA | 4     |
+| 2    | 2/3/2026  | Data wrangling and visualization (part 2) | 4     |
 | 3    | 4/3/2026  | TBA | 4     |
 | 4    | 9/3/2026  | TBA                   | 4     |
 | 5    | 11/3/2026 | TBA                    | 4     |
