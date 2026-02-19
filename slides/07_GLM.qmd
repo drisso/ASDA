@@ -1,0 +1,672 @@
+---
+title: "Generalized Linear Models"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    revealjs:
+        theme: default
+        incremental: true
+        scrollable: true
+html-math-method:
+    method: mathjax
+    url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
+---
+
+# Introduction
+
+## Linear models
+
+Linear models are the most useful applied statistics technique.
+
+However, they have their limitations:
+
+- The response may not be continuous
+- The response may have a limited range of possible values
+
+. . .
+
+In such cases, linear models are not ideal and we may want to consider _generalizations_ of it.
+
+## Generalized Linear Models (GLMs)
+
+The **Generalized Linear Model (GLM)** is a family of models that _includes_ the linear model and extend it to situations in which the response variable has a distribution of the _exponential family_.
+
+. . .
+
+The _exponential family_ is a family of distributions that includes the Gaussian, Poisson, Binomial, Gamma, among others.
+
+## Exponential Family
+
+The density function of a distribution of the exponential family can be written as
+$$
+f(y_i; \theta_i, \phi) = \exp \left\{\frac{y_i \theta_i - b(\theta_i)}{a(\phi)} + c(y_i, \phi)\right\},
+$$
+where:
+
+- $\theta_i$ are the _canonical parameters_;
+- $\phi$ is the _dispersion parameter_;
+- $a$, $b$, and $c$ are functions that depend on the specific distribution.
+
+
+## Example: Poisson distribution {.smaller}
+
+The probability function of a Poisson distribution can be written as
+$$
+f(y_i; \lambda_i) = \frac{\lambda_i^{y_i} e^{-\lambda_i}}{y_i!},
+$$
+
+or equivalently as
+$$
+f(y_i; \lambda_i) = \exp\left\{y_i \log(\lambda_i) - \lambda_i - \log(y_i!)\right\},
+$$
+
+which corresponds to an exponential family with:
+
+- $\theta_i = \log(\lambda_i)$;
+- $b(\theta_i) = \exp(\theta_i)$;
+- $a(\phi) = 1$;
+- $c(y_i, \phi) = -\log(y_i!)$.
+
+## Log-likelihood function {.smaller}
+
+Note that the log-likelihood function of the exponential family can be written as
+$$
+\ell(\lambda; y) = \sum_{i=1}^n \frac{y_i \theta_i - b(\theta_i)}{a(\phi)} + c(y_i, \phi).
+$$
+
+One can show that:
+$$
+E[Y_i] = \mu_i = b'(\theta_i)
+$$
+and
+$$
+Var(Y_i) = b''(\theta_i) a(\phi),
+$$
+
+where $b'()$ and $b''()$ are the first and second derivative of $b$.
+
+::: {.callout-important}
+Note that the variance depends on the mean!
+:::
+
+## Example: Poisson distribution
+
+In the case of the Poisson, $b(\theta_i) = \exp(\theta_i)$ and $a(\phi) = 1$, hence:
+
+$$
+E[Y_i] = \exp(\theta_i) = \lambda_i
+$$
+and
+
+$$
+Var(Y_i) = \exp(\theta_i) = \lambda_i.
+$$
+
+## Generalizations of the linear model
+
+We can think of GLMs as a two-way generalization of linear models:
+
+1. We can use a _function_ of the linear predictor to transform it to a range of values that is more useful for the application.
+
+2. We can use a different _distribution_ for the error terms other than the Gaussian.
+
+## Likelihood estimation
+
+Recall that ordinary least squares can be seen as the _maximum likelihood estimate_ of the linear regression parameters.
+
+. . .
+
+The idea is that by changing the distribution of the response variable, we can still use maximum likelihood to estimate the regression coefficients, but specifying a _different likelihood function_.
+
+## The three components of a GLM
+
+The three components that we need in order to fully specify a GLM are:
+
+1. An _exponential family_ distribution for the response.
+
+2. A _link function_ that connects the linear predictor to the response.
+
+3. A _variance function_ that specifies how the variance depends on the mean.
+
+## Example: the normal linear model
+
+If we assume that:
+
+1. The response variable is distributed as a Gaussian r.v.
+
+2. The link function is the _identity function_.
+
+3. The variance is _constant_ with respect to the mean.
+
+. . . 
+
+Then, we have the standard linear model.
+
+## Example: the normal linear model
+
+In formulas:
+
+1. $Y \sim \mathcal{N}( \mu, \sigma^2)$.
+
+2. $E[Y | X] = X \beta$.
+
+3. $V(\mu) = \sigma^2$.
+
+## Example: logistic regression
+
+Logistic regression assumes that:
+
+1. The response variable is distributed as a Bernoulli r.v.
+
+2. The link function is the _logistic function_.
+
+3. The variance is _a function_ of the mean.
+
+## Example: logistic regression
+
+In formulas:
+
+1. $Y \sim \mathcal{Be}(\mu)$.
+
+2. $g(E[Y | X]) = X \beta$, where $g(\mu) = \log \left(\frac{\mu}{1-\mu}\right)$.
+
+3. $V(\mu) = \mu (1 - \mu)$.
+
+. . .
+
+Note that the link function implies that
+$$
+\mu = \frac{\exp(X \beta)}{1 + \exp(X\beta)}.
+$$
+
+## Example: logistic regression
+
+- Assume that we have collected data from 299 patients that had heart failure.
+
+- For each patient we measure if they died or survived after a follow-up period.
+
+- We can use a set of 13 clinical features to try to predict patient survival.
+
+```{r}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 20))
+
+heart <- read_csv("data/heart_failure_clinical_records_dataset.csv")
+```
+
+- In total, `r sum(heart$DEATH_EVENT)` patients out of `r nrow(heart)` died.
+
+
+## Example: logistic regression
+
+```{r}
+ggplot(heart, aes(x = time, y = DEATH_EVENT)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+## Example: logistic regression
+
+```{r}
+ggplot(heart, aes(x = time, y = DEATH_EVENT)) +
+    geom_point() +
+    geom_smooth(method = "glm", method.args = list(family=binomial), se = FALSE)
+```
+
+
+## Example: Poisson regression
+
+Poisson regression (or log-linear regression) assumes that:
+
+1. The response variable is distributed as a Poisson r.v.
+
+2. The link function is the _log function_.
+
+3. The variance is _a function_ of the mean.
+
+## Example: Poisson regression
+
+In formulas:
+
+1. $Y \sim \mathcal{Poi}(\mu)$.
+
+2. $g(E[Y | X]) = X \beta$, where $g(\mu) = \log(\mu)$.
+
+3. $V(\mu) = \mu$.
+
+. . .
+
+Note that the link function implies that
+$$
+\mu = \exp(X \beta)
+$$
+
+::: {.callout-important appearance="minimal"}
+The log is called the _canonical link function_ because it is equal to the function that transforms the mean into the _canonical parameter_ in the exponential family formulation.
+:::
+
+## Example: Poisson regression
+
+- We measure the expression of two genes, DUSP1 and VCAM1, in airway smooth muscle (ASM) cell lines.
+
+- The DUSP1 gene plays an important role in the human cellular response to environmental stress.
+
+- The VCAM1 gene is involved in cell adhesion and signal transduction.
+
+- The genes are measured with an assay that yields counts as a measure of gene expression.
+
+## Example: Poisson regression
+
+```{r}
+library(airway)
+data("airway")
+y <- assay(airway)["ENSG00000120129",]
+df <- as.data.frame(colData(airway))
+df$DUSP1 <- y
+y <- assay(airway)["ENSG00000162692",]
+df$VCAM1 <- y
+
+
+ggplot(df, aes(x = VCAM1, y = DUSP1)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+## Example: Poisson regression
+
+```{r}
+library(airway)
+data("airway")
+y <- assay(airway)["ENSG00000120129",]
+df <- as.data.frame(colData(airway))
+df$DUSP1 <- y
+y <- assay(airway)["ENSG00000162692",]
+df$VCAM1 <- y
+
+
+ggplot(df, aes(x = VCAM1, y = DUSP1)) +
+    geom_point() +
+    geom_smooth(method = "glm", method.args = list(family=poisson), se = FALSE)
+```
+
+## Quasi Likelihood {visibility="hidden"}
+
+To completely define a GLM it is sufficient to specify:
+
+- The link function:
+    - i.e., how the linear predictor relates to the conditional mean;
+- The variance function:
+    - i.e., the relationship between the mean and the variance.
+    
+. . .
+
+Specifying these two components gives us a way to fit the GLM even if there is no proper distribution of $Y$. In such cases, we talk about _quasi-likelihood_.
+
+# Parameter estimation
+
+## Log-likelihood of a GLM
+
+In principle, we can maximize the log-likelihood as a function of the regression coefficients.
+
+In fact, once we have defined a relationship between the parameter of the model and the predictors, we can write the likelihood as a function of $\beta$.
+
+. . .
+
+In the case of the Poisson, the log-likelihood is
+$$
+\ell(\beta; X, y) = \sum_{i=1}^n y_i \eta_i- \exp\{\eta_i\},
+$$
+where $\eta_i = \log(\mu_i) = \sum_{k=1}^p x_{ik} \beta_k$.
+
+## Score function {.smaller}
+
+The derivative of the log-likelihood with respect to $\theta$ is also called _the score function_.
+
+One can show that in the exponential family, the score function
+$$
+S(\theta) = \sum_{i=1}^n \frac{y_i - \mu_i}{a(\phi)},
+$$
+
+. . .
+
+when you want to derive for $\beta$, the chain rule of differentiation gives
+$$
+S(\beta) = \sum_{i=1}^n \frac{Y_i - \mu_i}{Var(Y_i)} \frac{d \mu_i}{d \eta_i} X^\top = X^\top A (Y - \mu),
+$$
+
+where $A$ is a diagonal matrix with elements $a_{ii} = (Var(Y_i) \frac{d \eta_i}{d \mu_i})^{-1}$.
+
+::: {.callout-important}
+Note the relation with least squares!
+:::
+
+## Poisson example
+
+In Poisson data:
+
+- $Var(Y_i) = E[Y_i] = \mu_i$;
+- $\eta_i = \log(\mu_i)$, hence $\frac{d \eta_i}{d \mu_i} = \frac{1}{\mu_i}$.
+
+. . .
+
+Hence, $A = I$, the identity matrix and
+$$
+S(\beta) = X^\top (Y - \mu).
+$$
+
+## Derivation {.smaller} {visibility="hidden"}
+
+The log-likelihood is
+$$
+\ell(\lambda; y) = \sum_{i=1}^n \frac{y_i \theta_i - b(\theta_i)}{a(\phi)} + c(y_i, \phi).
+$$
+
+And the score is
+\begin{align*}
+S(\beta) = \frac{\partial \ell}{\partial \beta} &= \sum_{i=1}^n \frac{d \ell_i}{d \theta_i} \frac{d \theta_i}{d \mu_i} \frac{\partial \mu_i}{\partial \beta} \\
+&= \sum_{i=1}^n \frac{y_i - b'(\theta_i)}{a(\phi)} \frac{1}{b''(\theta)} \frac{\partial \mu_i}{\partial \beta}.
+\end{align*}
+
+Since $b''(\theta_i) = \frac{d \mu_i}{d \theta_i} = Var(Y_i)$,
+$$
+S(\beta) = \sum_{i=1}^n \frac{Y_i - \mu_i}{Var(Y_i)} \frac{d \mu_i}{d \eta_i} X^\top = X^\top A (Y - \mu)
+$$
+
+For canonical link functions, $\theta_i = x_i \beta$, hence $A=I$ and
+$$
+S(\beta) = X^\top (Y - \mu)
+$$
+
+## Solving the score equations
+
+To find the MLE we need to solve the equation
+$$
+S(\beta) = X^\top A (Y - \mu) = 0.
+$$
+
+The problem is that this is non linear in $\beta$ because of the link function.
+
+We hence need numerical algorithms to find the values of $\beta$ that solve this equation.
+
+## Newton-Raphson
+
+```{r}
+S <- function(beta) (beta - 3)^2 
+dS <- function(beta) 2*(beta-3)
+dSline <- function(beta, betak) dS(betak) *beta + S(betak) - dS(betak) * betak
+
+beta <- seq(-21,15,length=100)
+betak <- -20
+betak1 <- betak - 1/dS(betak)*S(betak)
+betaSeqDk <- seq(betak,betak1,length=100)
+pNR <- qplot(beta, S(beta), geom="line") +
+  annotate("line",x=betaSeqDk,y=dSline(betaSeqDk,betak),linetype = "dashed",col="red") +
+    annotate("line",x=rep(betak1,2),y=c(0,S(betak1)),linetype = "dashed",col="red") +
+    annotate("point",x=betak,y=S(betak),col="red") +
+  theme_bw()
+betaNs <- betak1
+for (i in 1:5)
+{
+betak <- betak1
+betak1 <- betak - 1/dS(betak)*S(betak)
+betaNs <- c(betaNs,betak1)
+betaSeqDk <- seq(betak,betak1,length=100)
+pNR <- pNR +
+    annotate("line",x=betaSeqDk,y=dSline(betaSeqDk,betak),linetype = "dashed",col="red") +
+    annotate("line",x=rep(betak1,2),y=c(0,S(betak1)),linetype = "dashed",col="red") 
+}
+pNR + 
+  annotate("text",x=-20,y=S(-20)+40,label=paste0("S(beta[k])"),col="red",parse=TRUE) +
+  annotate("text",x=betaNs[1:2],y=S(betaNs[1:2])+40,label=paste0("S(beta[k+",1:2,"])"),col="red",parse=TRUE)   +
+  annotate("text",x=betaNs[1:3],y=rep(-40,3),label=paste0("beta[k+",1:3,"]"),col="red",parse=TRUE) +
+  annotate("point",x=betaNs,y=S(betaNs),col="red") +
+  annotate("text",x=-20,y=400, label="frac(partialdiff*S, partialdiff*beta)*' |'*beta[k]", col="red",parse=TRUE) +
+  xlab(expression(beta)) +
+  ylab(expression(S(beta)))
+
+```
+
+## Newton-Raphson
+
+The Newton-Raphson algorithm is a numerical algorithm to find the "root" of a function, i.e., to find the value for which that function is equal to 0.
+
+. . . 
+
+It starts from an initial guess, say $\beta_k$, and moves in the direction of the derivative until it intersects the zero line.
+
+## Newton-Raphson
+
+Specifically:
+
+1. Choose an initial parameter estimate $\beta_k$;
+2. Calculate the score $S(\beta_k)$;
+3. Calculate the derivative $\frac{\partial S(\beta)}{\partial \beta}$ at the value $\beta_k$;
+4. Go in the direction of the derivative until the point, $\beta_{k+1}$ in which it crosses the zero line;
+5. Update the value of $\beta$ to $\beta_{k+1}$;
+6. Iterate 2-5 until convergence.
+
+## Derivative of the score
+
+For the Newton-Raphson algorithm to work, we need to compute the derivative of the score function.
+
+One can show that it is 
+$$
+\frac{\partial S(\beta)}{\partial \beta} = - X^\top W X,
+$$
+where $W$ is a diagonal matrix with elements
+$$
+w_{ii} = \frac{(d \mu_i / d \eta_i)^2}{Var(Y_i)}
+$$
+
+## Iteratively Reweighted Least Squares {.smaller}
+
+Now that we know the derivative, we can rewrite the Newton-Raphson algorithm as the _Iteratively Reweighted Least Squares_ (IRLS).
+
+In fact we can show that
+$$
+\beta_{k+1} = \beta_k + (X^\top W X)^{-1} S(\beta_k)
+$$
+or equivalently
+$$
+\beta_{k+1} = (X^\top W X)^{-1} X^\top W Z,
+$$
+where
+$$
+Z = X \beta_k + \frac{\partial \eta}{\partial \mu} (Y - \mu).
+$$
+
+## Poisson example {visibility="hidden"}
+
+For Poisson data, we can see that
+
+- $\frac{\partial \eta}{\partial \mu} = \frac{\partial \log(\mu)}{\partial \mu} = \frac{1}{\mu}$
+- $W$ is a diagonal matrix with $w_{ii} = \mu_i$
+
+## Interpretation of IRLS
+
+Note that the estimate of $\beta$ at iteration $k$ is similar to the least squares estimator, but it is weighted by a function of the variance.
+
+This is a way to account for the heteroschedasticity of the data.
+
+## Example: Poisson regression {visibility="hidden"}
+
+Let's go back to the example of the two genes.
+
+We can fit the model:
+$$
+\log E[Y | X] = \beta_0 + \beta_1 X,
+$$
+where $Y$ is the expression of DUSP1 and $X$ is the expression of VCAM1.
+
+## Example: Poisson regression {.smaller} {visibility="hidden"}
+
+We can now iteratively fit the model by:
+
+1. Choose initial values of $\beta^0 = [\beta_0 \, \beta_1] = [0 \, 1]$
+2. Calculate the score $S(\beta^0) = $
+
+## In R: the `glm()` function
+
+In R there is a very convenient function that implements the IRLS algorithm and has a syntax very similar to the `lm()` function.
+
+In addition to the formula, you need to specify the `family` of distributions you want to specify for the response variable and (implicitly or explicitly) the link function.
+
+```{r}
+#| echo: true
+#| eval: false
+
+fit <- glm(y ~ x, family = poisson)
+
+fit <- glm(y ~ x, family = poisson(link = "log"))
+```
+
+
+## Example: Poisson regression
+
+In the airway smooth muscle (ASM) cell lines, we have two additional variables to consider:
+
+1. The cell lines were either untreated or treated with dexamethasone (`dex`).
+
+2. The cell lines were derived from four distinct donors (`cell`).
+
+. . .
+
+It is of interest to check whether the DUSP1 gene changes between treated and control cells, potentially accounting for the differences in cell lines.
+
+## Example: Poisson regression
+
+```{r}
+df$dex <- relevel(df$dex, ref="untrt")
+fit <- glm(DUSP1 ~ dex, family = poisson, data = df)
+fit
+```
+
+## Interpretation of the parameters {.smaller}
+
+The Poisson regression model can be written as
+$$
+\log \mu_i = \beta_0 + \beta_1 x_{i},
+$$
+where $x_i=1$ if the cells are treated and $x_i=0$ if untreated.
+
+Hence,
+$$
+\log(\mu_i | x_i = 1) - \log(\mu_i | x_i = 0) = \beta_1
+$$
+
+which leads to
+$$
+\beta_1 = \log \left(\frac{\mu_i | x_i = 1}{\mu_i | x_i = 0}\right).
+$$
+
+## Example: logistic regression
+
+In the heart failure dataset, we may be interested in the relation between diabetes and heart failure.
+
+## Example: logistic regression
+
+```{r}
+fit <- glm(DEATH_EVENT ~ diabetes, family = binomial, data = heart)
+fit
+```
+
+## Interpretation of the parameters {.smaller}
+
+The logistic regression model can be written as
+$$
+\log \left( \frac{\mu_i}{1-\mu_i} \right)= \beta_0 + \beta_1 x_{i},
+$$
+where $x_i=1$ if the subject has diabetes and $x_i=0$ if not.
+
+Hence,
+$$
+\log \left( \frac{\mu_1}{1-\mu_1} \right) - \log \left( \frac{\mu_0}{1-\mu_0} \right) = \beta_1,
+$$
+where we indicate with $\mu_1 = E[Y|x=1]$ and $\mu_0 =  E[Y|x=0]$.
+
+We can thus interpret $\beta_1$ as the _log odds ratio_
+$$
+\beta_1 = \log OR = \log \left(\frac{\mu_1 / (1-\mu_1)}{\mu_0 / (1-\mu_0)}\right).
+$$
+
+# Inference
+
+## Likelihood Ratio Test
+
+The analogous of the sum of squares and the F test in GLMs is the log-likelihood and the likelihood ratio test.
+
+. . .
+
+We can use the likelihood to compare two models, as we have done with the F statistics in linear models.
+
+. . .
+
+One can show that, when $n \to \infty$,
+$$
+D = 2 [\ell(\hat\beta) - \ell(\hat\beta^0)] \stackrel{H_0}{\sim} \chi^2_{df-df_0},
+$$
+
+where $\hat\beta$ and $\hat\beta^0$ are the estimates of the coefficient under the full and reduced model, with $df$ and $df_0$ degrees of freedom, respectively.
+
+## Wald Test {.smaller}
+
+An alternative to the LRT is the Wald test, that leverages the fact that when $n \to \infty$, 
+$$
+\hat\beta \stackrel{H_0}{\sim} \mathcal{N}(\beta, (X^\top W X)^{-1}).
+$$
+
+Hence, the statistic
+$$
+t = \frac{\hat\beta_k}{\sqrt{[(X^\top W X)^{-1}]_{kk}}} \stackrel{H_0}{\sim} N(0, 1)
+$$
+can be used to compute confidence intervals and test the null hypothesis $\beta_k = 0$.
+
+## Example: Poisson regression
+
+In the airway smooth muscle (ASM) cell lines, we have two additional variables to consider:
+
+1. The cell lines were either untreated or treated with dexamethasone (`dex`).
+
+2. The cell lines were derived from four distinct donors (`cell`).
+
+. . .
+
+It is of interest to check whether the DUSP1 gene changes between treated and control cells, potentially accounting for the differences in cell lines.
+
+## Poisson regression: Wald test
+
+```{r}
+fit <- glm(DUSP1 ~ dex, family = poisson, data = df)
+summary(fit)
+```
+
+## Poisson regression: Wald Test
+
+```{r}
+fit2 <- glm(DUSP1 ~ dex + cell, family = poisson, data = df)
+summary(fit2)
+```
+
+## Poisson regression: LRT
+
+```{r}
+anova(fit, fit2)
+```
+
+## Logistic regression: 
+
+```{r}
+fit <- glm(DEATH_EVENT ~ . - time, family = binomial, data = heart)
+summary(fit)
+```
+
+## Logistic regression: Wald test
+
+```{r}
+fit0 <- glm(DEATH_EVENT ~ age + sex + smoking, family = binomial, data = heart)
+anova(fit0, fit)
+```
