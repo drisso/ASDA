@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Davide Risso">
-<meta name="dcterms.date" content="2026-02-23">
 
-<title>Advanced Statistics and Data Analysis</title>
+<title>5&nbsp; Experimental design – Advanced Statistics and Data Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -32,7 +49,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./intro.html" rel="next">
+<link href="./glm.html" rel="next">
+<link href="./linmod2.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -69,6 +87,14 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+ 
+  <style>
+  .slide-deck {
+      border: 3px solid #dee2e6;
+      width: 100%;
+  }
+  </style>
+  
 
 
 </head>
@@ -82,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Introduction</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./design.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Experimental design</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -109,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
@@ -139,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./design.html" class="sidebar-item-text sidebar-link">
+  <a href="./design.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Experimental design</span></span></a>
   </div>
 </li>
@@ -159,22 +185,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
-  <ul class="collapse">
-  <li><a href="#organization-of-this-website" id="toc-organization-of-this-website" class="nav-link" data-scroll-target="#organization-of-this-website">Organization of this website</a></li>
-  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline">Timeline</a>
-  <ul class="collapse">
-  <li><a href="#lectures" id="toc-lectures" class="nav-link" data-scroll-target="#lectures">Lectures</a></li>
-  <li><a href="#labs" id="toc-labs" class="nav-link" data-scroll-target="#labs">Labs</a></li>
-  </ul></li>
-  <li><a href="#suggested-reading-materials" id="toc-suggested-reading-materials" class="nav-link" data-scroll-target="#suggested-reading-materials">Suggested reading materials</a>
-  <ul class="collapse">
-  <li><a href="#r-resources" id="toc-r-resources" class="nav-link" data-scroll-target="#r-resources">R resources</a></li>
-  <li><a href="#statistics" id="toc-statistics" class="nav-link" data-scroll-target="#statistics">Statistics</a></li>
-  </ul></li>
-  <li><a href="#work-in-progress" id="toc-work-in-progress" class="nav-link" data-scroll-target="#work-in-progress">Work in progress</a></li>
-  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
-  </ul></li>
+  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">5.1</span> Lecture Slides</a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">5.2</span> Lab</a></li>
+  <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">5.3</span> Homework</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">5.4</span> Further reading</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -183,33 +198,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Advanced Statistics and Data Analysis</h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Experimental design</span></h1>
 </div>
 
 
-<div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Author</div>
-  <div class="quarto-title-meta-heading">Affiliation</div>
-  
-    <div class="quarto-title-meta-contents">
-    <p class="author">Davide Risso </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            Department of Statistical Sciences, University of Padova
-          </p>
-      </div>
-  </div>
 
 <div class="quarto-title-meta">
 
-      
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">February 23, 2026</p>
-    </div>
-  </div>
+    
   
     
   </div>
@@ -219,219 +215,34 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level1 unnumbered">
-<h1 class="unnumbered">Introduction</h1>
-<p>This is the companion website of the 2026 edition of the “Advanced Statistics and Data Analysis” course, taught within the <a href="https://www.unipd.it/en/educational-offer/second-cycle-degree/science?tipo=LM&amp;scuola=SC&amp;ordinamento=2024&amp;key=SC2804&amp;cg=science">“Quantitative and Computational Biosciences” Master’s program</a> at the <a href="https://www.unipd.it/">University of Padova</a>.</p>
-<p>If you are looking for the materials of the 2025 edition of this course, you can find them on the <a href="https://github.com/drisso/ASDA/tree/2025">2025 branch of the github repository</a>.</p>
-<section id="organization-of-this-website" class="level2">
-<h2 class="anchored" data-anchor-id="organization-of-this-website">Organization of this website</h2>
-<p>This website is organized as a book. Each class topic is treated in a different chapter.</p>
-<p>In each Chapter, you will find the slides presented in class and the code used for the practicals.</p>
-<p>You can use the navigation bar to navigate by topic or the Timeline section below to see the topics in the same order they were presented in class.</p>
+<section id="lecture-slides" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">5.1</span> Lecture Slides</h2>
+    <p><a href="slides/06_design.html" target="_blank">View slides in full screen</a></p>
+       <div>
+      <iframe class="slide-deck" src="slides/06_design.html" height="475px"></iframe>
+    </div>
+  
 </section>
-<section id="timeline" class="level2">
-<h2 class="anchored" data-anchor-id="timeline">Timeline</h2>
-<section id="lectures" class="level3">
-<h3 class="anchored" data-anchor-id="lectures">Lectures</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Week</th>
-<th>Date</th>
-<th>Topic</th>
-<th>Hours</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>23/2/2026</td>
-<td>Intro to course (online)</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>24/2/2026</td>
-<td>Data wrangling and visualization</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>26/2/2026</td>
-<td>Visualizing distributions</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>27/2/2026</td>
-<td>Visualizing multiple variables</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td>2</td>
-<td>3/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>5/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>6/3/2026</td>
-<td>TBA (online)</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td>3</td>
-<td>9/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>10/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>12/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>13/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td>5</td>
-<td>23/3/2026</td>
-<td>TBA (online)</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>24/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>26/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>27/3/2026</td>
-<td>TBA</td>
-<td>2</td>
-</tr>
-</tbody>
-</table>
+<section id="lab" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">5.2</span> Lab</h2>
 </section>
-<section id="labs" class="level3">
-<h3 class="anchored" data-anchor-id="labs">Labs</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Week</th>
-<th>Date</th>
-<th>Topic</th>
-<th>Hours</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>25/2/2026</td>
-<td>Data wrangling and visualization (part 1)</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>2/3/2026</td>
-<td>Data wrangling and visualization (part 2)</td>
-<td>4</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>4/3/2026</td>
-<td>TBA</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>9/3/2026</td>
-<td>TBA</td>
-<td>4</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>11/3/2026</td>
-<td>TBA</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>18/3/2026</td>
-<td>TBA</td>
-<td>4</td>
-</tr>
-<tr class="odd">
-<td>7</td>
-<td>25/3/2026</td>
-<td>TBA</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td>8</td>
-<td>30/3/2026</td>
-<td>TBA</td>
-<td>4</td>
-</tr>
-</tbody>
-</table>
+<section id="homework" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">5.3</span> Homework</h2>
 </section>
-</section>
-<section id="suggested-reading-materials" class="level2">
-<h2 class="anchored" data-anchor-id="suggested-reading-materials">Suggested reading materials</h2>
-<section id="r-resources" class="level3">
-<h3 class="anchored" data-anchor-id="r-resources">R resources</h3>
+<section id="further-reading" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">5.4</span> Further reading</h2>
 <ul>
-<li><a href="https://r4ds.had.co.nz/">R for Data Science book</a></li>
-<li><a href="https://www.coursera.org/specializations/tidyverse-data-science-r">Tidyverse Skills for Data Science in R</a></li>
-<li><a href="https://ggplot2-book.org/">The ggplot2 book</a></li>
-<li><a href="https://happygitwithr.com/">Happy Git with R</a></li>
-<li><a href="https://adv-r.hadley.nz/">Advanced R</a></li>
+<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/13-chap.html">Chapter 13</a>.</li>
+<li>Nature Methods <a href="https://www.nature.com/collections/qghhqm/pointsofsignificance">Points of Significance</a>.</li>
 </ul>
 </section>
-<section id="statistics" class="level3">
-<h3 class="anchored" data-anchor-id="statistics">Statistics</h3>
-<ul>
-<li><a href="https://www.huber.embl.de/msmb/">Modern Statistics for Modern Biology</a></li>
-<li><a href="https://leanpub.com/dataanalysisforthelifesciences">Data Analysis for the Life Sciences</a></li>
-</ul>
-</section>
-</section>
-<section id="work-in-progress" class="level2">
-<h2 class="anchored" data-anchor-id="work-in-progress">Work in progress</h2>
-<p>The book is a work in progress as we move through the first edition of this class. Please, open issues and contribute pull requests at https://github.com/drisso/ASDA if you find typos or mistakes or if something is missing.</p>
-</section>
-<section id="acknowledgments" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
-<p>I wish to warmly thank all the authors that have provided open resources related to the topics of this course. In particular, the following people either directly or indirectly inspired the materials developed for this course: Claus O. Wilke, Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks, Roger D. Peng, Wolfgang Huber, Susan Holmes, Hadley Wickham, Lieven Clement, Milan Malfait, Karl Broman, Rafael Irizarry, Mike Love, Jeff Leek, Brian Caffo, Charlotte Soneson.</p>
-<p>In the same spirit, I am sharing openly online this course.</p>
-<p>Specific resources that can be used as additional readings are noted in the relevant chapters.</p>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+<div id="refs" role="list" style="display: none">
+
+</div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -854,10 +665,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./linmod2.html" class="pagination-link" aria-label="Linear models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Linear models</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link" aria-label="Course Introduction">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Course Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./glm.html" class="pagination-link" aria-label="Generalized Linear Models">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Generalized Linear Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
