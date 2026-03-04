@@ -14,9 +14,9 @@ book:
     - dataviz2.qmd
 #    - git.qmd
 #    - linmod.qmd
-#    - linmod2.qmd
-#    - design.qmd
-#    - glm.qmd
+    - linmod2.qmd
+    - design.qmd
+    - glm.qmd
 #    - hdr.qmd
 #    - bayes.qmd
 

@@ -1,5 +1,5 @@
 ---
-title: "Linear models (part 2)"
+title: "Linear models"
 execute:
   echo: true
   warning: false
@@ -7,6 +7,16 @@ execute:
 ---
 
 ## Lecture Slides
+
+### Statistical modeling
+
+{{< revealjs "slides/03_statmod_redux.html" >}}
+
+### Linear models
+
+{{< revealjs "slides/04_linreg_redux.html" >}}
+
+### Linear models (part 2)
 
 {{< revealjs "slides/05_linreg2.html" >}}
 

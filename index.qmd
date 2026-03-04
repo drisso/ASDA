@@ -21,11 +21,11 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 | 1    | 23/2/2026 | Intro to course  (online)            | 2     |
 |      | 24/2/2026 | Data wrangling and visualization     | 2     |
 |      | 26/2/2026 | Visualizing distributions            | 2     |
-|      | 27/2/2026 | Visualizing multiple variables       | 2     |
-| 2    | 3/3/2026 | TBA          | 2     |
-|      | 5/3/2026 | TBA              | 2     |
-|      | 6/3/2026 | TBA (online)        | 4     |
-| 3    | 9/3/2026 | TBA          | 2     |
+|      | 27/2/2026 | Statistical modeling       | 2     |
+| 2    | 3/3/2026 | Linear Models          | 2     |
+|      | 5/3/2026 | Linear Models (part 2)              | 2     |
+|      | 6/3/2026 | Experimental design (online)        | 4     |
+| 3    | 9/3/2026 | Generalized Linear Models          | 2     |
 |      | 10/3/2026 | TBA               | 2     |
 |      | 12/3/2026 | TBA              | 2     |
 |      | 13/3/2026 | TBA         | 2     |
@@ -41,8 +41,8 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 |------|-----------|-------------------------------------------|-------|
 | 1    | 25/2/2026 | Data wrangling and visualization (part 1) | 4     |
 | 2    | 2/3/2026  | Data wrangling and visualization (part 2) | 4     |
-| 3    | 4/3/2026  | TBA | 4     |
-| 4    | 9/3/2026  | TBA                   | 4     |
+| 3    | 4/3/2026  | Linear Models | 4     |
+| 4    | 9/3/2026  | Generalized Linear Models                   | 4     |
 | 5    | 11/3/2026 | TBA                    | 4     |
 | 6    | 18/3/2026 | TBA                    | 4     |
 | 7    | 25/3/2026 | TBA                    | 4     |
