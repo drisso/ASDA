@@ -25,25 +25,441 @@ The main questions are:
 3. What vaping brands and flavors appear to be used the most frequently?
 4. Is there a relationship between e-cigarette/vaping use and other tobacco use?
 
-### Guided solution
+### Load the data
 
-1. Read-in the data: because we focused on data wrangling on a previous lab, I suggest that you start from the already cleaned-up version of the data, that you can find [here](https://raw.githubusercontent.com/opencasestudies/ocs-bp-vaping-case-study/master/data/wrangled/wrangled_data_with_var_for_plots.rda). 
-    - Note that you have to use the function `load()`.
-    - The "codebook" with the explanation of the variables can be found [here](https://www.cdc.gov/tobacco/data_statistics/surveys/nyts/zip_files/2019/2019-nyts-dataset-and-codebook-microsoft-excel.zip)
-    - In addition to the variables in the cookbook, some other variables have been define that sum all the e-cigarette / non-e-cigarette products.
-    
-2. Create plots to visualize the data and answer graphically to the questions above.
+  - Read-in the data: because we focused on data wrangling on a previous lab, I suggest that you start from the already cleaned-up version of the data, that you can find [here](https://raw.githubusercontent.com/opencasestudies/ocs-bp-vaping-case-study/master/data/wrangled/wrangled_data_with_var_for_plots.rda). 
+  - Note that you have to use the function `load()`.
+  - The "codebook" with the explanation of the variables can be found [here](https://www.cdc.gov/tobacco/data_statistics/surveys/nyts/zip_files/2019/2019-nyts-dataset-and-codebook-microsoft-excel.zip)
+  - In addition to the variables in the cookbook, some other variables have been define that sum all the e-cigarette / non-e-cigarette products.
 
-3. Consider only data from 2015 and fit a model to compare **current use of e-cigarettes** between males and females.
-    - Compute "by hand" the Odds Ratio (OR) of the use of e-cigarettes between males and females. Who is most likely to smoke e-cigarettes in 2015? By how much?
-    - Fit a logistic regression model. Is the difference significance? How do you interpret $\beta_1$? What is its relationship with the OR calculated above? Is it the same?
-    
-4. Go back to the full data, and fit a new logistic model that includes, in addition to Sex, year, and "non_ecig_ever". If appropriate, consider including interactions. What do you conclude?
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(scales) 
+library(viridis)
+library(cowplot)
+load("/Users/KimHue/Downloads/wrangled_data_with_var_for_plots.rda")
+# Get a glimpse of the data
+glimpse(nyts_data)
+```
+
+### Question 1: How has tobacco and e-cigarette/vaping use by American youths changed since 2015?
+
+To create a visualization of how tobacco and e-cigarette/vaping usage has changed over time, we need to
+
+
+  - Calculate the mean ever and current usage percentages for students who used e-cigarettes or any tobacco products (including e-cigarettes) for each year (using tobacco_ever, tobacco_current, ecig_ever, and ecig_current variables). To do this we use the `group_by()`, `summarize()` functions of the `dplyr` package, and  the `mean()` function is used to calculate the percentages.
+  - Convert data into the "long" format using the `pivot_longer` function from the `tidyr` package to create two column "User" and "Percentage of students" contain information from all columns except year. 
+  - Use the `separate()` function of the `tidyr` package to seperate the column "User" into two columns contain information about ever/current users and products. 
+  
+```{r}
+user_change <- nyts_data |>
+  group_by(year) |>
+  summarize("Ever use_Any Tobacco Product" = (mean(tobacco_ever, na.rm = TRUE) * 100),
+            "Current use_Any Tobacco Product" = (mean(tobacco_current, na.rm = TRUE) * 100),
+            "Ever use_E-cigarettes" = (mean(ecig_ever, na.rm = TRUE) * 100),
+            "Current use_E-cigarettes" = (mean(ecig_current, na.rm = TRUE) * 100)) 
+
+user_change <- user_change |>
+  pivot_longer(cols = -year,
+               names_to = "User", 
+               values_to = "Percentage of students") 
+user_change <- user_change |>
+  separate(User, into = c("User", "Product"), sep = "_") 
+head(user_change)
+```
+
+R automatic convert TRUE/FALSE variables to 0-1 binary variable, TRUE is given a value of one and FALSE is given a value of zero. NA values do not contribute to the total count when we include the argument na.rm = TRUE to our function call.
+
+Plot how tobacco and e-cigarette/vaping usage has changed over time using the `geom_point()` function
+```{r}
+user_change |>
+  ggplot(aes(x = year,
+             y = `Percentage of students`,
+             color = Product)) +
+  geom_line(aes(linetype = User)) +
+  geom_point(show.legend = FALSE, size = 2) +
+  # this allows us to specify how the y-axis should appear
+  scale_y_continuous(limits = c(0, 60)) +
+  # this moves the legend to the bottom of the plot and removes the x axis title
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank()) +
+  labs(title = "How has tobacco use varied over the years",
+       y = "% of students")
+```
+
+We see an increase in all categories starting in 2017, but the rate of increase is higher for students using only e-cigarettes (current or ever users), as shown by the higher slope of the e-cigarette lines.
+
+::: {.callout-important}
+# Exercise
+
+1. In the above plot, the “Any tobacco product” groups include individuals in the “E-cigarette only” groups. Now let’s plot students in two mutually exclusive groups on the same plot: those who reported either using only e-cigarettes or only other tobacco products (besides e-cigarettes).
+
+:::
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+```{r}
+user_change1 <- nyts_data |>
+  group_by(year) |>
+  summarize("Ever use_E-cigarette" = (mean(ecig_only_ever, na.rm = TRUE) * 100),
+            "Current use_E-cigarette" = (mean(ecig_only_current, na.rm = TRUE) * 100),
+            "Ever use_Non-e-cigarette" = (mean(non_ecig_only_ever, na.rm = TRUE) * 100),
+            "Current use_Non-e-cigarette" = (mean(non_ecig_only_current, na.rm = TRUE) * 100)) |>
+  pivot_longer(cols = -year,
+               names_to = "User",
+               values_to = "Percentage of students") |>
+  separate(User, into = c("User", "Product"), sep = "_") 
+
+plot1c <- user_change1 |>
+  ggplot(aes(x = year, y = `Percentage of students`, color = Product)) +
+  geom_line(aes(linetype = User)) +
+  geom_point(show.legend = FALSE, size = 2) +
+  # this allows us to specify how the y-axis should appear
+  scale_y_continuous(limits = c(0, 20)) +
+  # this moves the legend to the bottom of the plot and removes the x axis title
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank()) +
+  labs(title = "How has use of only e-cigarettes and only tobacco products
+       besides e-cigarettes varied over time?",
+       y = "% of students")
+plot1c 
+```
+
+:::
+
+### Question 2: How does e-cigarette use compare between males and females?
+Consider only data from 2015 and fit a model to compare current use of e-cigarettes between males and females.
+
+1. Create plot to answer graphically to the question
+To do this, we need to calculate the percent ever and current e-cigarette users for each year and sex category using the `group_by()` function and the `summarize()` function (using EELCIGT variable for ever use, and CELCIGT variable for current use). We will again use the `pivot_longer` function to convert our data to long format.
+```{r}
+
+ecigarette_use <- nyts_data |>
+  filter(!is.na(Sex)) |>
+  group_by(year, Sex) |>
+  summarize("Ever" = (mean(EELCIGT, na.rm = TRUE) * 100),
+            "Current" = (mean(CELCIGT, na.rm = TRUE) * 100)) |>
+  pivot_longer(cols = c("Ever","Current"),
+               names_to = "User",
+               values_to = "Percentage of students") 
+
+# use different colors here for males and females to differentiate from the previous plots
+ecigarette_use |>
+    ggplot(aes(x = year, y = `Percentage of students`, color = Sex)) +
+    geom_line(aes(linetype = User)) +
+    geom_point(show.legend = FALSE, size = 2) +
+    scale_color_brewer(palette = "Set1") +
+    theme(legend.position = "bottom",
+          axis.title.x = element_blank()) +
+    labs(title = "How does e-cigarette usage compare between males and females?", y = "% of students")
+
+```
+It looks like the rates are fairly similar between the sexes, however the rate for males appears to be consistently higher across time.
+
+2. Compute "by hand" the Odds Ratio ([OR](https://en.wikipedia.org/wiki/Odds_ratio){target="_blank"}) of the use of e-cigarettes between males and females. Who is most likely to smoke e-cigarettes in 2015? By how much?
+
+  To calculate the OR of the use of e-cigarettes between males and females, we need to 
+
+  - Calculate the Odds of current e-cigarette use for males: $$Odd_m=\frac{\text{Male  current  e-cigarette  user}}{\text{Male  not current e-cigarette user}}$$
+  - Calculate the Odds of current e-cigarette use for females: $$Odd_f=\frac{\text{Female current e-cigarette user}}{\text{Female not current e-cigarette user}}$$
+  - Odds ratio of e-cigarette use for females as compared to males: $$OR = \frac{Odd_f}{Odd_m}$$
+  
+```{r}
+nyts_data |> 
+  filter(year == 2015, !is.na(Sex)) |>
+  group_by(Sex, ecig_current) |>
+  summarize(n = n()) 
+```
+
+|                                 | Male     | Female| 
+|:--------------------------------|---------:|------:|
+|Current e-cigarette user         |      1171|    772|  
+|Not current e-cigarette user     |      7787|   7850| 
+
+
+Odds ratio of e-cigarette use for females as compared to males: $$OR =\frac{Odd_f}{Odd_m} = \frac{772 / 7850}{1171 / 7787} = 0.65$$
+
+
+  This value says that the odds of being a current e-cigarette user for women are around 0.65 times the odds of being a current e-cigarette user for men, or 35% lower for women. This matches what we can see in the plot above.
+
+3. Fit a logistic regression model. Is the difference significance? How do you interpret $\beta_1$? What is its relationship with the OR calculated above? Is it the same?
+
+  - Fit a logistic regression model: $$E(\text{Current e-cigarette user} \mid \text{Sex})= \frac {\exp(\beta_0+\beta_1 \text{Sex})}{1+\exp(\beta_0+\beta_1 \text{Sex})}$$
+  
+```{r}
+dat2015 <- nyts_data |> 
+  filter(year == 2015, !is.na(Sex))
+
+currEcigSex <- glm(ecig_current ~ Sex, data = dat2015, family = binomial(link = "logit"))
+summary(currEcigSex)
+```
+
+The OR is $OR=\exp(\beta_1)=\exp(-0.425)=0.65$. We can notice that this value matches the log odds ratio that we calculated by hand above.
+
+::: {.callout-important}
+# Exercise 
+1. Predict the probability of Current e-cigarette user for a female/male student with  using the function `predict`. 
+2. Change the reference of `Sex` to `female` using the function `relevel`. Refit the logistic regression model. Do anythings change?
+:::
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+```{r,fig.height=4, fig.width=6}
+# Exercise 1
+predict(currEcigSex, newdata=data.frame(Sex=c("female","male")),type = "response")
+# Exercise 2
+dat2015new <- dat2015
+dat2015new$Sex <- relevel(dat2015new$Sex, ref="female")
+currEcigSex1 <- glm(ecig_current ~ Sex, data = dat2015new, family = binomial(link = "logit"))
+summary(currEcigSex1)
+```
+
+:::
+
+4. Fit a new logistic model that includes, in addition to Sex, year, and "ecig_current". What do you conclude?
+
+
+```{r}
+currEcigSexAge2 <- glm(ecig_current ~ Sex + Age,
+                       data = dat2015, 
+                       family = binomial(link = "logit"))
+summary(currEcigSexAge2)
+```
+
+Now our $\beta_1$ parameter tells us that the log odds of being a current e-cigarette user are 0.385 lower for females compared to males, within an age group, or holding Age constant.
+
+
+::: {.callout-important}
+# Exercise  
+1. Go back to the full data, and fit a new logistic model that includes, in addition to Sex, year, and "non_ecig_ever". If appropriate, consider including potential confounding variables for adjustment. What do you conclude?
+:::
 
 Bonus:
 
 5. Use the `glmnet` package to fit a lasso regression that has the current use of e-cigarettes as response and any appropriate variable in the dataset as covariates.
     - Hint: use the `cv.glmnet` function to perform the cross-validation and the `coef(fit.cv, s = "lambda.1se")` to obtain the coefficient estimates.
+    
+### Question 3: What vaping brands and flavors appear to be used the most frequently?
+
+
+Only the 2019 dataset has information about vaping brands. Hence, to answer what vaping brands appear to be used the most frequently, we need to do
+
+  - Select the observations  in the year 2019
+  - Calculate the percent of students using each brand 
+  - Reorder the brand names by percent use
+```{r}
+nyts_data |>
+  filter(year == 2019) |>
+  group_by(brand_ecig) |>
+  filter(!is.na(brand_ecig)) |>
+  summarize(n = n()) |>
+  mutate(total = sum(n),
+         Percent = n * 100 / total) |>
+  arrange(desc(Percent)) 
+```
+  
+Juul appears to be the most widely used brand. Similarly we can answer the question for flavor. Exclude 2015 data, as no specific flavor questions were asked at that time.
+
+```{r}
+nyts_data |>
+  filter(year != 2015) |>
+  group_by(year) |>
+  summarize(Menthol = (mean(menthol) * 100),
+            `Clove or Spice` = (mean(clove_spice) * 100),
+            Fruit = (mean(fruit) * 100),
+            Chocolate = (mean(chocolate) * 100),
+            `Candy/Desserts/Sweets` = (mean(candy_dessert_sweets) * 100),
+            Other = (mean(other) * 100)) |>
+  pivot_longer(cols = -year, 
+               names_to = "Flavor",
+               values_to = "Percentage of students") |>
+  ggplot(aes(y = `Percentage of students`,
+             x = year,
+             fill = reorder(Flavor, `Percentage of students`))) +
+  geom_bar(stat = "identity",
+           position = "dodge",
+           color = "black") +
+  scale_fill_viridis(discrete = TRUE) +
+  guides(fill = guide_legend("Flavor")) +
+  labs(title = "What flavors appear to be used the most frequently?")
+
+
+```
+From this plot, we can see that fruit flavors are the most widely used products, followed by menthol or mint flavored products. We can also see that there was a general increase in the usage of flavored products over time.
+
+### Question 4: Is there a relationship between e-cigarette/vaping use and other tobacco use?
+
+1. How tobacco usage change over the time
+
+```{r}
+plot1 <- nyts_data |>
+  group_by(year) |>
+  summarize("Ever use" = (mean(tobacco_ever, na.rm = TRUE) * 100),
+            "Current use" = (mean(tobacco_current, na.rm = TRUE) * 100)) |>
+  pivot_longer(cols = -year, names_to = "User", values_to = "Percentage of students") |>
+  ggplot(aes(x = year, y = `Percentage of students`)) +
+  geom_line(aes(linetype = User)) +
+  geom_point(show.legend = FALSE, size = 2) +
+  # this allows us to specify how the y-axis should appear
+  scale_y_continuous(breaks = seq(0, 60, by = 10),limits = c(0, 60)) +
+  # this moves the legend to the bottom of the plot and removes the x axis title
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank()) +
+  labs(title = "How has tobacco use varied over the years?",
+       y = "% of students")
+
+plot1 + theme(text = element_text(size = 15))
+```
+
+2. How does the rate of ever trying e-cigarettes
+compare to ever trying other products over time? 
+```{r}
+plot2 <- nyts_data |>
+  group_by(year) |>
+  summarize(
+    "e-cigarette_ever" = (mean(ecig_ever, na.rm = TRUE) * 100),
+    "non-e-cigarette_ever" = (mean(non_ecig_ever, na.rm = TRUE) * 100)
+  ) |>
+  pivot_longer(cols = -year,
+               names_to = "Category",
+               values_to = "Percentage of students") |>
+  separate(Category, into = c("Product", "User"), sep = "_") |>
+  ggplot(aes(x = year,
+             y = `Percentage of students`,
+             color = Product)) +
+  geom_line(linetype = "dashed") +
+  geom_point(show.legend = FALSE, size = 2) +
+  scale_y_continuous(breaks = seq(0, 60, by = 10),limits = c(0, 60)) +
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank()) +
+  labs(title = "How does the rate of ever trying e-cigarettes
+compare to ever trying other products over time?",
+       y = "% of students")
+
+plot2 + theme(text = element_text(size = 15))
+```
+
+3. How does the rate of currently using e-cigarettes
+compare to currently using other products over time?
+```{r}
+plot3 <- nyts_data |>
+  group_by(year) |>
+  summarize(
+    "e-cigarette_current" = (mean(ecig_current, na.rm = TRUE) * 100),
+    "non-e-cigarette_current" = (mean(non_ecig_current, na.rm = TRUE) * 100)
+  ) |>
+  pivot_longer(cols = -year,
+               names_to = "Category",
+               values_to = "Percentage of students") |>
+  separate(Category, into = c("Product", "User"), sep = "_") |>
+  ggplot(aes(x = year, y = `Percentage of students`, color = Product)) +
+  geom_line() +
+  geom_point(show.legend = FALSE, size = 2) +
+  scale_y_continuous(breaks = seq(0, 60, by = 10),limits = c(0, 60)) +
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank()) +
+  labs(title = "How does the rate of currently using e-cigarettes
+compare to currently using other products over time?",
+       y = "% of students")
+
+plot3 + theme(text = element_text(size = 15))
+```
+
+4. Putting all plot together
+```{r}
+plotA_uw <- plot1 +
+  theme(legend.position = "none") +
+  labs(title = "Tobacco usage change over the time",
+       y = "% of students")
+
+plotB_uw <- plot2 +
+  theme(legend.position = "none") +
+    labs(title = " Ever trying e-cigarettes usage",
+         subtitle = NULL,
+         y = "% of students")
+
+plotC_uw <- plot3 +
+  theme(legend.position = "none") +
+  labs(title = "Currently using e-cigarettes usage",
+       subtitle = NULL,
+       y = "% of students")
+
+title_uw <- ggdraw() +
+  draw_label(
+    "Is there a relationship between e-cigarette use and other tobacco use?",
+    fontface = 'bold',
+    size = 14,
+    x = 0,
+    hjust = 0
+  ) 
+
+# this will take the legend from plot1c to use as the legend for the plot we are creating
+legend_uw <- get_legend(plot1c +
+                          theme(legend.position = "bottom",
+                                legend.direction = "horizontal"))
+
+plotsA_uw <- plot_grid(plotA_uw,
+                       rel_widths = c(1, 1))
+plotsBC_uw <- plot_grid(plotB_uw,
+                        plotC_uw,
+                        rel_widths = c(1, 1))
+
+
+plot_grid(title_uw,
+          plotsA_uw,
+          plotsBC_uw,
+          legend_uw,
+          ncol = 1,
+          rel_heights = c(0.1,
+                          1,
+                          1,
+                          0.1))
+
+
+
+```
+
+## Homework
+\section*{``Women and children first!''}
+Titanic data contains information on survival of the Titanic passengers on its first and only (you know why!) crossing of the Atlantic ocean.  Apart from their names, look for the following variables:
+
+  - `Survived` (Yes/No): states whether the passenger survived or not;  
+  - `Type` (child/female/male): depends on the age of the passenger (less than 10 years old/female older than 10 years/male older than 10 years);
+  - `Class` (first/second/third): the class in which the passenger travelled.
+  
+The file does not include all passengers because age and/or sex was not known for some passengers.
+
+The data were collected by the British Board of Trade which concluded that the old seafaring policy of "Women and children first!" had been followed with no class discrimination.
+
+1. Fit a logistic regression model for the probability of surviving as a function of `Type` and `Class` of the passenger. 
+$$ 
+  Prob(Survived)=\dfrac{e^\eta}{1+e^\eta} \quad \text{ with } \quad \eta=\beta_0+\beta_1X_1+\beta_2X_2+\beta_3X_3+\beta_4X_4,
+$$
+where $X_1$, $X_2$, $X_3$ and $X_4$ amount to 1 if the passenger was a woman, a man, travelled in second class or in third class, respectively.  
+
+Answer the following questions:
+
+  - which passenger group had the highest probability of surviving?
+  - which passenger group experienced the highest mortality?
+  - do the parameter estimates support the statement that preference was given to women and children?
+  - more to children or more to women?
+  - do you agree with the conclusions of the \emph{British Board of Trade} that the second and third class passenger were not discriminated in their access to the (few) available lifeboats?
+
+2. Verify whether ``the class of the passenger did not determine her/his survival'', i.e., amounts to testing the following system of hypotheses:
+  $$ H_0: \beta_3=0 \text{ and } \beta_4=0 \quad \text{ against } \quad H_1: \beta_3 \ne 0 \text{ and/or } \beta_4 \ne 0 .$$
+
+3. Whether the treatment reserved to the second class passengers on board of the Titanic was different from the one reserved to third class passengers, that is, whether 
+$$ H_0: \beta_3-\beta_4=0 \quad \text{ against } \quad H_1: \beta_3-\beta_4 \ne 0. $$
 
 ## Further reading
 
