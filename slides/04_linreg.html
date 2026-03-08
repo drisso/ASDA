@@ -528,13 +528,13 @@ X_n
 <span id="cb23-2"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
 <span id="cb23-3"><a href=""></a><span class="fu">mean</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -0.1087607</code></pre>
+<pre><code>[1] 0.2672906</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>A <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, n)</span>
 <span id="cb25-2"><a href=""></a><span class="dv">1</span><span class="sc">/</span>n <span class="sc">*</span> <span class="fu">t</span>(A) <span class="sc">%*%</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           [,1]
-[1,] -0.1087607</code></pre>
+<pre><code>          [,1]
+[1,] 0.2672906</code></pre>
 </div>
 </div>
 </section>
@@ -558,13 +558,13 @@ X_n - \bar{X}
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">var</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.105475</code></pre>
+<pre><code>[1] 1.333457</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>r <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
 <span id="cb29-2"><a href=""></a><span class="dv">1</span><span class="sc">/</span>(n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">t</span>(r) <span class="sc">%*%</span> r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         [,1]
-[1,] 1.105475</code></pre>
+[1,] 1.333457</code></pre>
 </div>
 </div>
 </section>
@@ -576,15 +576,15 @@ X_n - \bar{X}
 <span id="cb31-2"><a href=""></a>B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb31-3"><a href=""></a><span class="fu">t</span>(A) <span class="sc">%*%</span> B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           [,1]       [,2]
-[1,] -0.5857975 -1.7036897
-[2,]  0.1692081 -0.6047101</code></pre>
+<pre><code>          [,1]      [,2]
+[1,] 0.2587702 0.3792104
+[2,] 0.2072049 1.3355772</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="fu">crossprod</span>(A, B)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           [,1]       [,2]
-[1,] -0.5857975 -1.7036897
-[2,]  0.1692081 -0.6047101</code></pre>
+<pre><code>          [,1]      [,2]
+[1,] 0.2587702 0.3792104
+[2,] 0.2072049 1.3355772</code></pre>
 </div>
 </div>
 </section>
@@ -594,12 +594,12 @@ X_n - \bar{X}
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">var</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.105475</code></pre>
+<pre><code>[1] 1.333457</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a><span class="fu">crossprod</span>(r)<span class="sc">/</span>(n<span class="dv">-1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         [,1]
-[1,] 1.105475</code></pre>
+[1,] 1.333457</code></pre>
 </div>
 </div>
 <p>Note that <code>crossprod(r)</code> is a further shortcut for <code>crossprod(r, r)</code>.</p>
@@ -1425,7 +1425,7 @@ x      12525      4217364 1.597455e+09 6.454018e+11
 <span id="cb75-2"><a href=""></a>fit<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  x                     
-0.6308805 1.0077055 0.9999607 1.0000001 </code></pre>
+1.1538763 0.9914138 1.0000506 0.9999999 </code></pre>
 </div>
 </div>
 </section>
@@ -1497,15 +1497,15 @@ R \beta &amp;= Q^\top Y \\
 <span id="cb77-5"><a href=""></a><span class="fu">backsolve</span>(R, <span class="fu">crossprod</span>(Q,y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]
-[1,] 0.6308805
-[2,] 1.0077055
-[3,] 0.9999607
-[4,] 1.0000001</code></pre>
+[1,] 1.1538763
+[2,] 0.9914138
+[3,] 1.0000506
+[4,] 0.9999999</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href=""></a>fit<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  x                     
-0.6308805 1.0077055 0.9999607 1.0000001 </code></pre>
+1.1538763 0.9914138 1.0000506 0.9999999 </code></pre>
 </div>
 </div>
 </section>
