@@ -39,7 +39,7 @@ library(tidyr)
 library(scales) 
 library(viridis)
 library(cowplot)
-load("/Users/KimHue/Downloads/wrangled_data_with_var_for_plots.rda")
+load("wrangled_data_with_var_for_plots.rda")
 # Get a glimpse of the data
 glimpse(nyts_data)
 ```

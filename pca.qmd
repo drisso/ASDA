@@ -1,0 +1,25 @@
+---
+title: "Principal Component Analysis"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< revealjs "slides/08_PCA.html" >}}
+
+## Lab
+
+## Homework
+
+## Further reading
+
+- S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 13](https://www.huber.embl.de/msmb/13-chap.html).
+- Nature Methods [Points of Significance](https://www.nature.com/collections/qghhqm/pointsofsignificance).
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

@@ -22,7 +22,11 @@ knitr:
 
 So far, we have focused on "supervised" problems, in which we have a _response_ variable that we want to explain/predict using other variales (_covariates_).
 
+. . .
+
 However, many practical problems are _unsupervised_ in nature, meaning that all the variables have the same role and the main goal is to describe/explore the relations among the variables.
+
+. . .
 
 Even when we do have a _response_, it may be useful to use unsupervised techniques for _exploratory data analysis_ prior to modeling.
 
@@ -30,7 +34,11 @@ Even when we do have a _response_, it may be useful to use unsupervised techniqu
 
 Suppose that we have a $n \times p$ matrix $X$ containing $n$ observations for which we recorded $p$ numerical variables.
 
+. . .
+
 When we have two variables ($p=2$), say height and weight, it is natural to represent the observations as points in a two-dimensional space.
+
+. . .
 
 We can generalize this by thinking of the $n$ observations (the rows of a data matrix) as points in a $p$-dimensional space.
 
@@ -38,7 +46,11 @@ We can generalize this by thinking of the $n$ observations (the rows of a data m
 
 It is impossible to _visualize_ the data when $p>3$, and it is in general very hard for humans to reason in more than three-dimensional space.
 
+. . .
+
 Moreover, the _curse of dimensionality_ states that the more we increase the number of dimensions the less effective Euclidean distances are to identify the similarities between data points.
+
+. . .
 
 One way to think about the curse of dimensionality is: if the space is big enough, no single point will be close to any other point, for a reasonable definition of "closeness".
 
@@ -46,9 +58,10 @@ One way to think about the curse of dimensionality is: if the space is big enoug
 
 If we had a way to reduce in some way the dimensionality of the data, we could simplify the problem.
 
-In general, this will lead to information loss, but we can try to _preserve as much information as possible_.
+. . .
 
-Let's start with a mock example.
+In general, this will lead to information loss, but we can try to __preserve as much information as possible__.
+
 
 ## Not all variables are useful...
 
@@ -79,7 +92,7 @@ While `width` is not constant, `length` _explains_ or _captures_ much better the
 
 ## A slightly different example
 
-In these cases, dropping the width variable and focusing only on length would be a reasonable way to _reduce the dimensionality_ of the dataset from two to one. 
+In these cases, dropping the `width` variable and focusing only on `length` would be a reasonable way to _reduce the dimensionality_ of the dataset from two to one. 
 
 ## Yet another example
 
@@ -132,7 +145,7 @@ ggplot(mock3, aes(length, width)) +
   coord_equal()
 ```
 
-## The interesting direction...
+## Let's rotate the axes...
 
 ```{r}
 ggplot(mock3, aes(length, width)) +
@@ -156,25 +169,29 @@ round(pca$x, 2)
 
 ## Interpretation of the new variables
 
-The new variable "PC1" represents the "global dimension" of the object.
+The new variable `PC1` represents the **global dimension** of the object.
 
-The new variable is "centered", meaning that the mean is zero, and positive and negative values correspond to "large" and "small" objects, respectively.
+The new variable is _centered_, meaning that the mean is zero, and positive and negative values correspond to "large" and "small" objects, respectively.
 
-The new variable "PC2" is almost useless as it is "almost zero" for all objects.
+. . .
 
-This is an example of _Principal Component Analysis (PCA)_.
+The new variable `PC2` is almost useless as it is "almost zero" for all objects.
+
+This is an example of __Principal Component Analysis (PCA)__.
 
 ## PCA as dimensionality reduction
 
-PCA can be interpreted geometrically as a rotation of the original axes, but in statistics it is often used as a way to reduce the dimensionality of the problem.
+PCA can be interpreted geometrically as a rotation of the original axes, but in statistics it is often used as a way to _reduce the dimensionality of the problem_.
+
+. . .
 
 The example that we just saw is a good example of that: now that we know that we have seen that the second new variable does not explain much of the variability of the data, we can drop it and keep only the first one.
 
 ## Principal Components
 
-The "new variables" that we have discussed are called _Principal Components_.
+The "new variables" that we have discussed are called __Principal Components__.
 
-The first principal component of the data, "PC1", is obtained by minimizing the sum of squares of the orthogonal (perpendicular) projections of data points onto it.
+The first principal component of the data, `PC1`, is obtained by minimizing the sum of squares of the orthogonal (perpendicular) projections of data points onto it.
 
 ## Principal Components
 
@@ -196,13 +213,17 @@ ggplot(mock3, aes(length, width)) +
 
 Pythagoras’ theorem tells us that the total variability of the points is measured by the sum of squares of the projection of the points onto the center of gravity.
 
+. . .
+
 For a fixed variance, minimizing the projection distances also maximizes the variance along that line.
 
-Often we define the first principal component as the line with maximum variance.
+. . .
+
+Often we define the first principal component as the **direction with maximum variance**.
 
 ## Principal Components
 
-Hence, we can define the first _principal component_ as the _linear combination_ of the $p$ original variables
+We can define the first _principal component_ as the _linear combination_ of the $p$ original variables
 $$
 Y_1 = a_{11} X_1 + a_{12} X_2 + \ldots + a_{1p} X_p
 $$
@@ -264,18 +285,61 @@ library(ggbiplot)
 ggbiplot(pca_athletes)
 ```
 
+## Transforming the data
+
+Unlike the other disciplines, for running the higher the "score" (time) the worse the performance.
+
+Let's transform the variable so that higher scores will be better, by simply multiplying by -1.
+
+## New biplot
+
+```{r}
+runningvars <- grep("^m", colnames(athletes), value = TRUE)
+athletes[, runningvars] = -athletes[, runningvars]
+pca_athletes <- prcomp(athletes, scale. = TRUE)
+ggbiplot(pca_athletes)
+```
+
+## Interpretation
+
+```{r}
+#| echo: true
+pca_athletes$rotation[,1:2]
+```
+
+How do you interpret the first PC? The second?
+
+## PC1 captures the final results
+
+```{r}
+ggplot(
+  data = data.frame(
+    PC1 = pca_athletes$x[, 1],
+    score = olympic$score,
+    label = rownames(athletes)
+  ),
+  mapping = aes(y = score, x = PC1)
+) +
+  geom_text(aes(label = label)) +
+  stat_smooth(method = "lm", se = FALSE)
+```
+
 ## More formal definition
+
+Let $X$ be a $p$-dimensional random vector with mean $\mu$ and covariance matrix $\Sigma$.
 
 The _principal component transformation_ of $X$ is defined as the standardized linear combination 
 $$
-Y = \Gamma^{\top}(X - \mu),
+Y = \Gamma^{\top}(X - \mu).
 $$
 
-where, from the Spectral Decomposition Theorem, 
+## More formal definition
+
+From the Spectral Decomposition Theorem, 
 
 - $\Gamma^{\top} \Sigma \Gamma = \Lambda$, 
-- $\Lambda = \text{Diag}(\lambda_j: j=1,\dotsc,J)$ is the diagonal matrix of _eigenvalues_ of $\Sigma$, $\lambda_1 \geq \lambda_2 \geq \dotsc \geq \lambda_J \geq 0$, and 
-- $\Gamma = (\gamma_j: j=1,\dotsc,J)$ is an orthogonal matrix whose columns $\gamma_j$ are the corresponding _eigenvectors_. 
+- $\Lambda = \text{Diag}(\lambda_j: j=1,\dotsc,p)$ is the diagonal matrix of _eigenvalues_ of $\Sigma$, $\lambda_1 \geq \lambda_2 \geq \dotsc \geq \lambda_p \geq 0$, and 
+- $\Gamma = (\gamma_j: j=1,\dotsc,p)$ is an orthogonal matrix whose columns $\gamma_j$ are the corresponding _eigenvectors_. 
 
 ## More formal definition
 
@@ -286,7 +350,26 @@ $$
 
 where the $j$th eigenvector $\gamma_j$ is referred to as the _$j$th vector of principal component loadings_.
 
-## PCA properties
+## Example: the athletes data
+
+```{r}
+#| echo: true
+
+# Principal components (scores)
+head(pca_athletes$x)
+```
+
+## Example: the athletes data
+
+```{r}
+#| echo: true
+
+# Loadings
+head(pca_athletes$rotation)
+```
+
+
+## PCA properties {.smaller}
 
 The principal components satisfy the following properties.
 
@@ -312,10 +395,26 @@ $$
 \prod_{j=1}^p \text{Var}(Y_j) = |\Sigma| = \prod_{j=1}^p \lambda_j.
 $$
 
+## Example: the athletes data
+
+```{r}
+#| echo: true
+
+# Zero mean
+round(colMeans(pca_athletes$x), 2)
+
+# covariance matrix is diagonal
+round(cov(pca_athletes$x), 2)
+```
+
+
+
 ## PCA properties
 
 The principal components are _not scale-invariant_!
+
 Depending on the types of variables under consideration, scaling or use of the correlation matrix instead of the covariance matrix may be in order.
+
 
 ## PCA properties
 
@@ -338,34 +437,53 @@ summary(pca_athletes)
 ggbiplot::ggscreeplot(pca_athletes)
 ```
 
-## Transforming the data
+## How to compute PCA
 
-Unlike the other disciplines, for running the higher the "score" (time) the worse the performance.
+Recall that the principal components are linear combinations of the $p$ original variables that explain the most variability in the data. E.g., 
+$$
+Y_1 = a_{11} X_1 + a_{12} X_2 + \ldots + a_{1p} X_p.
+$$
 
-Let's transform the variable so that higher scores will be better, by simply multiplying by -1.
+But how can we find the coefficients $a_{1j}$?
 
-## New biplot
+## Singular Value Decomposition (SVD) {.smaller}
+
+Singular Value Decomposition (SVD) is a fundamental linear algebra technique that factorizes any $n \times p$ matrix $X$ as
+$$
+X = U D V^{\top},
+$$
+where 
+
+- $U$ is a $n \times p$ orthogonal matrix ($U^{\top} U = I$), whose columns are called _left singular vectors_ of $X$,
+- $V$ is a $p \times p$ orthogonal matrix ($V^{\top} V = I$), whose columns are called _right singular vectors_ of $X$, and
+- $D$ is a $p \times p$ diagonal matrix with diagonal elements $d_1 \geq d_2 \geq \ldots \geq d_p \geq 0$, called _singular values_ of $X$.
+
+## Intuition for SVD
+
+The intuition behind SVD is that it decomposes $X$ into a sum of rank-one matrices, obtained by multiplying the columns of $U$ and $V$, weighted by the diagonal elements of $D$.
+
+![SVD](img/SumRankOneD.png)
+
+## SVD and PCA
+
+The singular vectors from SVD contain the coefficients of the linear combinations of the original variables that define the principal components.
+
+In practice, we can compute the principal components as $U D$.
+
+## Example: the athletes data
 
 ```{r}
-runningvars <- grep("^m", colnames(athletes), value = TRUE)
-athletes[, runningvars] = -athletes[, runningvars]
-pca_athletes <- prcomp(athletes, scale. = TRUE)
-ggbiplot(pca_athletes)
-```
+#| echo: true
+X <- scale(as.matrix(athletes), center = TRUE, scale = TRUE)
+svdX <- svd(X)
 
-## Interpretation
+# Principal components
+head(svdX$u %*% diag(svdX$d))[,1:2]
+head(pca_athletes$x)[,1:2]
 
-```{r}
-ggplot(
-  data = data.frame(
-    PC1 = pca_athletes$x[, 1],
-    score = olympic$score,
-    label = rownames(athletes)
-  ),
-  mapping = aes(y = score, x = PC1)
-) +
-  geom_text(aes(label = label)) +
-  stat_smooth(method = "lm", se = FALSE)
+# Loadings
+head(svdX$v)[,1:2]
+head(pca_athletes$rotation)[,1:2]
 ```
 
 ## PCA as exploratory tool

@@ -24,9 +24,9 @@ You can use the navigation bar to navigate by topic or the Timeline section belo
 |      | 27/2/2026 | Statistical modeling       | 2     |
 | 2    | 3/3/2026 | Linear Models          | 2     |
 |      | 5/3/2026 | Linear Models (part 2)              | 2     |
-|      | 6/3/2026 | Experimental design (online)        | 4     |
-| 3    | 9/3/2026 | Generalized Linear Models          | 2     |
-|      | 10/3/2026 | TBA               | 2     |
+|      | 6/3/2026 | Generalized Linear Models (online)        | 4     |
+| 3    | 9/3/2026 | Experimental design          | 2     |
+|      | 10/3/2026 | Principal Component Analysis               | 2     |
 |      | 12/3/2026 | TBA              | 2     |
 |      | 13/3/2026 | TBA         | 2     |
 | 5    | 23/3/2026 | TBA (online)         | 2     |
