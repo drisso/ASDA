@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Experimental design – Advanced Statistics and Data Analysis</title>
+<title>7&nbsp; Principal Component Analysis – Advanced Statistics and Data Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -49,8 +49,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./glm.html" rel="next">
-<link href="./linmod2.html" rel="prev">
+<link href="./glm.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -108,7 +107,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./design.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Experimental design</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./pca.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -165,7 +164,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./design.html" class="sidebar-item-text sidebar-link active">
+  <a href="./design.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Experimental design</span></span></a>
   </div>
 </li>
@@ -177,7 +176,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+  <a href="./pca.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
   </div>
 </li>
@@ -191,10 +190,10 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">5.1</span> Lecture Slides</a></li>
-  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">5.2</span> Lab</a></li>
-  <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">5.3</span> Homework</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">5.4</span> Further reading</a></li>
+  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">7.1</span> Lecture Slides</a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">7.2</span> Lab</a></li>
+  <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">7.3</span> Homework</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">7.4</span> Further reading</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -204,7 +203,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Experimental design</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></h1>
 </div>
 
 
@@ -221,25 +220,24 @@ div.csl-indent {
 </header>
 
 
-<section id="lecture-slides" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">5.1</span> Lecture Slides</h2>
-    <p><a href="slides/06_design.html" target="_blank">View slides in full screen</a></p>
+<section id="lecture-slides" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">7.1</span> Lecture Slides</h2>
+    <p><a href="slides/08_PCA.html" target="_blank">View slides in full screen</a></p>
        <div>
-      <iframe class="slide-deck" src="slides/06_design.html" height="475px"></iframe>
+      <iframe class="slide-deck" src="slides/08_PCA.html" height="475px"></iframe>
     </div>
   
 </section>
-<section id="lab" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">5.2</span> Lab</h2>
+<section id="lab" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">7.2</span> Lab</h2>
 </section>
-<section id="homework" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">5.3</span> Homework</h2>
+<section id="homework" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">7.3</span> Homework</h2>
 </section>
-<section id="further-reading" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">5.4</span> Further reading</h2>
+<section id="further-reading" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">7.4</span> Further reading</h2>
 <ul>
-<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/13-chap.html">Chapter 13</a>.</li>
-<li>Nature Methods <a href="https://www.nature.com/collections/qghhqm/pointsofsignificance">Points of Significance</a>.</li>
+<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/07-chap.html">Chapter 7</a>.</li>
 </ul>
 </section>
 <section id="references" class="level2 unnumbered">
@@ -671,14 +669,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./linmod2.html" class="pagination-link" aria-label="Linear models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Linear models</span></span>
+      <a href="./glm.html" class="pagination-link" aria-label="Generalized Linear Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Generalized Linear Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./glm.html" class="pagination-link" aria-label="Generalized Linear Models">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Generalized Linear Models</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
