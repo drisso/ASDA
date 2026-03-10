@@ -26,7 +26,7 @@ Read the data and glimpse at the data.
 ```{r read-in}
 library(tidyverse)
 theme_set(theme_minimal(base_size = 20))
-soay <- read_csv("slides/data/SoaySheepFitness.csv")
+soay <- read_csv("slides/data/SoaySheep.csv")
 glimpse(soay)
 ```
 
