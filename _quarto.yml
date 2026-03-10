@@ -17,6 +17,7 @@ book:
     - linmod2.qmd
     - design.qmd
     - glm.qmd
+    - glm2.qmd
     - pca.qmd
 #    - hdr.qmd
 #    - bayes.qmd

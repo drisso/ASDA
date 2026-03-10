@@ -1,0 +1,401 @@
+---
+title: "Generalized Linear Models (part 2)"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Lecture Slides
+
+{{< revealjs "slides/07_GLM.html" >}}
+
+## Lab 
+
+# 1. Soay sheep fitness data [^1]
+To illustrate Poisson regression model, we use a simulated data
+that consists of 52 female Soay sheep.
+
+The variables available in the dataset are:
+  
+- **fitness**: Lifetime reproductive success (number of offspring born to a female during her life);
+- **body.size**: Body mass (size).
+
+Read the data and glimpse at the data.
+
+```{r read-in}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 20))
+soay <- read_csv("slides/data/SoaySheepFitness.csv")
+glimpse(soay)
+```
+
+The goal is to study whether there is an association between the body size and the number of reproductive success, i.e., does lifetime reproductive success increase with ewe body mass?
+
+### Data wrangling and exploration
+
+We can visualize the relationship between lifetime reproductive sucess and body mass
+```{r}
+ggplot(soay, aes(x = body.size , y = fitness)) +
+  geom_point(size = 3, alpha = 0.6) +
+  geom_smooth(method = "glm", se=F,
+              method.args = list(family = "poisson"),
+              color = "blue") +
+  geom_smooth(method = "lm", se = FALSE,colour = "red" , span=1) 
+```
+
+::: {.callout-important}
+# Exercise
+
+Fit a simple linear model. What does the plot **Residuals vs Fitted** tell you?
+:::
+
+
+```{webr-r}
+## Your solution
+```
+
+::: {.callout-tip}
+# Solution
+
+```{r}
+fit1 <- lm(fitness ~ body.size, data = soay)
+summary(fit1)
+par(mfrow=c(2,2))
+plot(fit1)
+```
+:::
+
+From the **Residuals vs Fitted** plot, we can see there exist a nonlinearity relationship between fitness and body.size. Therefore, a different approach may be necessary.
+
+### Fit a Poisson regression model
+
+```{r}
+fit2 <- glm(fitness ~ body.size, family = "poisson", data = soay)
+summary(fit2)
+par(mfrow=c(2,2))
+plot(fit2)
+```
+::: {.callout-important}
+# Exercise
+
+What does the output of Poisson regression tell you?
+:::
+The fitted model is
+$$\log(\lambda)=-2.0770  + 0.4896 \text{ body.size}$$
+These results suggest that by exponentiating the coefficient on `body.size`, we obtain the multiplicative factor by which the mean count changes. In this case, the mean number of offspring born changes by a factor of $\exp(0.4896)=1.631663$ or increases 63.17% (since  $1.631663-1=0.63166) if a body mass increase 1.
+
+The total deviance for NULL (fitness), and the deviance reduce $125.589−53.653=71.936$ if we consider the body size as a predictor.
+This is a large reduction, meaning the predictor explains a lot of variation, i.e., the body size is an important predictor of fitness. We can verify this conclusion by perform a deviance test.
+
+```{r}
+anova(fit2)
+```
+
+The test statistic has a value of 71.936, corresponding p value is very small. This means that adding predictor (body.size) significantly improves the model.
+
+### Prediction
+
+Let’s go back to parameter estimation. Here, we have estimated the two regression coefficients, we can also compute _confidence intervals_ for those estimates.
+
+```{r conf_int}
+confint(fit2)
+```
+
+This allows us to be more confident on the inferential statements about the relation between the lifetime reproductive success and the body size.
+
+However, very often one of the goals of generalized linear model is _prediction_. For instance, we can try and predict what would be the number of number of offspring produced by an ewe that has body size is 6, 7, 8 in average.
+
+```{r predict}
+# for body.size = 6
+exp(-2.0770  + 0.4896 *6)
+# for body.size = 6
+exp(-2.0770  + 0.4896 *7)
+# for body.size = 6
+exp(-2.0770  + 0.4896 *8)
+
+```
+
+::: {.callout-important}
+# Exercise
+
+Predict the number of number of offspring produced by a ewe that has body size is 6, 7, 8 using `predict()` function. What do you notice?
+:::
+
+### Plotting the fitted curve 
+```{r}
+min.size <- min(soay$body.size)
+max.size <- max(soay$body.size)
+
+new.x <- expand.grid(body.size=seq(min.size,max.size,length=100))
+new.y <- predict(fit2, newdata=new.x, se.fit=TRUE)
+
+newdata <- data.frame(new.x, new.y)
+newdata <- newdata %>% mutate(
+  fitness=exp(fit),
+  lwr = exp(fit-1.96*se.fit),
+  upr = exp(fit+1.96*se.fit))
+
+ggplot(soay, aes(x=body.size, y=fitness))+
+  geom_point(size=3, alpha=0.5)+
+  geom_smooth(data=newdata,
+              aes(ymin=lwr, ymax=upr), stat='identity') +  # identity means that y values are provided
+  theme_bw()
+```
+
+### Check for overdispersion
+
+Dispersion index (DI) is defined as 
+$$DI=\frac{\text{Residual deviance}}{\text{Residual degrees of freedom}}$$
+
+  - If $DI\approx 1$ no overdispersion
+  - If $2>DI > 1.5$ Possible overdispersion
+  - If $DI \ge 2$ strong overdispersion
+  
+In this example,
+```{r}
+DI=53.653/48
+DI
+```
+
+$DI=1.12$ no dispersion so the model is good, i.e., Poisson is a suitable model.
+
+# 2. Warpbreaks data [^1]
+The `warpbreak` data set is a data in the package `datasets`. This data looks at how many warp breaks occurred for different types of looms per loom, per fixed length of yarn.
+
+A data frame with 54 observations on 3 variables.
+
+  - **breaks**:	The number of breaks
+  - **wool**:	The type of wool (A or B)
+  - **tension**:	The level of tension (L, M, H)
+  
+There are measurements on 9 looms of each of the six types of warp, for a total of 54 entries in the dataset.
+```{r}
+library(datasets)
+data("warpbreaks")
+glimpse(warpbreaks)
+```
+
+## Exploration
+We can look at the distribution of `breaks` in the data
+
+```{r}
+ggplot(warpbreaks, aes(x=breaks)) +
+    geom_histogram(fill = "dodgerblue")
+```
+
+Check the mean and variance of this variable
+```{r}
+mean(warpbreaks$breaks)
+var(warpbreaks$breaks)
+```
+
+The variance is much greater than the mean, which suggests that we will have over-dispersion in the model.
+
+## Fit Poisson model
+We fit a Poisson linear model to model the number of breaks as a function of the predictors wool and tension.
+```{r}
+fit3 <- glm(breaks ~ wool+tension, data=warpbreaks, family = "poisson")
+summary(fit3)
+```
+
+::: {.callout-important}
+# Exercise
+
+What do these results tell you?
+:::
+
+## Model selection
+
+Is the inclusion of the levels of tension informative or not? Which model is better, with or without such variable?
+
+To test for the global significance of the tension variable, we can fit a model without it and perform an Analysis of Deviance (likelihood ratio test) comparing a Poisson GLM with and without the tension variable
+
+```{r}
+fit4 <- glm(breaks ~ wool, data=warpbreaks, family = "poisson")
+summary(fit4)
+anova(fit3,fit4)
+```
+
+A significant Chi-square test indicates that tension significantly improves model fit.
+
+### Consider interaction
+```{r}
+fit5 <- glm(breaks ~ wool*tension, data=warpbreaks, family = "poisson")
+summary(fit5)
+anova(fit3,fit5)
+```
+The p value is really small, it means that the interaction is significant, i.e.,  the difference in the number of breaks between wool types changes across tension levels.
+
+::: {.callout-important}
+# Note
+
+If interaction is significant, **Do not interpret main effects alone**. Interpret how the effect of one variable changes across levels of the other variable.
+
+Effects of interest = linear combinations of main + interaction terms.
+:::
+
+### Plot fitted value
+```{r}
+new.x <- expand.grid(wool=c("A","B"), tension=c("L","M","H"))
+new.y <- predict(fit5, newdata=new.x, se.fit=TRUE)
+
+newdata <- data.frame(new.x, new.y)
+newdata <- newdata %>% mutate(
+  fitness=exp(fit),
+  lwr = exp(fit-1.96*se.fit),
+  upr = exp(fit+1.96*se.fit))
+
+ggplot(newdata, aes(x=tension, y=fitness, group=wool, col=wool))+
+  geom_point()+
+  geom_line() +
+  geom_errorbar(aes(ymin=lwr, ymax=upr), width=0.1)+
+  scale_color_manual(values=c("black","dodgerblue"))+ 
+  xlab("Tension")+
+  ylab("Breaks")+
+  theme_bw()
+```
+
+
+### Check overdispersion
+The dispersion index is 
+```{r}
+DI = 182.31/48
+DI
+```
+
+The $DI= 3.8 >2$, this indicates strong overdispersion. Hence, the Poisson model is underestimating the variability in the data, and a diffent approach maybe necessary. A common solution could be, consider the negative binomial model.
+
+```{r}
+library(MASS)
+fit6 <- glm.nb(breaks ~ wool * tension, data=warpbreaks)
+summary(fit6)
+```
+
+# Campus Crime [^2]
+
+This data collects and reports information about crime occurring on campus. Data consits of 81 observations and six variables:
+
+  - **Enrollment**: enrollment at the school;
+  - **type**: college (C) or university (U);
+  - **nv**: the number of violent crimes for that institution for the given year;
+  - **nvrate**: number of violent crimes per 1000 students;
+  - **enroll1000**  enrollment at the school, in thousands;
+  - **region**: region of the country (C = Central, MW = Midwest, NE = Northeast, SE = Southeast, SW = Southwest, and W = West)
+  
+Read the data and glimpse at the data.
+
+```{r}
+c_data <- read_csv("https://raw.githubusercontent.com/proback/BeyondMLR/refs/heads/master/data/c_data.csv")
+head(c_data)
+```
+
+The goal is to study  whether is an association  among the number of violent crimes, region and the type of school.
+
+## Data wrangling and exploration
+
+We combine the SW and SE to form a single category of the South because Southwestern colleges has 0 observed rate.
+
+```{r}
+c_data <- c_data %>%
+  mutate(
+    region2 = case_when(
+      region %in% c("SW", "SE") ~ "S",
+      TRUE ~ region
+    ))
+
+```
+
+We then turn the categorical variables into factors.
+
+```{r}
+c_data <- c_data |>
+    mutate(type = factor(type), region2 = factor(region2)) 
+head(c_data)
+```
+
+We can now look at the number of crimes across the type of schools and regions.
+
+```{r boxplot}
+c_data |>
+    ggplot(aes(region2, nvrate, fill=type)) +
+    geom_boxplot()
+```
+
+This plot shows that 
+
+  - In general the  mean violent crime rates of universities is lower than the mean violent crime rates of colleges within a region (except the Northeast). 
+  - The regional pattern of rates at universities appears to differ from that of the colleges across different regions.
+  - There are several outliers.
+  
+We filter out the outliers
+
+```{r}
+c_data_filt<- c_data %>%
+  filter(nvrate <= 2)
+```
+
+
+Plot the density of violent crime rates
+
+```{r}
+ggplot(c_data_filt, aes(x=nv)) +
+    geom_histogram(aes(y = after_stat(density)), fill = "dodgerblue", bins = 12)
+```
+
+From the histogram plot, we can see many schools reported few crimes, and a few schools have a large number of crimes. Moreover, the shape of the density does not look like a normal distribution. Therefore, Poisson regression should be considered to model the data.
+
+## Fit Poisson linear models
+
+It is also important to note that the counts are not directly comparable because they come from different  school size. We expect schools with more students to have more reports of violent crime since there are more students who could be affected. Therefore, we take the differences in enrollments into account by including an offset in our model, i.e., consider a Poisson regression of the form
+$$\log(\frac{\lambda}{\text{enroll1000}})=\beta_0+\beta_1 \text{type}$$
+or $$\log(\lambda)=\beta_0+\beta_1 \text{type}+\log(\text{enroll1000})$$
+
+
+```{r}
+fit7 <- glm(nv ~ type + region2, family = "poisson", offset=log(enroll1000), data=c_data_filt)
+summary(fit7)
+```
+These results tell us the Northeast and the South differ significantly from the Central region. The estimated coefficient of  0.5663 means that  the violent crime rate per 1000 in the Northeast is 1.76 ( $=\exp( 0.5663)$) times that of the Central region when the type of school is the same. 
+
+::: {.callout-important}
+# Exercise
+1. Fit the Poisson linear model on the original data (without filtering out outliers). What do you notice?
+:::
+
+We also note that the effect of the type may vary denpending on the region, so we also consider a Poisson regression model with interaction between type and region. 
+
+```{r}
+fit8 <- glm(nv ~ type * region2, family = "poisson", offset = log(enroll1000), data = c_data_filt)
+summary(fit8)
+```
+::: {.callout-important}
+# Exercise
+1. What do these results tell you?
+:::
+
+These results confirm the significance of the interaction between the effect of region and the type of institution. We also can perform a test to see where the interaction is significant.
+
+```{r}
+anova(fit7, fit8)
+```
+
+## Check overdispersion
+The dispersion index is 
+```{r}
+DI = 236.02/68
+DI
+```
+
+The $DI= 3.47 >2$, this indicates there exist strong overdispersion. Hence, a different approach is neccessary!!
+
+
+
+
+## Further reading
+
+- S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 8](https://www.huber.embl.de/msmb/08-chap.html).
+
+
+[^1]: Warpbreaks and  Soay sheep fitness example are based on the [Poisson regression activities lecture](https://rpubs.com/jorgelizarazo/1361544).
+[^2]: Campus Crime example is from the [Beyond Multiple Linear Regression](https://bookdown.org/roback/bookdown-BeyondMLR/).

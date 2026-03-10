@@ -465,4 +465,4 @@ $$ H_0: \beta_3-\beta_4=0 \quad \text{ against } \quad H_1: \beta_3-\beta_4 \ne 
 
 - S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 8](https://www.huber.embl.de/msmb/08-chap.html).
 
-[^1]: This homework is one of the [Open Case Studies](https://www.opencasestudies.org/). Please try to solve this yourself before looking at the solution there.
+[^1]: This lab is one of the [Open Case Studies](https://www.opencasestudies.org/).
