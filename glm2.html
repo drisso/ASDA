@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Data Wrangling and Visualization (part 2) – Advanced Statistics and Data Analysis</title>
+<title>7&nbsp; Generalized Linear Models (part 2) – Advanced Statistics and Data Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./linmod2.html" rel="next">
-<link href="./dataviz.html" rel="prev">
+<link href="./pca.html" rel="next">
+<link href="./glm.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -402,7 +402,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"## Your solution","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"## Your solution","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qwebrCellDetails = [{"code":"## Your solution","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script>
 <script type="module">
@@ -1664,6 +1664,35 @@ globalThis.qwebrExecuteCode = async function (
   </style>
   
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -1676,7 +1705,7 @@ globalThis.qwebrExecuteCode = async function (
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataviz2.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization (part 2)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glm2.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Generalized Linear Models (part 2)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -1721,7 +1750,7 @@ globalThis.qwebrExecuteCode = async function (
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dataviz2.html" class="sidebar-item-text sidebar-link active">
+  <a href="./dataviz2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization (part 2)</span></span></a>
   </div>
 </li>
@@ -1745,7 +1774,7 @@ globalThis.qwebrExecuteCode = async function (
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./glm2.html" class="sidebar-item-text sidebar-link">
+  <a href="./glm2.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Generalized Linear Models (part 2)</span></span></a>
   </div>
 </li>
@@ -1765,20 +1794,34 @@ globalThis.qwebrExecuteCode = async function (
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">3.1</span> Lecture Slides</a></li>
-  <li><a href="#lab-tidy-data-in-r" id="toc-lab-tidy-data-in-r" class="nav-link" data-scroll-target="#lab-tidy-data-in-r"><span class="header-section-number">3.2</span> Lab: tidy data in R</a>
+  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">7.1</span> Lecture Slides</a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">7.2</span> Lab</a></li>
+  <li><a href="#soay-sheep-fitness-data-1" id="toc-soay-sheep-fitness-data-1" class="nav-link" data-scroll-target="#soay-sheep-fitness-data-1"><span class="header-section-number">8</span> 1. Soay sheep fitness data </a>
   <ul class="collapse">
-  <li><a href="#whats-not-covered-i.e.-prerequisites" id="toc-whats-not-covered-i.e.-prerequisites" class="nav-link" data-scroll-target="#whats-not-covered-i.e.-prerequisites"><span class="header-section-number">3.2.1</span> What’s not covered (i.e., prerequisites)</a></li>
-  <li><a href="#whats-covered-i.e.-outline" id="toc-whats-covered-i.e.-outline" class="nav-link" data-scroll-target="#whats-covered-i.e.-outline"><span class="header-section-number">3.2.2</span> What’s covered (i.e., outline)</a></li>
-  <li><a href="#import-and-export-the-data" id="toc-import-and-export-the-data" class="nav-link" data-scroll-target="#import-and-export-the-data"><span class="header-section-number">3.2.3</span> Import and export the data</a></li>
-  <li><a href="#tidy-the-data-the-tidyr-package" id="toc-tidy-the-data-the-tidyr-package" class="nav-link" data-scroll-target="#tidy-the-data-the-tidyr-package"><span class="header-section-number">3.2.4</span> Tidy the data: the <code>tidyr</code> package</a></li>
-  <li><a href="#the-tidyverse-vs.-base-r" id="toc-the-tidyverse-vs.-base-r" class="nav-link" data-scroll-target="#the-tidyverse-vs.-base-r"><span class="header-section-number">3.2.5</span> The “tidyverse” vs.&nbsp;“base R”</a></li>
+  <li><a href="#data-wrangling-and-exploration" id="toc-data-wrangling-and-exploration" class="nav-link" data-scroll-target="#data-wrangling-and-exploration"><span class="header-section-number">8.0.1</span> Data wrangling and exploration</a></li>
+  <li><a href="#fit-a-poisson-regression-model" id="toc-fit-a-poisson-regression-model" class="nav-link" data-scroll-target="#fit-a-poisson-regression-model"><span class="header-section-number">8.0.2</span> Fit a Poisson regression model</a></li>
+  <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction"><span class="header-section-number">8.0.3</span> Prediction</a></li>
+  <li><a href="#plotting-the-fitted-curve" id="toc-plotting-the-fitted-curve" class="nav-link" data-scroll-target="#plotting-the-fitted-curve"><span class="header-section-number">8.0.4</span> Plotting the fitted curve</a></li>
+  <li><a href="#check-for-overdispersion" id="toc-check-for-overdispersion" class="nav-link" data-scroll-target="#check-for-overdispersion"><span class="header-section-number">8.0.5</span> Check for overdispersion</a></li>
   </ul></li>
-  <li><a href="#sec-homework1" id="toc-sec-homework1" class="nav-link" data-scroll-target="#sec-homework1"><span class="header-section-number">3.3</span> Homework </a>
+  <li><a href="#warpbreaks-data-1" id="toc-warpbreaks-data-1" class="nav-link" data-scroll-target="#warpbreaks-data-1"><span class="header-section-number">9</span> 2. Warpbreaks data </a>
   <ul class="collapse">
-  <li><a href="#guided-solution" id="toc-guided-solution" class="nav-link" data-scroll-target="#guided-solution"><span class="header-section-number">3.3.1</span> Guided solution</a></li>
+  <li><a href="#exploration" id="toc-exploration" class="nav-link" data-scroll-target="#exploration"><span class="header-section-number">9.1</span> Exploration</a></li>
+  <li><a href="#fit-poisson-model" id="toc-fit-poisson-model" class="nav-link" data-scroll-target="#fit-poisson-model"><span class="header-section-number">9.2</span> Fit Poisson model</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">9.3</span> Model selection</a>
+  <ul class="collapse">
+  <li><a href="#consider-interaction" id="toc-consider-interaction" class="nav-link" data-scroll-target="#consider-interaction"><span class="header-section-number">9.3.1</span> Consider interaction</a></li>
+  <li><a href="#plot-fitted-value" id="toc-plot-fitted-value" class="nav-link" data-scroll-target="#plot-fitted-value"><span class="header-section-number">9.3.2</span> Plot fitted value</a></li>
+  <li><a href="#check-overdispersion" id="toc-check-overdispersion" class="nav-link" data-scroll-target="#check-overdispersion"><span class="header-section-number">9.3.3</span> Check overdispersion</a></li>
   </ul></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">3.4</span> Further reading</a></li>
+  </ul></li>
+  <li><a href="#campus-crime-2" id="toc-campus-crime-2" class="nav-link" data-scroll-target="#campus-crime-2"><span class="header-section-number">10</span> Campus Crime </a>
+  <ul class="collapse">
+  <li><a href="#data-wrangling-and-exploration-1" id="toc-data-wrangling-and-exploration-1" class="nav-link" data-scroll-target="#data-wrangling-and-exploration-1"><span class="header-section-number">10.1</span> Data wrangling and exploration</a></li>
+  <li><a href="#fit-poisson-linear-models" id="toc-fit-poisson-linear-models" class="nav-link" data-scroll-target="#fit-poisson-linear-models"><span class="header-section-number">10.2</span> Fit Poisson linear models</a></li>
+  <li><a href="#check-overdispersion-1" id="toc-check-overdispersion-1" class="nav-link" data-scroll-target="#check-overdispersion-1"><span class="header-section-number">10.3</span> Check overdispersion</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">10.4</span> Further reading</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -2071,7 +2114,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization (part 2)</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Generalized Linear Models (part 2)</span></h1>
 </div>
 
 
@@ -2088,162 +2131,54 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </header>
 
 
-<section id="lecture-slides" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">3.1</span> Lecture Slides</h2>
-    <p><a href="slides/02_dataviz.html" target="_blank">View slides in full screen</a></p>
+<section id="lecture-slides" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">7.1</span> Lecture Slides</h2>
+    <p><a href="slides/07_GLM.html" target="_blank">View slides in full screen</a></p>
        <div>
-      <iframe class="slide-deck" src="slides/02_dataviz.html" height="475px"></iframe>
+      <iframe class="slide-deck" src="slides/07_GLM.html" height="475px"></iframe>
     </div>
   
 </section>
-<section id="lab-tidy-data-in-r" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="lab-tidy-data-in-r"><span class="header-section-number">3.2</span> Lab: tidy data in R</h2>
-<section id="whats-not-covered-i.e.-prerequisites" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="whats-not-covered-i.e.-prerequisites"><span class="header-section-number">3.2.1</span> What’s not covered (i.e., prerequisites)</h3>
-<p>Basic R syntax is not covered in this lab, as we assume that you are already familiar with it. Most of the concepts in this first lab should be accessible to peolple with minimal exposure to R (Googling what you don’t remember is allowed – and encouraged!).</p>
-<p>If you need help getting started with R, this is a good and free tutorial: https://swcarpentry.github.io/r-novice-gapminder/</p>
+<section id="lab" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">7.2</span> Lab</h2>
 </section>
-<section id="whats-covered-i.e.-outline" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="whats-covered-i.e.-outline"><span class="header-section-number">3.2.2</span> What’s covered (i.e., outline)</h3>
-<p>In this second lab, we will cover how to:</p>
+<section id="soay-sheep-fitness-data-1" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> 1. Soay sheep fitness data <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<p>To illustrate Poisson regression model, we use a simulated data that consists of 52 female Soay sheep.</p>
+<p>The variables available in the dataset are:</p>
 <ul>
-<li>import the data into R</li>
-<li>clean the data and transform them into <em>tidy data</em></li>
-<li>work with more complex data structures</li>
+<li><strong>fitness</strong>: Lifetime reproductive success (number of offspring born to a female during her life);</li>
+<li><strong>body.size</strong>: Body mass (size).</li>
 </ul>
-</section>
-<section id="import-and-export-the-data" class="level3" data-number="3.2.3">
-<h3 data-number="3.2.3" class="anchored" data-anchor-id="import-and-export-the-data"><span class="header-section-number">3.2.3</span> Import and export the data</h3>
-<p>There are several functions to import the data into R depending on the format in which the data live outside of R. First, we will assume that the data exist in a standard text format, such as tab-delimited or comma-separated. We will briefly mention some packages that can be used to import data in MS Excel, Matlab, and other non-standard formats.</p>
-<p>Base R has many useful functions for the import of flat data tables, <code>read.table</code> and <code>read.cvs</code> among others. However, we will use the <code>readr</code> package here and in particular we will illustrate the <code>read_csv</code>, <code>read_tsv</code> and <code>read_delim</code> functions. These functions are faster and offer more flexibility compared to the base R counterparts. However, sometimes using <code>read.table</code> can be useful, for instance when one wants to use <code>row.names</code>.</p>
-<section id="read-the-data-into-r" class="level4" data-number="3.2.3.1">
-<h4 data-number="3.2.3.1" class="anchored" data-anchor-id="read-the-data-into-r"><span class="header-section-number">3.2.3.1</span> Read the data into R</h4>
-<p>Often the data come in the form of csv files (comma-separated values). Excel spreadsheet can also be saved to csv files, making it a useful format to read into R data generated with Excel.</p>
-<p>Another popular format is tsv files (tab-separated values). This is for instance how the gapminder data has been saved to file in the gapminder package.</p>
-<p>Finally, <code>read_delim</code> can be used to read files whose fields are separated by any character (most commonly a space) which need to be specified in the <code>delim</code> argument.</p>
-<p>Here, we will illustrate the use of <code>read_tsv</code> since the other two functions are very similar.</p>
-<p>First, we need a string that describes the location on disk of the file that we want to import in R. Note that the string will change depending on your OS.</p>
+<p>Read the data and glimpse at the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gap_tsv <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata/gapminder.tsv"</span>, <span class="at">package =</span> <span class="st">"gapminder"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>gap_tsv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>soay <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"slides/data/SoaySheepFitness.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(soay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "/Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/library/gapminder/extdata/gapminder.tsv"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>gap <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(gap_tsv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 1704 Columns: 6
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: "\t"
-chr (2): country, continent
-dbl (4): year, lifeExp, pop, gdpPercap
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,704 × 6
-   country     continent  year lifeExp      pop gdpPercap
-   &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
- 1 Afghanistan Asia       1952    28.8  8425333      779.
- 2 Afghanistan Asia       1957    30.3  9240934      821.
- 3 Afghanistan Asia       1962    32.0 10267083      853.
- 4 Afghanistan Asia       1967    34.0 11537966      836.
- 5 Afghanistan Asia       1972    36.1 13079460      740.
- 6 Afghanistan Asia       1977    38.4 14880372      786.
- 7 Afghanistan Asia       1982    39.9 12881816      978.
- 8 Afghanistan Asia       1987    40.8 13867957      852.
- 9 Afghanistan Asia       1992    41.7 16317921      649.
-10 Afghanistan Asia       1997    41.8 22227415      635.
-# ℹ 1,694 more rows</code></pre>
+<pre><code>Rows: 50
+Columns: 2
+$ fitness   &lt;dbl&gt; 2, 3, 1, 4, 2, 5, 2, 6, 3, 5, 2, 6, 3, 5, 4, 7, 4, 6, 5, 8, …
+$ body.size &lt;dbl&gt; 6.2, 6.3, 6.4, 6.5, 6.5, 6.6, 6.6, 6.7, 6.7, 6.8, 6.8, 6.9, …</code></pre>
 </div>
 </div>
-<p>Note how the <code>read_tsv</code> function printed a message with the type that it inferred from each of the columns.</p>
-</section>
-<section id="write-the-data-to-file" class="level4" data-number="3.2.3.2">
-<h4 data-number="3.2.3.2" class="anchored" data-anchor-id="write-the-data-to-file"><span class="header-section-number">3.2.3.2</span> Write the data to file</h4>
-<p>Similarly to <code>read_tsv</code> and <code>read_csv</code>, the functions <code>write_tsv</code> and <code>write_csv</code> can be used to write the R tables to a file on disk.</p>
-<p>Note that writing flat tables to csv or tsv files is the easiest and most reproducible approach. For complex data structures, say an histogram or a clustering tree, one can use the function <code>save</code> to save a binary R representation of the object on a <code>.rda</code> file. Similarly, the function <code>load</code> will read <code>.rda</code> files back into R.</p>
-</section>
-<section id="additional-resources-for-data-importexport" class="level4" data-number="3.2.3.3">
-<h4 data-number="3.2.3.3" class="anchored" data-anchor-id="additional-resources-for-data-importexport"><span class="header-section-number">3.2.3.3</span> Additional resources for data import/export</h4>
-<p>Sometimes you may need to import data from different formats, e.g., because your collaborator has the data in a MS Excel file or because you are continuing in R an analysis started with SPSS, Stata, or SAS.</p>
-<p>Fortunately, R has many packages that can be used for data import/export:</p>
-<ul>
-<li><code>haven</code> can be used to read SPSS, Stata, and SAS files.</li>
-<li><code>readxl</code> to read excel files (both .xls and .xlsx).</li>
-<li><code>DBI</code> to import data from a variety of databases (advanced).</li>
-<li><code>jsonlite</code> to import json files</li>
-<li><code>xml2</code> to import XML files.</li>
-</ul>
-</section>
-</section>
-<section id="tidy-the-data-the-tidyr-package" class="level3" data-number="3.2.4">
-<h3 data-number="3.2.4" class="anchored" data-anchor-id="tidy-the-data-the-tidyr-package"><span class="header-section-number">3.2.4</span> Tidy the data: the <code>tidyr</code> package</h3>
-<p>Often, a large amount of time is spent on “cleaning” the data, in what is sometimes referred to <em>data wrangling</em>.</p>
-<p>This is because often the data are plagued by missing or implausible values, either because of technical issues with the data collection or because of human error. Moreover, data are often recorded in a way that is useful for storing them, but not ideal for analyzing them.</p>
-<p>The objective of data wrangling is to take a messy dataset and make it <em>tidy</em>, so that it becomes easier to work with.</p>
-<section id="what-are-tidy-data" class="level4" data-number="3.2.4.1">
-<h4 data-number="3.2.4.1" class="anchored" data-anchor-id="what-are-tidy-data"><span class="header-section-number">3.2.4.1</span> What are tidy data?</h4>
-<p>The concept of tidy data was introduced by Hadley Wickham in his seminal paper.</p>
-<p>There are three fundamental rules which make a dataset tidy:</p>
-<ol type="1">
-<li>Each variable must have its own column.</li>
-<li>Each observation must have its own row.</li>
-<li>Each value must have its own cell.</li>
-</ol>
-<p>The advantage of tidy data is both conceptual and practical: it allows you to have consistency between datasets and to use tools designed for this data structure. Moreover, because R works extremely well with vectorized operation it is very efficient to operate on the columns of a data frame.</p>
-</section>
-<section id="examples-of-tidy-and-untidy-data" class="level4" data-number="3.2.4.2">
-<h4 data-number="3.2.4.2" class="anchored" data-anchor-id="examples-of-tidy-and-untidy-data"><span class="header-section-number">3.2.4.2</span> Examples of tidy and untidy data</h4>
-<p>To illustrate the concept of tidy data, we can use the examples in the <a href="https://github.com/rstudio/EDAWR">EDAWR package</a>. First we need to download and install it from Github with the <code>devtools</code> package.</p>
+<p>The goal is to study whether there is an association between the body size and the number of reproductive success, i.e., does lifetime reproductive success increase with ewe body mass?</p>
+<section id="data-wrangling-and-exploration" class="level3" data-number="8.0.1">
+<h3 data-number="8.0.1" class="anchored" data-anchor-id="data-wrangling-and-exploration"><span class="header-section-number">8.0.1</span> Data wrangling and exploration</h3>
+<p>We can visualize the relationship between lifetime reproductive sucess and body mass</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(remotes)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"rstudio/EDAWR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">storms</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">cases</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">pollution</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(EDAWR)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>storms</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    storm wind pressure       date
-1 Alberto  110     1007 2000-08-03
-2    Alex   45     1009 1998-07-27
-3 Allison   65     1005 1995-06-03
-4     Ana   40     1013 1997-06-30
-5  Arlene   50     1010 1999-06-11
-6  Arthur   45     1010 1996-06-17</code></pre>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cases</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  country  2011  2012  2013
-1      FR  7000  6900  7000
-2      DE  5800  6000  6200
-3      US 15000 14000 13000</code></pre>
-</div>
-</div>
-</div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pollution</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      city  size amount
-1 New York large     23
-2 New York small     14
-3   London large     22
-4   London small     16
-5  Beijing large    121
-6  Beijing small     56</code></pre>
-</div>
-</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(soay, <span class="fu">aes</span>(<span class="at">x =</span> body.size , <span class="at">y =</span> fitness)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">se=</span>F,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"poisson"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>,<span class="at">colour =</span> <span class="st">"red"</span> , <span class="at">span=</span><span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
@@ -2257,109 +2192,7 @@ Exercise
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Take some time to list and describe the variables present in each datasets. Which of these datasets is tidy?</p>
-</div>
-</div>
-<p>Note that somebody’s tidy data is someone else’s untidy data. For instance in the <code>pollution</code> example, one could argue that the two variables in addition to city are: particle size, and particle amount. In this case the dataset is tidy. But another argument is that the variables are: amount of small particles and amount of large particles. In this case the dataset is untidy.</p>
-<p>For this reason, I actually prefer another terminology: long data and wide data. The pollution dataset is stored in long format, while the cases dataset is stored in wide format.</p>
-<p>To switch between long and wide format, the <code>tidyr</code> package provide two extremely useful functions: <code>piveot_longer()</code> and <code>pivot_wider()</code>.</p>
-</section>
-<section id="make-your-data-tall-pivot_longer" class="level4" data-number="3.2.4.3">
-<h4 data-number="3.2.4.3" class="anchored" data-anchor-id="make-your-data-tall-pivot_longer"><span class="header-section-number">3.2.4.3</span> Make your data “tall”: <code>pivot_longer()</code></h4>
-<p>The function <code>pivot_longer()</code> can be used to transform the data from wide to tall.</p>
-<p>The <code>cases</code> data frame is in wide form. If we want to make it tall, we can use the following command.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>(cases, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"n"</span>, <span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 9 × 3
-  country year      n
-  &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt;
-1 FR      2011   7000
-2 FR      2012   6900
-3 FR      2013   7000
-4 DE      2011   5800
-5 DE      2012   6000
-6 DE      2013   6200
-7 US      2011  15000
-8 US      2012  14000
-9 US      2013  13000</code></pre>
-</div>
-</div>
-<p>The <code>names_to</code> and <code>values_to</code> arguments are simply the names of the new columns that will have the variable values. The <code>cols</code> argument specify the columns that contain the data and that should be transformed.</p>
-</section>
-<section id="make-your-data-wide-pivot_wider" class="level4" data-number="3.2.4.4">
-<h4 data-number="3.2.4.4" class="anchored" data-anchor-id="make-your-data-wide-pivot_wider"><span class="header-section-number">3.2.4.4</span> Make your data “wide”: <code>pivot_wider()</code></h4>
-<p>Analogously, the <code>pivot_wider()</code> function let us go back to wide data from tall data.</p>
-<p>If we <code>pivot_wider</code> a table that we previously <code>pivot_longer</code>ed, we should return to the original data representation.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cases</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  country  2011  2012  2013
-1      FR  7000  6900  7000
-2      DE  5800  6000  6200
-3      US 15000 14000 13000</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>(cases, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"n"</span>, <span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)  <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"year"</span>, <span class="at">values_from =</span> <span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 4
-  country `2011` `2012` `2013`
-  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1 FR        7000   6900   7000
-2 DE        5800   6000   6200
-3 US       15000  14000  13000</code></pre>
-</div>
-</div>
-<p>As we mentioned, sometimes the wide format is the tidy format. This could be the case for the <code>pollution</code> data, which we can transform in the following way.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(pollution, <span class="at">names_from =</span> <span class="st">"size"</span>, <span class="at">values_from =</span> <span class="st">"amount"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  city     large small
-  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
-1 New York    23    14
-2 London      22    16
-3 Beijing    121    56</code></pre>
-</div>
-</div>
-<p>Additional functions useful to transform the data are the <code>separate()</code> and <code>unite()</code> functions. You can find out what they do as an exercize.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Explore the dataset <code>airquality</code>:</p>
-<ul>
-<li>What are the variables? What are the observations?</li>
-<li>Transform it into a taller dataset, so that it will look like this:</li>
-</ul>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 612 × 4
-   Month   Day variable value
-   &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;
- 1     5     1 Ozone     41  
- 2     5     1 Solar.R  190  
- 3     5     1 Wind       7.4
- 4     5     1 Temp      67  
- 5     5     2 Ozone     36  
- 6     5     2 Solar.R  118  
- 7     5     2 Wind       8  
- 8     5     2 Temp      72  
- 9     5     3 Ozone     12  
-10     5     3 Solar.R  149  
-# ℹ 602 more rows</code></pre>
-</div>
-</div>
-<ul>
-<li>Starting from the created dataset use <code>pivot_wider</code> to turn it back to the original</li>
-</ul>
+<p>Fit a simple linear model. What does the plot <strong>Residuals vs Fitted</strong> tell you?</p>
 </div>
 </div>
 <div id="qwebr-insertion-location-1"></div>
@@ -2375,88 +2208,77 @@ Solution
 </div>
 <div class="callout-body-container callout-body">
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>air_long <span class="ot">&lt;-</span> airquality <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(Ozone, Solar.R, Wind, Temp), </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="st">"variable"</span>, </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"value"</span>)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>air_wide <span class="ot">&lt;-</span> air_long <span class="sc">|&gt;</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"variable"</span>, <span class="at">values_from =</span> <span class="st">"value"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = fitness ~ body.size, data = soay)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3085 -1.1237 -0.1014  1.1085  2.6343 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -22.1169     2.0037  -11.04 9.05e-15 ***
+body.size     3.8215     0.2643   14.46  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.364 on 48 degrees of freedom
+Multiple R-squared:  0.8133,    Adjusted R-squared:  0.8094 
+F-statistic: 209.1 on 1 and 48 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
+</div>
+</div>
+<p>From the <strong>Residuals vs Fitted</strong> plot, we can see there exist a nonlinearity relationship between fitness and body.size. Therefore, a different approach may be necessary.</p>
 </section>
-<section id="joining-tables" class="level4" data-number="3.2.4.5">
-<h4 data-number="3.2.4.5" class="anchored" data-anchor-id="joining-tables"><span class="header-section-number">3.2.4.5</span> Joining tables</h4>
-<p>In the tidy data framework, each table has one row per observational unit and one column per variable. But what if our analysis involves multiple observational unit types? In that case, there might be one table per observational unit types and you might need to <em>join</em> tables to perform certain data analyses.</p>
-<p>The <code>dplyr</code> package contains several <em>join</em> functions. See <code>?inner_join</code> for a full list. Here, we will cover only the inner and full joins, with the other operations left for homework exercises.</p>
-<p>To illustrate joins, we will use the <code>songs</code> and <code>artists</code> datasets available in the <code>EDAWR</code> package. As you can see the observational units are quite different in the two tables, but nonetheless we might need both sets of variables in a single analysis.</p>
+<section id="fit-a-poisson-regression-model" class="level3" data-number="8.0.2">
+<h3 data-number="8.0.2" class="anchored" data-anchor-id="fit-a-poisson-regression-model"><span class="header-section-number">8.0.2</span> Fit a Poisson regression model</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>songs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">family =</span> <span class="st">"poisson"</span>, <span class="at">data =</span> soay)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                 song  name
-1 Across the Universe  John
-2       Come Together  John
-3      Hello, Goodbye  Paul
-4           Peggy Sue Buddy</code></pre>
+<pre><code>
+Call:
+glm(formula = fitness ~ body.size, family = "poisson", data = soay)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -2.65901    0.62475  -4.256 2.08e-05 ***
+body.size    0.59271    0.07929   7.475 7.73e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 74.898  on 49  degrees of freedom
+Residual deviance: 15.775  on 48  degrees of freedom
+AIC: 201.99
+
+Number of Fisher Scoring iterations: 4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>artists</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    name  plays
-1 George  sitar
-2   John guitar
-3   Paul   bass
-4  Ringo  drums</code></pre>
-</div>
-</div>
-<p>The inner join only returns those observations that are present in both datasets. You can think of it as a “intersection.”</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(songs, artists, <span class="at">by =</span> <span class="st">"name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 song name  plays
-1 Across the Universe John guitar
-2       Come Together John guitar
-3      Hello, Goodbye Paul   bass</code></pre>
-</div>
-</div>
-<p>Coversely, the full join returns all observations that are present in either dataset. You can think of it as a “union.”</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">full_join</span>(songs, artists, <span class="at">by =</span> <span class="st">"name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 song   name  plays
-1 Across the Universe   John guitar
-2       Come Together   John guitar
-3      Hello, Goodbye   Paul   bass
-4           Peggy Sue  Buddy   &lt;NA&gt;
-5                &lt;NA&gt; George  sitar
-6                &lt;NA&gt;  Ringo  drums</code></pre>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>Finally, the left and right join keep the left or right observations, respectively.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(songs, artists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 song  name  plays
-1 Across the Universe  John guitar
-2       Come Together  John guitar
-3      Hello, Goodbye  Paul   bass
-4           Peggy Sue Buddy   &lt;NA&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">right_join</span>(songs, artists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 song   name  plays
-1 Across the Universe   John guitar
-2       Come Together   John guitar
-3      Hello, Goodbye   Paul   bass
-4                &lt;NA&gt; George  sitar
-5                &lt;NA&gt;  Ringo  drums</code></pre>
-</div>
-</div>
-<p>Note how we can imply the “by” argument if we want to use all the common variable names between the two tables.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2467,92 +2289,626 @@ Exercise
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Load the <code>nycflights13</code> package to explore the four datasets <code>flights</code>, <code>airlines</code>, <code>weather</code>, and <code>planes</code>.</p>
-<ul>
-<li>Join the tables <code>flights</code> and <code>airlines</code> in a way that each flight contains the names of the airline</li>
-<li>Join the resulting table with the weather information</li>
-<li>Join the resulting table with the airplane information</li>
-<li>Use tidyverse functions to extract the complete information (including weather and airplane info) of UA1545 flight departed on Jan 1st 2013.</li>
-<li>Plot departure delay versus wind speed: is there a relation between these variables? (Hint: avoid overplotting)</li>
-</ul>
+<p>What does the output of Poisson regression tell you?</p>
 </div>
 </div>
-<div id="qwebr-insertion-location-2"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div class="callout callout-style-default callout-tip callout-titled">
+<p>The fitted model is <span class="math display">\[\log(\lambda)=-2.0770  + 0.4896 \text{ body.size}\]</span> These results suggest that by exponentiating the coefficient on <code>body.size</code>, we obtain the multiplicative factor by which the mean count changes. In this case, the mean number of offspring born changes by a factor of <span class="math inline">\(\exp(0.4896)=1.631663\)</span> or increases 63.17% (since $1.631663-1=0.63166) if a body mass increase 1.</p>
+<p>The total deviance for NULL (fitness), and the deviance reduce <span class="math inline">\(125.589−53.653=71.936\)</span> if we consider the body size as a predictor. This is a large reduction, meaning the predictor explains a lot of variation, i.e., the body size is an important predictor of fitness. We can verify this conclusion by perform a deviance test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model: poisson, link: log
+
+Response: fitness
+
+Terms added sequentially (first to last)
+
+          Df Deviance Resid. Df Resid. Dev  Pr(&gt;Chi)    
+NULL                         49     74.898              
+body.size  1   59.123        48     15.775 1.481e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The test statistic has a value of 71.936, corresponding p value is very small. This means that adding predictor (body.size) significantly improves the model.</p>
+</section>
+<section id="prediction" class="level3" data-number="8.0.3">
+<h3 data-number="8.0.3" class="anchored" data-anchor-id="prediction"><span class="header-section-number">8.0.3</span> Prediction</h3>
+<p>Let’s go back to parameter estimation. Here, we have estimated the two regression coefficients, we can also compute <em>confidence intervals</em> for those estimates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5 %     97.5 %
+(Intercept) -3.9012894 -1.4508924
+body.size    0.4386683  0.7496778</code></pre>
+</div>
+</div>
+<p>This allows us to be more confident on the inferential statements about the relation between the lifetime reproductive success and the body size.</p>
+<p>However, very often one of the goals of generalized linear model is <em>prediction</em>. For instance, we can try and predict what would be the number of number of offspring produced by an ewe that has body size is 6, 7, 8 in average.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for body.size = 6</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">2.0770</span>  <span class="sc">+</span> <span class="fl">0.4896</span> <span class="sc">*</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.364579</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for body.size = 6</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">2.0770</span>  <span class="sc">+</span> <span class="fl">0.4896</span> <span class="sc">*</span><span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.858197</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for body.size = 6</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">2.0770</span>  <span class="sc">+</span> <span class="fl">0.4896</span> <span class="sc">*</span><span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.295279</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+Exercise
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p>Predict the number of number of offspring produced by a ewe that has body size is 6, 7, 8 using <code>predict()</code> function. What do you notice?</p>
+</div>
+</div>
+</section>
+<section id="plotting-the-fitted-curve" class="level3" data-number="8.0.4">
+<h3 data-number="8.0.4" class="anchored" data-anchor-id="plotting-the-fitted-curve"><span class="header-section-number">8.0.4</span> Plotting the fitted curve</h3>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 1-3</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(flights, airlines) <span class="sc">|&gt;</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(weather) <span class="sc">|&gt;</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(planes) <span class="ot">-&gt;</span> complete_data</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>complete_data <span class="sc">|&gt;</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2013</span> <span class="sc">&amp;</span> month <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> day <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> carrier <span class="sc">==</span> <span class="st">"UA"</span>, flight <span class="sc">==</span> <span class="dv">1545</span>)</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 5</span></span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>complete_data <span class="sc">|&gt;</span></span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> dep_delay, <span class="at">x =</span> wind_speed)) <span class="sc">+</span></span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hex</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>min.size <span class="ot">&lt;-</span> <span class="fu">min</span>(soay<span class="sc">$</span>body.size)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>max.size <span class="ot">&lt;-</span> <span class="fu">max</span>(soay<span class="sc">$</span>body.size)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>new.x <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">body.size=</span><span class="fu">seq</span>(min.size,max.size,<span class="at">length=</span><span class="dv">100</span>))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>new.y <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit2, <span class="at">newdata=</span>new.x, <span class="at">se.fit=</span><span class="cn">TRUE</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(new.x, new.y)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> newdata <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">fitness=</span><span class="fu">exp</span>(fit),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwr =</span> <span class="fu">exp</span>(fit<span class="fl">-1.96</span><span class="sc">*</span>se.fit),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">upr =</span> <span class="fu">exp</span>(fit<span class="fl">+1.96</span><span class="sc">*</span>se.fit))</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(soay, <span class="fu">aes</span>(<span class="at">x=</span>body.size, <span class="at">y=</span>fitness))<span class="sc">+</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>, <span class="at">alpha=</span><span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data=</span>newdata,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">ymin=</span>lwr, <span class="at">ymax=</span>upr), <span class="at">stat=</span><span class="st">'identity'</span>) <span class="sc">+</span>  <span class="co"># identity means that y values are provided</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
 </section>
-</section>
-<section id="the-tidyverse-vs.-base-r" class="level3" data-number="3.2.5">
-<h3 data-number="3.2.5" class="anchored" data-anchor-id="the-tidyverse-vs.-base-r"><span class="header-section-number">3.2.5</span> The “tidyverse” vs.&nbsp;“base R”</h3>
-<p>As you look at examples or find answers to your questions online, you will notice that people refer to the set of packages that includes <code>dplyr</code>, <code>tidyr</code>, and <code>ggplot2</code> as the <code>tidyverse</code>. You will often see people asking for a “tidyverse” way of doing something or for a “base R” way of doing something.</p>
-<p>There is no right or wrong way to achieve something in R, but considerations about code readability and efficiency may be important depending on the application.</p>
-</section>
-</section>
-<section id="sec-homework1" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="sec-homework1"><span class="header-section-number">3.3</span> Homework <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h2>
-<p>Health policy in the United States is complicated, and several forms of healthcare coverage exist, including both coverage by federal goverment-led healthcare policy, and by private insurance companies. Before making any inference about the relationship between health condition and health policy, it is important for us to have a general idea about healthcare economics in the United States. Thus, we are interested in getting sense of healthcare coverage and healthcare spending across States. More specifically, the questions are:</p>
-<ol type="1">
-<li>Is there a relationship between healthcare coverage and healthcare spending in the United States?</li>
-<li>How does the spending distribution change across geographic regions in the United States?</li>
-<li>Does the relationship between healthcare coverage and healthcare spending in the United States change from 2013 to 2014?</li>
-</ol>
-<section id="guided-solution" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="guided-solution"><span class="header-section-number">3.3.1</span> Guided solution</h3>
-<ol type="1">
-<li><p>Read-in the data: use the <code>read_csv</code> function (<code>readr</code> package) to read the <code>healthcare-coverage.cvs</code> and the <code>healthcare-spending.csv</code> files (found <a href="https://github.com/opencasestudies/ocs-healthexpenditure">here</a> at <code>data/KFF</code>).</p></li>
-<li><p>Load the state information found in the <code>state</code> datasets (<code>datasets</code> package). Note that you need to manually add information about the District of Columbia.</p></li>
-<li><p>Add the abbreviation and the region of each state to the coverage dataset.</p></li>
-<li><p>Join the coverage and spending datasets.</p></li>
-<li><p>Use ggplot to produce a scatterplot of the proportion of coverage by state vs.&nbsp;the spending per capita. Color code the points by region and add state abbreviations as labels. Use facet to stratify the analysis by type of coverage.</p></li>
-<li><p>Use ggplot to create a boxplot of spending per capita stratified by region.</p></li>
-<li><p>Repeat the graph in point 5 but faceting by year, in addition to coverage type. Hint: use the <code>facet_grid()</code> function.</p></li>
-</ol>
-</section>
-</section>
-<section id="further-reading" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">3.4</span> Further reading</h2>
+<section id="check-for-overdispersion" class="level3" data-number="8.0.5">
+<h3 data-number="8.0.5" class="anchored" data-anchor-id="check-for-overdispersion"><span class="header-section-number">8.0.5</span> Check for overdispersion</h3>
+<p>Dispersion index (DI) is defined as <span class="math display">\[DI=\frac{\text{Residual deviance}}{\text{Residual degrees of freedom}}\]</span></p>
 <ul>
-<li>Claus O. Wilke. <a href="https://clauswilke.com/dataviz/index.html">Fundamentals of Data Visualization</a></li>
-<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/03-chap.html">Chapter 3</a></li>
-<li>Carrie Wright, Shannon E. Ellis, Stephanie C. Hicks and Roger D. Peng <a href="https://jhudatascience.org/tidyversecourse/">Tidyverse Skills for Data Science</a></li>
+<li>If <span class="math inline">\(DI\approx 1\)</span> no overdispersion</li>
+<li>If <span class="math inline">\(2&gt;DI &gt; 1.5\)</span> Possible overdispersion</li>
+<li>If <span class="math inline">\(DI \ge 2\)</span> strong overdispersion</li>
+</ul>
+<p>In this example,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>DI<span class="ot">=</span><span class="fl">53.653</span><span class="sc">/</span><span class="dv">48</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>DI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.117771</code></pre>
+</div>
+</div>
+<p><span class="math inline">\(DI=1.12\)</span> no dispersion so the model is good, i.e., Poisson is a suitable model.</p>
+</section>
+</section>
+<section id="warpbreaks-data-1" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> 2. Warpbreaks data <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></h1>
+<p>The <code>warpbreak</code> data set is a data in the package <code>datasets</code>. This data looks at how many warp breaks occurred for different types of looms per loom, per fixed length of yarn.</p>
+<p>A data frame with 54 observations on 3 variables.</p>
+<ul>
+<li><strong>breaks</strong>: The number of breaks</li>
+<li><strong>wool</strong>: The type of wool (A or B)</li>
+<li><strong>tension</strong>: The level of tension (L, M, H)</li>
+</ul>
+<p>There are measurements on 9 looms of each of the six types of warp, for a total of 54 entries in the dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(datasets)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"warpbreaks"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(warpbreaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 54
+Columns: 3
+$ breaks  &lt;dbl&gt; 26, 30, 54, 25, 70, 52, 51, 26, 67, 18, 21, 29, 17, 12, 18, 35…
+$ wool    &lt;fct&gt; A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A,…
+$ tension &lt;fct&gt; L, L, L, L, L, L, L, L, L, M, M, M, M, M, M, M, M, M, H, H, H,…</code></pre>
+</div>
+</div>
+<section id="exploration" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="exploration"><span class="header-section-number">9.1</span> Exploration</h2>
+<p>We can look at the distribution of <code>breaks</code> in the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(warpbreaks, <span class="fu">aes</span>(<span class="at">x=</span>breaks)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"dodgerblue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Check the mean and variance of this variable</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(warpbreaks<span class="sc">$</span>breaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 28.14815</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(warpbreaks<span class="sc">$</span>breaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 174.2041</code></pre>
+</div>
+</div>
+<p>The variance is much greater than the mean, which suggests that we will have over-dispersion in the model.</p>
+</section>
+<section id="fit-poisson-model" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="fit-poisson-model"><span class="header-section-number">9.2</span> Fit Poisson model</h2>
+<p>We fit a Poisson linear model to model the number of breaks as a function of the predictors wool and tension.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(breaks <span class="sc">~</span> wool<span class="sc">+</span>tension, <span class="at">data=</span>warpbreaks, <span class="at">family =</span> <span class="st">"poisson"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = breaks ~ wool + tension, family = "poisson", data = warpbreaks)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  3.69196    0.04541  81.302  &lt; 2e-16 ***
+woolB       -0.20599    0.05157  -3.994 6.49e-05 ***
+tensionM    -0.32132    0.06027  -5.332 9.73e-08 ***
+tensionH    -0.51849    0.06396  -8.107 5.21e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 297.37  on 53  degrees of freedom
+Residual deviance: 210.39  on 50  degrees of freedom
+AIC: 493.06
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do these results tell you?</p>
+</div>
+</div>
+</section>
+<section id="model-selection" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">9.3</span> Model selection</h2>
+<p>Is the inclusion of the levels of tension informative or not? Which model is better, with or without such variable?</p>
+<p>To test for the global significance of the tension variable, we can fit a model without it and perform an Analysis of Deviance (likelihood ratio test) comparing a Poisson GLM with and without the tension variable</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fit4 <span class="ot">&lt;-</span> <span class="fu">glm</span>(breaks <span class="sc">~</span> wool, <span class="at">data=</span>warpbreaks, <span class="at">family =</span> <span class="st">"poisson"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = breaks ~ wool, family = "poisson", data = warpbreaks)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  3.43518    0.03454  99.443  &lt; 2e-16 ***
+woolB       -0.20599    0.05157  -3.994 6.49e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 297.37  on 53  degrees of freedom
+Residual deviance: 281.33  on 52  degrees of freedom
+AIC: 560
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit3,fit4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: breaks ~ wool + tension
+Model 2: breaks ~ wool
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1        50     210.39                          
+2        52     281.33 -2  -70.942 3.938e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>A significant Chi-square test indicates that tension significantly improves model fit.</p>
+<section id="consider-interaction" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="consider-interaction"><span class="header-section-number">9.3.1</span> Consider interaction</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>fit5 <span class="ot">&lt;-</span> <span class="fu">glm</span>(breaks <span class="sc">~</span> wool<span class="sc">*</span>tension, <span class="at">data=</span>warpbreaks, <span class="at">family =</span> <span class="st">"poisson"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = breaks ~ wool * tension, family = "poisson", data = warpbreaks)
+
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)     3.79674    0.04994  76.030  &lt; 2e-16 ***
+woolB          -0.45663    0.08019  -5.694 1.24e-08 ***
+tensionM       -0.61868    0.08440  -7.330 2.30e-13 ***
+tensionH       -0.59580    0.08378  -7.112 1.15e-12 ***
+woolB:tensionM  0.63818    0.12215   5.224 1.75e-07 ***
+woolB:tensionH  0.18836    0.12990   1.450    0.147    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 297.37  on 53  degrees of freedom
+Residual deviance: 182.31  on 48  degrees of freedom
+AIC: 468.97
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit3,fit5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: breaks ~ wool + tension
+Model 2: breaks ~ wool * tension
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1        50     210.39                          
+2        48     182.31  2   28.087 7.962e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The p value is really small, it means that the interaction is significant, i.e., the difference in the number of breaks between wool types changes across tension levels.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If interaction is significant, <strong>Do not interpret main effects alone</strong>. Interpret how the effect of one variable changes across levels of the other variable.</p>
+<p>Effects of interest = linear combinations of main + interaction terms.</p>
+</div>
+</div>
+</section>
+<section id="plot-fitted-value" class="level3" data-number="9.3.2">
+<h3 data-number="9.3.2" class="anchored" data-anchor-id="plot-fitted-value"><span class="header-section-number">9.3.2</span> Plot fitted value</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>new.x <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">wool=</span><span class="fu">c</span>(<span class="st">"A"</span>,<span class="st">"B"</span>), <span class="at">tension=</span><span class="fu">c</span>(<span class="st">"L"</span>,<span class="st">"M"</span>,<span class="st">"H"</span>))</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>new.y <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit5, <span class="at">newdata=</span>new.x, <span class="at">se.fit=</span><span class="cn">TRUE</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(new.x, new.y)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> newdata <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">fitness=</span><span class="fu">exp</span>(fit),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwr =</span> <span class="fu">exp</span>(fit<span class="fl">-1.96</span><span class="sc">*</span>se.fit),</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">upr =</span> <span class="fu">exp</span>(fit<span class="fl">+1.96</span><span class="sc">*</span>se.fit))</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(newdata, <span class="fu">aes</span>(<span class="at">x=</span>tension, <span class="at">y=</span>fitness, <span class="at">group=</span>wool, <span class="at">col=</span>wool))<span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>lwr, <span class="at">ymax=</span>upr), <span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"black"</span>,<span class="st">"dodgerblue"</span>))<span class="sc">+</span> </span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Tension"</span>)<span class="sc">+</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Breaks"</span>)<span class="sc">+</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="check-overdispersion" class="level3" data-number="9.3.3">
+<h3 data-number="9.3.3" class="anchored" data-anchor-id="check-overdispersion"><span class="header-section-number">9.3.3</span> Check overdispersion</h3>
+<p>The dispersion index is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>DI <span class="ot">=</span> <span class="fl">182.31</span><span class="sc">/</span><span class="dv">48</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>DI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.798125</code></pre>
+</div>
+</div>
+<p>The <span class="math inline">\(DI= 3.8 &gt;2\)</span>, this indicates strong overdispersion. Hence, the Poisson model is underestimating the variability in the data, and a diffent approach maybe necessary. A common solution could be, consider the negative binomial model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>fit6 <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(breaks <span class="sc">~</span> wool <span class="sc">*</span> tension, <span class="at">data=</span>warpbreaks)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm.nb(formula = breaks ~ wool * tension, data = warpbreaks, 
+    init.theta = 12.08216462, link = log)
+
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)      3.7967     0.1081  35.116  &lt; 2e-16 ***
+woolB           -0.4566     0.1576  -2.898 0.003753 ** 
+tensionM        -0.6187     0.1597  -3.873 0.000107 ***
+tensionH        -0.5958     0.1594  -3.738 0.000186 ***
+woolB:tensionM   0.6382     0.2274   2.807 0.005008 ** 
+woolB:tensionH   0.1884     0.2316   0.813 0.416123    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(12.0822) family taken to be 1)
+
+    Null deviance: 86.759  on 53  degrees of freedom
+Residual deviance: 53.506  on 48  degrees of freedom
+AIC: 405.12
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  12.08 
+          Std. Err.:  3.30 
+
+ 2 x log-likelihood:  -391.125 </code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="campus-crime-2" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Campus Crime <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></h1>
+<p>This data collects and reports information about crime occurring on campus. Data consits of 81 observations and six variables:</p>
+<ul>
+<li><strong>Enrollment</strong>: enrollment at the school;</li>
+<li><strong>type</strong>: college (C) or university (U);</li>
+<li><strong>nv</strong>: the number of violent crimes for that institution for the given year;</li>
+<li><strong>nvrate</strong>: number of violent crimes per 1000 students;</li>
+<li><strong>enroll1000</strong> enrollment at the school, in thousands;</li>
+<li><strong>region</strong>: region of the country (C = Central, MW = Midwest, NE = Northeast, SE = Southeast, SW = Southwest, and W = West)</li>
+</ul>
+<p>Read the data and glimpse at the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>c_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/proback/BeyondMLR/refs/heads/master/data/c_data.csv"</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(c_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  Enrollment type     nv nvrate enroll1000 region
+       &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt; 
+1       5590 U        30 5.37         5.59 SE    
+2        540 C         0 0            0.54 SE    
+3      35747 U        23 0.643       35.7  W     
+4      28176 C         1 0.0355      28.2  W     
+5      10568 U         1 0.0946      10.6  SW    
+6       3127 U         0 0            3.13 SW    </code></pre>
+</div>
+</div>
+<p>The goal is to study whether is an association among the number of violent crimes, region and the type of school.</p>
+<section id="data-wrangling-and-exploration-1" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="data-wrangling-and-exploration-1"><span class="header-section-number">10.1</span> Data wrangling and exploration</h2>
+<p>We combine the SW and SE to form a single category of the South because Southwestern colleges has 0 observed rate.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>c_data <span class="ot">&lt;-</span> c_data <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">region2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>      region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SW"</span>, <span class="st">"SE"</span>) <span class="sc">~</span> <span class="st">"S"</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> region</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We then turn the categorical variables into factors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>c_data <span class="ot">&lt;-</span> c_data <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">factor</span>(type), <span class="at">region2 =</span> <span class="fu">factor</span>(region2)) </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(c_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  Enrollment type     nv nvrate enroll1000 region region2
+       &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;fct&gt;  
+1       5590 U        30 5.37         5.59 SE     S      
+2        540 C         0 0            0.54 SE     S      
+3      35747 U        23 0.643       35.7  W      W      
+4      28176 C         1 0.0355      28.2  W      W      
+5      10568 U         1 0.0946      10.6  SW     S      
+6       3127 U         0 0            3.13 SW     S      </code></pre>
+</div>
+</div>
+<p>We can now look at the number of crimes across the type of schools and regions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>c_data <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(region2, nvrate, <span class="at">fill=</span>type)) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/boxplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot shows that</p>
+<ul>
+<li>In general the mean violent crime rates of universities is lower than the mean violent crime rates of colleges within a region (except the Northeast).</li>
+<li>The regional pattern of rates at universities appears to differ from that of the colleges across different regions.</li>
+<li>There are several outliers.</li>
+</ul>
+<p>We filter out the outliers</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>c_data_filt<span class="ot">&lt;-</span> c_data <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nvrate <span class="sc">&lt;=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot the density of violent crime rates</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(c_data_filt, <span class="fu">aes</span>(<span class="at">x=</span>nv)) <span class="sc">+</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">fill =</span> <span class="st">"dodgerblue"</span>, <span class="at">bins =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm2_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From the histogram plot, we can see many schools reported few crimes, and a few schools have a large number of crimes. Moreover, the shape of the density does not look like a normal distribution. Therefore, Poisson regression should be considered to model the data.</p>
+</section>
+<section id="fit-poisson-linear-models" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="fit-poisson-linear-models"><span class="header-section-number">10.2</span> Fit Poisson linear models</h2>
+<p>It is also important to note that the counts are not directly comparable because they come from different school size. We expect schools with more students to have more reports of violent crime since there are more students who could be affected. Therefore, we take the differences in enrollments into account by including an offset in our model, i.e., consider a Poisson regression of the form <span class="math display">\[\log(\frac{\lambda}{\text{enroll1000}})=\beta_0+\beta_1 \text{type}\]</span> or <span class="math display">\[\log(\lambda)=\beta_0+\beta_1 \text{type}+\log(\text{enroll1000})\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>fit7 <span class="ot">&lt;-</span> <span class="fu">glm</span>(nv <span class="sc">~</span> type <span class="sc">+</span> region2, <span class="at">family =</span> <span class="st">"poisson"</span>, <span class="at">offset=</span><span class="fu">log</span>(enroll1000), <span class="at">data=</span>c_data_filt)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit7)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = nv ~ type + region2, family = "poisson", data = c_data_filt, 
+    offset = log(enroll1000))
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  -1.7969     0.1870  -9.611  &lt; 2e-16 ***
+typeU         0.5567     0.1536   3.625 0.000289 ***
+region2MW     0.1004     0.1775   0.565 0.571763    
+region2NE     0.5663     0.1607   3.524 0.000425 ***
+region2S      0.5836     0.1490   3.918 8.94e-05 ***
+region2W      0.3077     0.1874   1.641 0.100701    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 323.91  on 77  degrees of freedom
+Residual deviance: 283.86  on 72  degrees of freedom
+AIC: 499.55
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<p>These results tell us the Northeast and the South differ significantly from the Central region. The estimated coefficient of 0.5663 means that the violent crime rate per 1000 in the Northeast is 1.76 ( <span class="math inline">\(=\exp( 0.5663)\)</span>) times that of the Central region when the type of school is the same.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Fit the Poisson linear model on the original data (without filtering out outliers). What do you notice?</li>
+</ol>
+</div>
+</div>
+<p>We also note that the effect of the type may vary denpending on the region, so we also consider a Poisson regression model with interaction between type and region.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>fit8 <span class="ot">&lt;-</span> <span class="fu">glm</span>(nv <span class="sc">~</span> type <span class="sc">*</span> region2, <span class="at">family =</span> <span class="st">"poisson"</span>, <span class="at">offset =</span> <span class="fu">log</span>(enroll1000), <span class="at">data =</span> c_data_filt)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit8)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = nv ~ type * region2, family = "poisson", data = c_data_filt, 
+    offset = log(enroll1000))
+
+Coefficients:
+                Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)      -1.4741     0.3536  -4.169 3.05e-05 ***
+typeU             0.1959     0.3775   0.519  0.60377    
+region2MW        -1.9765     1.0607  -1.863  0.06239 .  
+region2NE         1.1732     0.3994   2.938  0.00331 ** 
+region2S         -0.1562     0.4859  -0.322  0.74779    
+region2W         -1.8337     0.7906  -2.319  0.02037 *  
+typeU:region2MW   2.1965     1.0765   2.040  0.04132 *  
+typeU:region2NE  -0.8016     0.4381  -1.830  0.06732 .  
+typeU:region2S    0.8121     0.5108   1.590  0.11185    
+typeU:region2W    2.4106     0.8140   2.962  0.00306 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 323.91  on 77  degrees of freedom
+Residual deviance: 236.02  on 68  degrees of freedom
+AIC: 459.7
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>What do these results tell you?</li>
+</ol>
+</div>
+</div>
+<p>These results confirm the significance of the interaction between the effect of region and the type of institution. We also can perform a test to see where the interaction is significant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit7, fit8)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: nv ~ type + region2
+Model 2: nv ~ type * region2
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1        72     283.86                          
+2        68     236.02  4   47.841 1.018e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="check-overdispersion-1" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="check-overdispersion-1"><span class="header-section-number">10.3</span> Check overdispersion</h2>
+<p>The dispersion index is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>DI <span class="ot">=</span> <span class="fl">236.02</span><span class="sc">/</span><span class="dv">68</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>DI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.470882</code></pre>
+</div>
+</div>
+<p>The <span class="math inline">\(DI= 3.47 &gt;2\)</span>, this indicates there exist strong overdispersion. Hence, a different approach is neccessary!!</p>
+</section>
+<section id="further-reading" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">10.4</span> Further reading</h2>
+<ul>
+<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/08-chap.html">Chapter 8</a>.</li>
 </ul>
 
 
 </section>
+</section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>This homework is one of the <a href="https://www.opencasestudies.org/">Open Case Studies</a>. Please try to solve this yourself before looking at the solution there.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Warpbreaks and Soay sheep fitness example are based on the <a href="https://rpubs.com/jorgelizarazo/1361544">Poisson regression activities lecture</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Warpbreaks and Soay sheep fitness example are based on the <a href="https://rpubs.com/jorgelizarazo/1361544">Poisson regression activities lecture</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Campus Crime example is from the <a href="https://bookdown.org/roback/bookdown-BeyondMLR/">Beyond Multiple Linear Regression</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -2976,13 +3332,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./dataviz.html" class="pagination-link" aria-label="Data Wrangling and Visualization">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Wrangling and Visualization</span></span>
+      <a href="./glm.html" class="pagination-link" aria-label="Generalized Linear Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Generalized Linear Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./linmod2.html" class="pagination-link" aria-label="Linear models">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Linear models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./pca.html" class="pagination-link" aria-label="Principal Component Analysis">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -334,59 +334,159 @@
     "href": "glm.html#footnotes",
     "title": "6  Generalized Linear Models",
     "section": "",
-    "text": "This homework is one of the Open Case Studies. Please try to solve this yourself before looking at the solution there.↩︎",
+    "text": "This lab is one of the Open Case Studies.↩︎",
     "crumbs": [
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Generalized Linear Models</span>"
     ]
   },
   {
-    "objectID": "pca.html",
-    "href": "pca.html",
-    "title": "7  Principal Component Analysis",
+    "objectID": "glm2.html",
+    "href": "glm2.html",
+    "title": "7  Generalized Linear Models (part 2)",
     "section": "",
     "text": "7.1 Lecture Slides\nView slides in full screen",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#lab",
+    "href": "glm2.html#lab",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "7.2 Lab",
+    "text": "7.2 Lab",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#exploration",
+    "href": "glm2.html#exploration",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "9.1 Exploration",
+    "text": "9.1 Exploration\nWe can look at the distribution of breaks in the data\n\nggplot(warpbreaks, aes(x=breaks)) +\n    geom_histogram(fill = \"dodgerblue\")\n\n\n\n\n\n\n\n\nCheck the mean and variance of this variable\n\nmean(warpbreaks$breaks)\n\n[1] 28.14815\n\nvar(warpbreaks$breaks)\n\n[1] 174.2041\n\n\nThe variance is much greater than the mean, which suggests that we will have over-dispersion in the model.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#fit-poisson-model",
+    "href": "glm2.html#fit-poisson-model",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "9.2 Fit Poisson model",
+    "text": "9.2 Fit Poisson model\nWe fit a Poisson linear model to model the number of breaks as a function of the predictors wool and tension.\n\nfit3 &lt;- glm(breaks ~ wool+tension, data=warpbreaks, family = \"poisson\")\nsummary(fit3)\n\n\nCall:\nglm(formula = breaks ~ wool + tension, family = \"poisson\", data = warpbreaks)\n\nCoefficients:\n            Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)  3.69196    0.04541  81.302  &lt; 2e-16 ***\nwoolB       -0.20599    0.05157  -3.994 6.49e-05 ***\ntensionM    -0.32132    0.06027  -5.332 9.73e-08 ***\ntensionH    -0.51849    0.06396  -8.107 5.21e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for poisson family taken to be 1)\n\n    Null deviance: 297.37  on 53  degrees of freedom\nResidual deviance: 210.39  on 50  degrees of freedom\nAIC: 493.06\n\nNumber of Fisher Scoring iterations: 4\n\n\n\n\n\n\n\n\nExercise\n\n\n\nWhat do these results tell you?",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#model-selection",
+    "href": "glm2.html#model-selection",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "9.3 Model selection",
+    "text": "9.3 Model selection\nIs the inclusion of the levels of tension informative or not? Which model is better, with or without such variable?\nTo test for the global significance of the tension variable, we can fit a model without it and perform an Analysis of Deviance (likelihood ratio test) comparing a Poisson GLM with and without the tension variable\n\nfit4 &lt;- glm(breaks ~ wool, data=warpbreaks, family = \"poisson\")\nsummary(fit4)\n\n\nCall:\nglm(formula = breaks ~ wool, family = \"poisson\", data = warpbreaks)\n\nCoefficients:\n            Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)  3.43518    0.03454  99.443  &lt; 2e-16 ***\nwoolB       -0.20599    0.05157  -3.994 6.49e-05 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for poisson family taken to be 1)\n\n    Null deviance: 297.37  on 53  degrees of freedom\nResidual deviance: 281.33  on 52  degrees of freedom\nAIC: 560\n\nNumber of Fisher Scoring iterations: 4\n\nanova(fit3,fit4)\n\nAnalysis of Deviance Table\n\nModel 1: breaks ~ wool + tension\nModel 2: breaks ~ wool\n  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    \n1        50     210.39                          \n2        52     281.33 -2  -70.942 3.938e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\nA significant Chi-square test indicates that tension significantly improves model fit.\n\n9.3.1 Consider interaction\n\nfit5 &lt;- glm(breaks ~ wool*tension, data=warpbreaks, family = \"poisson\")\nsummary(fit5)\n\n\nCall:\nglm(formula = breaks ~ wool * tension, family = \"poisson\", data = warpbreaks)\n\nCoefficients:\n               Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)     3.79674    0.04994  76.030  &lt; 2e-16 ***\nwoolB          -0.45663    0.08019  -5.694 1.24e-08 ***\ntensionM       -0.61868    0.08440  -7.330 2.30e-13 ***\ntensionH       -0.59580    0.08378  -7.112 1.15e-12 ***\nwoolB:tensionM  0.63818    0.12215   5.224 1.75e-07 ***\nwoolB:tensionH  0.18836    0.12990   1.450    0.147    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for poisson family taken to be 1)\n\n    Null deviance: 297.37  on 53  degrees of freedom\nResidual deviance: 182.31  on 48  degrees of freedom\nAIC: 468.97\n\nNumber of Fisher Scoring iterations: 4\n\nanova(fit3,fit5)\n\nAnalysis of Deviance Table\n\nModel 1: breaks ~ wool + tension\nModel 2: breaks ~ wool * tension\n  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    \n1        50     210.39                          \n2        48     182.31  2   28.087 7.962e-07 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\nThe p value is really small, it means that the interaction is significant, i.e., the difference in the number of breaks between wool types changes across tension levels.\n\n\n\n\n\n\nNote\n\n\n\nIf interaction is significant, Do not interpret main effects alone. Interpret how the effect of one variable changes across levels of the other variable.\nEffects of interest = linear combinations of main + interaction terms.\n\n\n\n\n9.3.2 Plot fitted value\n\nnew.x &lt;- expand.grid(wool=c(\"A\",\"B\"), tension=c(\"L\",\"M\",\"H\"))\nnew.y &lt;- predict(fit5, newdata=new.x, se.fit=TRUE)\n\nnewdata &lt;- data.frame(new.x, new.y)\nnewdata &lt;- newdata %&gt;% mutate(\n  fitness=exp(fit),\n  lwr = exp(fit-1.96*se.fit),\n  upr = exp(fit+1.96*se.fit))\n\nggplot(newdata, aes(x=tension, y=fitness, group=wool, col=wool))+\n  geom_point()+\n  geom_line() +\n  geom_errorbar(aes(ymin=lwr, ymax=upr), width=0.1)+\n  scale_color_manual(values=c(\"black\",\"dodgerblue\"))+ \n  xlab(\"Tension\")+\n  ylab(\"Breaks\")+\n  theme_bw()\n\n\n\n\n\n\n\n\n\n\n9.3.3 Check overdispersion\nThe dispersion index is\n\nDI = 182.31/48\nDI\n\n[1] 3.798125\n\n\nThe \\(DI= 3.8 &gt;2\\), this indicates strong overdispersion. Hence, the Poisson model is underestimating the variability in the data, and a diffent approach maybe necessary. A common solution could be, consider the negative binomial model.\n\nlibrary(MASS)\nfit6 &lt;- glm.nb(breaks ~ wool * tension, data=warpbreaks)\nsummary(fit6)\n\n\nCall:\nglm.nb(formula = breaks ~ wool * tension, data = warpbreaks, \n    init.theta = 12.08216462, link = log)\n\nCoefficients:\n               Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)      3.7967     0.1081  35.116  &lt; 2e-16 ***\nwoolB           -0.4566     0.1576  -2.898 0.003753 ** \ntensionM        -0.6187     0.1597  -3.873 0.000107 ***\ntensionH        -0.5958     0.1594  -3.738 0.000186 ***\nwoolB:tensionM   0.6382     0.2274   2.807 0.005008 ** \nwoolB:tensionH   0.1884     0.2316   0.813 0.416123    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for Negative Binomial(12.0822) family taken to be 1)\n\n    Null deviance: 86.759  on 53  degrees of freedom\nResidual deviance: 53.506  on 48  degrees of freedom\nAIC: 405.12\n\nNumber of Fisher Scoring iterations: 1\n\n              Theta:  12.08 \n          Std. Err.:  3.30 \n\n 2 x log-likelihood:  -391.125",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#data-wrangling-and-exploration-1",
+    "href": "glm2.html#data-wrangling-and-exploration-1",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "10.1 Data wrangling and exploration",
+    "text": "10.1 Data wrangling and exploration\nWe combine the SW and SE to form a single category of the South because Southwestern colleges has 0 observed rate.\n\nc_data &lt;- c_data %&gt;%\n  mutate(\n    region2 = case_when(\n      region %in% c(\"SW\", \"SE\") ~ \"S\",\n      TRUE ~ region\n    ))\n\nWe then turn the categorical variables into factors.\n\nc_data &lt;- c_data |&gt;\n    mutate(type = factor(type), region2 = factor(region2)) \nhead(c_data)\n\n# A tibble: 6 × 7\n  Enrollment type     nv nvrate enroll1000 region region2\n       &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;fct&gt;  \n1       5590 U        30 5.37         5.59 SE     S      \n2        540 C         0 0            0.54 SE     S      \n3      35747 U        23 0.643       35.7  W      W      \n4      28176 C         1 0.0355      28.2  W      W      \n5      10568 U         1 0.0946      10.6  SW     S      \n6       3127 U         0 0            3.13 SW     S      \n\n\nWe can now look at the number of crimes across the type of schools and regions.\n\nc_data |&gt;\n    ggplot(aes(region2, nvrate, fill=type)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n\nThis plot shows that\n\nIn general the mean violent crime rates of universities is lower than the mean violent crime rates of colleges within a region (except the Northeast).\nThe regional pattern of rates at universities appears to differ from that of the colleges across different regions.\nThere are several outliers.\n\nWe filter out the outliers\n\nc_data_filt&lt;- c_data %&gt;%\n  filter(nvrate &lt;= 2)\n\nPlot the density of violent crime rates\n\nggplot(c_data_filt, aes(x=nv)) +\n    geom_histogram(aes(y = after_stat(density)), fill = \"dodgerblue\", bins = 12)\n\n\n\n\n\n\n\n\nFrom the histogram plot, we can see many schools reported few crimes, and a few schools have a large number of crimes. Moreover, the shape of the density does not look like a normal distribution. Therefore, Poisson regression should be considered to model the data.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#fit-poisson-linear-models",
+    "href": "glm2.html#fit-poisson-linear-models",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "10.2 Fit Poisson linear models",
+    "text": "10.2 Fit Poisson linear models\nIt is also important to note that the counts are not directly comparable because they come from different school size. We expect schools with more students to have more reports of violent crime since there are more students who could be affected. Therefore, we take the differences in enrollments into account by including an offset in our model, i.e., consider a Poisson regression of the form \\[\\log(\\frac{\\lambda}{\\text{enroll1000}})=\\beta_0+\\beta_1 \\text{type}\\] or \\[\\log(\\lambda)=\\beta_0+\\beta_1 \\text{type}+\\log(\\text{enroll1000})\\]\n\nfit7 &lt;- glm(nv ~ type + region2, family = \"poisson\", offset=log(enroll1000), data=c_data_filt)\nsummary(fit7)\n\n\nCall:\nglm(formula = nv ~ type + region2, family = \"poisson\", data = c_data_filt, \n    offset = log(enroll1000))\n\nCoefficients:\n            Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)  -1.7969     0.1870  -9.611  &lt; 2e-16 ***\ntypeU         0.5567     0.1536   3.625 0.000289 ***\nregion2MW     0.1004     0.1775   0.565 0.571763    \nregion2NE     0.5663     0.1607   3.524 0.000425 ***\nregion2S      0.5836     0.1490   3.918 8.94e-05 ***\nregion2W      0.3077     0.1874   1.641 0.100701    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for poisson family taken to be 1)\n\n    Null deviance: 323.91  on 77  degrees of freedom\nResidual deviance: 283.86  on 72  degrees of freedom\nAIC: 499.55\n\nNumber of Fisher Scoring iterations: 5\n\n\nThese results tell us the Northeast and the South differ significantly from the Central region. The estimated coefficient of 0.5663 means that the violent crime rate per 1000 in the Northeast is 1.76 ( \\(=\\exp( 0.5663)\\)) times that of the Central region when the type of school is the same.\n\n\n\n\n\n\nExercise\n\n\n\n\nFit the Poisson linear model on the original data (without filtering out outliers). What do you notice?\n\n\n\nWe also note that the effect of the type may vary denpending on the region, so we also consider a Poisson regression model with interaction between type and region.\n\nfit8 &lt;- glm(nv ~ type * region2, family = \"poisson\", offset = log(enroll1000), data = c_data_filt)\nsummary(fit8)\n\n\nCall:\nglm(formula = nv ~ type * region2, family = \"poisson\", data = c_data_filt, \n    offset = log(enroll1000))\n\nCoefficients:\n                Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)      -1.4741     0.3536  -4.169 3.05e-05 ***\ntypeU             0.1959     0.3775   0.519  0.60377    \nregion2MW        -1.9765     1.0607  -1.863  0.06239 .  \nregion2NE         1.1732     0.3994   2.938  0.00331 ** \nregion2S         -0.1562     0.4859  -0.322  0.74779    \nregion2W         -1.8337     0.7906  -2.319  0.02037 *  \ntypeU:region2MW   2.1965     1.0765   2.040  0.04132 *  \ntypeU:region2NE  -0.8016     0.4381  -1.830  0.06732 .  \ntypeU:region2S    0.8121     0.5108   1.590  0.11185    \ntypeU:region2W    2.4106     0.8140   2.962  0.00306 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for poisson family taken to be 1)\n\n    Null deviance: 323.91  on 77  degrees of freedom\nResidual deviance: 236.02  on 68  degrees of freedom\nAIC: 459.7\n\nNumber of Fisher Scoring iterations: 6\n\n\n\n\n\n\n\n\nExercise\n\n\n\n\nWhat do these results tell you?\n\n\n\nThese results confirm the significance of the interaction between the effect of region and the type of institution. We also can perform a test to see where the interaction is significant.\n\nanova(fit7, fit8)\n\nAnalysis of Deviance Table\n\nModel 1: nv ~ type + region2\nModel 2: nv ~ type * region2\n  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    \n1        72     283.86                          \n2        68     236.02  4   47.841 1.018e-09 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#check-overdispersion-1",
+    "href": "glm2.html#check-overdispersion-1",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "10.3 Check overdispersion",
+    "text": "10.3 Check overdispersion\nThe dispersion index is\n\nDI = 236.02/68\nDI\n\n[1] 3.470882\n\n\nThe \\(DI= 3.47 &gt;2\\), this indicates there exist strong overdispersion. Hence, a different approach is neccessary!!",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#further-reading",
+    "href": "glm2.html#further-reading",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "10.4 Further reading",
+    "text": "10.4 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 8.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "glm2.html#footnotes",
+    "href": "glm2.html#footnotes",
+    "title": "7  Generalized Linear Models (part 2)",
+    "section": "",
+    "text": "Warpbreaks and Soay sheep fitness example are based on the Poisson regression activities lecture.↩︎\nWarpbreaks and Soay sheep fitness example are based on the Poisson regression activities lecture.↩︎\nCampus Crime example is from the Beyond Multiple Linear Regression.↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Generalized Linear Models (part 2)</span>"
+    ]
+  },
+  {
+    "objectID": "pca.html",
+    "href": "pca.html",
+    "title": "8  Principal Component Analysis",
+    "section": "",
+    "text": "8.1 Lecture Slides\nView slides in full screen",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Principal Component Analysis</span>"
     ]
   },
   {
     "objectID": "pca.html#lab",
     "href": "pca.html#lab",
-    "title": "7  Principal Component Analysis",
-    "section": "7.2 Lab",
-    "text": "7.2 Lab",
+    "title": "8  Principal Component Analysis",
+    "section": "8.2 Lab",
+    "text": "8.2 Lab",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Principal Component Analysis</span>"
     ]
   },
   {
     "objectID": "pca.html#homework",
     "href": "pca.html#homework",
-    "title": "7  Principal Component Analysis",
-    "section": "7.3 Homework",
-    "text": "7.3 Homework",
+    "title": "8  Principal Component Analysis",
+    "section": "8.3 Homework",
+    "text": "8.3 Homework",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Principal Component Analysis</span>"
     ]
   },
   {
     "objectID": "pca.html#further-reading",
     "href": "pca.html#further-reading",
-    "title": "7  Principal Component Analysis",
-    "section": "7.4 Further reading",
-    "text": "7.4 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 7.",
+    "title": "8  Principal Component Analysis",
+    "section": "8.4 Further reading",
+    "text": "8.4 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 7.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Principal Component Analysis</span>"
     ]
   },
   {
     "objectID": "pca.html#references",
     "href": "pca.html#references",
-    "title": "7  Principal Component Analysis",
+    "title": "8  Principal Component Analysis",
     "section": "References",
     "text": "References",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Principal Component Analysis</span>"
     ]
   }
 ]
