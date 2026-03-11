@@ -154,7 +154,7 @@ $$
 
 ```{r}
 library(ggplot2)
-theme_set(theme_minimal())
+theme_set(theme_minimal(base_size = 20))
 
 # Define two points
 p1 <- data.frame(x = 1, y = 1)
@@ -205,8 +205,8 @@ Our dataset includes 91,392 cells and 41 markers.
 ```{r}
 library(flowCore)
 library(flowViz)
-fcsB = read.FCS("~/Downloads/data/Bendall_2011.fcs", truncate_max_range = FALSE)
-markersB = readr::read_csv("~/Downloads/data/Bendall_2011_markers.csv")
+fcsB = read.FCS("data/Bendall_2011.fcs", truncate_max_range = FALSE)
+markersB = readr::read_csv("data/Bendall_2011_markers.csv")
 mt = match(markersB$isotope, colnames(fcsB))
 stopifnot(!any(is.na(mt)))
 colnames(fcsB)[mt] = markersB$marker
@@ -337,15 +337,285 @@ $$
 
 ## Example: k-means
 
+```{r}
+#| echo: true
+assign_centroids <- function(x, centroids) {
+  apply(x, 1, function(xi) {
+    which.min(apply(centroids, 1, function(mu) sum((xi - mu)^2)))
+  })
+}
 
+compute_centroids <- function(x, labels, k) {
+  t(vapply(1:k, function(i) colMeans(x[labels == i,]), numeric(ncol(x))))
+}
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+# pick random centroids
+(centroids <- cd10[1:3,])
+```
+
+```{r}
+p_cd10 <- ggplot(cd10, aes(x = CD3all, y = CD4)) +
+  coord_equal() 
+
+p_cd10 + 
+  geom_point() +
+  geom_point(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), color = "red", size = 3) +
+  geom_text_repel(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), label = paste0("centroid ", 1:3), color = "red")
+
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+
+# assign observations to centroids
+(labels <- assign_centroids(cd10, centroids))
+```
+
+```{r}
+p_cd10 + 
+  geom_point(data = cbind(cd10, labels=paste0("cluster", labels)), aes(x = CD3all, y = CD4, color = labels))
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+
+# compute new centroids
+(centroids <- compute_centroids(cd10, labels, k = 3))
+```
+
+```{r}
+p_cd10 + 
+  geom_point() +
+  geom_point(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), color = "red", size = 3) +
+  geom_text_repel(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), label = paste0("centroid ", 1:3), color = "red")
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+
+# assign observations to new centroids
+(labels <- assign_centroids(cd10, centroids))
+```
+
+```{r}
+p_cd10 + 
+  geom_point(data = cbind(cd10, labels=paste0("cluster", labels)), aes(x = CD3all, y = CD4, color = labels))
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+
+# compute new centroids
+(centroids <- compute_centroids(cd10, labels, k = 3))
+```
+
+```{r}
+p_cd10 + 
+  geom_point() +
+  geom_point(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), color = "red", size = 3) +
+  geom_text_repel(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), label = paste0("centroid ", 1:3), color = "red")
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+
+# assign observations to new centroids
+(labels <- assign_centroids(cd10, centroids))
+```
+
+```{r}
+p_cd10 + 
+  geom_point(data = cbind(cd10, labels=paste0("cluster", labels)), aes(x = CD3all, y = CD4, color = labels))
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+
+# compute new centroids
+(centroids <- compute_centroids(cd10, labels, k = 3))
+```
+
+```{r}
+p_cd10 + 
+  geom_point() +
+  geom_point(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), color = "red", size = 3) +
+  geom_text_repel(data = as.data.frame(centroids), aes(x = CD3all, y = CD4), label = paste0("centroid ", 1:3), color = "red")
+```
+
+## Example: k-means {.smaller}
+
+```{r}
+#| echo: true
+
+# assign observations to new centroids
+(labels <- assign_centroids(cd10, centroids))
+```
+
+```{r}
+p_cd10 + 
+  geom_point(data = cbind(cd10, labels=paste0("cluster", labels)), aes(x = CD3all, y = CD4, color = labels))
+```
+
+## Randomness of k-means
+
+The k-means algorithm is not deterministic, because of the random initialization of the centroids.
+
+. . .
+
+Hence, every time you run the algorithm, you may get different results. It is good practice to run the algorithm multiple times and select the solution that minimizes the within-group sum of squares.
+
+## K-means in R
+
+```{r}
+#| echo: true
+
+set.seed(2258)
+(km <- kmeans(cd10, centers = 3, nstart = 10))
+```
 
 ## The curse of dimensionality
 
+In this simple example, we have only two variables and we can easily compute the distance between observations in a two-dimensional space.
+
+. . .
+
+When dealing with high-dimensional data, the curse of dimensionality makes it less effective to cluster points based on their Euclidean distance.
+
+. . .
+
+Hence, it is often useful to perform dimensionality reduction, and perform k-means clustering in the reduced space (e.g, by using the first few principal components).
+
 ## Evaluating clustering results
+
+The main problem with any clustering algorithm is that, directly or indirectly, we need to set the number of clusters.
+
+. . .
+
+As with any algorithm, if we ask for clusters, we will get clusters. But how do we evaluate if the results reflect the underlying structure of the data?
+
+. . .
+
+Evaluating clustering results is an active area of research in statistics. Here, we will discuss only two simple metrics that may be useful to compare values of $k$ or to get an overall assessment of the clustering performance.
 
 ## The silhouette width
 
-## The Rand index
+The **silhouette width** of observation $i$ is defined as
+$$
+sil(i) = \frac{b(i) - a(i)}{\max\{a(i), b(i)\}} \in [-1, 1],
+$$
+
+where
+
+- $a(i)$ is the average distance between $i$ and all other observations in the same cluster;
+- $b(i)$ is the average distance between $i$ and all the observations of the closest cluster to which $i$ does not belong.
+
+## The silhouette width
+
+A high positive value of silhouette indicates that clusters are well separated and well cohesive.
+
+. . .
+
+We can use the silhouette to _choose the number of clusters_, by selecting the value of $K$ that maximizes the silhouette index.
+
+. . .
+
+We can look at the average silhouette width for each cluster, and the average silhouette width across all clusters.
+
+## Example
+
+```{r}
+#| echo: true
+
+library(cluster)
+(sil <- silhouette(labels, dist(cd10)))
+```
+
+## Example
+
+```{r}
+plot(sil)
+```
+
+## The Rand Index
+
+When we want to compare two partitions, we can use the _Rand index_.
+
+This could be useful, for instance, to:
+
+- Compare two different clustering algorithmns;
+- Compare the results of a clustering algorithm to ground truth labels.
+
+## The Rand Index {.smaller}
+
+Given two partitions $R = \{R_1, \ldots, R_p\}$ and $S = \{S_1, \ldots, S_q\}$, the Rand Index is defined as
+
+$$
+R = \frac{a + b}{a + b + c + d} = \frac{a + b}{{n \choose 2}},
+$$
+
+where
+
+- $a$ is the number of pairs of elements that are in the same cluster in both $R$ and $S$.
+- $b$ is the number of pairs of elements that are in different clusters in both $R$ and $S$.
+- $c$ is the number of pairs of elements that are in the same cluster in $R$ but in different clusters in $S$.
+- $d$ is the number of pairs of elements that are in the same cluster in $S$ but in different clusters in $R$.
+
+## The Rand Index
+
+Mathematically, $a$ is the cardinality of $\mathcal X^\prime$ and $b$ is the cardinality of $\mathcal X^{\prime\prime}$, where
+
+$$
+\mathcal X^\prime = \{(x_i, x_j) : x_i, x_j \in R_k; x_i, x_j \in S_l \}
+$$
+
+and
+
+$$
+\mathcal X^{\prime\prime} = \{(x_i, x_j) : x_i \in R_{k_1}, x_j \in R_{k_2}; x_i \in S_{l_1}, x_j \in S_{l_2} \}
+$$
+
+Intuitively, the sum of $a$ and $b$ represents the number of times that the two partitions agree.
+
+## Adjusted Rand Index
+
+The Rand Index ranges between 0 and 1, where 0 indicates complete disagreement and 1 complete agreement.
+
+. . .
+
+Obviously, if we compare two partitions, it is likely that the two partitions agree by chance for some pairs of observations.
+
+. . .
+
+There is an "adjusted" version of the Rand Index that takes into account this element of randomness and that is equal to 0 when the two partitions do not agree more than expected by chance between two random partitions.
+
+## Example
+
+Let's compare our manual k-means solution to the one obtained by the kmeans function in R.
+
+```{r}
+#| echo: true
+cbind(labels, km$cluster)
+
+library(mclust)
+adjustedRandIndex(labels, km$cluster)
+```
 
 # Hierarchical clustering
 
