@@ -1,0 +1,360 @@
+---
+title: "Clustering"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    revealjs:
+        theme: default
+        incremental: true
+        scrollable: true
+html-math-method:
+    method: mathjax
+    url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
+        R.options:
+            width: 120
+---
+
+# Introduction
+
+## Classification
+
+We have seen logistic regression as a special case of GLM.
+
+. . .
+
+In logistic regression, our response variable is _binary_ and the result of the regression model fitting can be seen as a _prediction_ of the probability that each observation belong to one of two classes.
+
+. . .
+
+This sometimes takes the names of **classification**.
+
+## Supervised classification
+
+In logistic regression, we know the values of the binary response.
+
+. . .
+
+In other words, we know the _labels_ of the observations, i.e., to which of the two classes each observation belongs.
+
+. . .
+
+You will see many more classification examples in the machine learning class.
+
+## Unsupervised classification
+
+Here, we focus on _unsupervised classification_, in which we do not know the labels of the observations in advance.
+
+. . .
+
+This class of problems is also called **clustering**.
+
+. . .
+
+The goal of clustering is to classify observations into discrete groups, without knowing the group labels, _nor the number of groups_.
+
+## Why clustering?
+
+Clustering problems are often posed in a vague way: _"let's group the data and see what the groups tell us."_
+
+. . .
+
+Other times, this is done to simplify complex measurements: for instance, by grouping tumor samples we can define _molecular subtypes_ that can be used for treatment decision making.
+
+. . .
+
+In yet other instances, we conceptualize our observations as noisy versions of idealized objects: e.g., we hope that by clustering single cells, our groups represent cell types.
+
+## Clustering as a discovery tool
+
+![John Snow's cholera map](img/Snow-cholera-map-1.jpg)
+
+## Clustering as a discovery tool
+
+In 1855, the English physiscian John Snow made a map of cholera cases and identified spatial _clusters_ of cases. 
+
+. . .
+
+The proximity of dense clusters of cases to the Broadstreet pump pointed to its water as a possible culprit. 
+
+. . .
+
+Clustering enabled him to infer the source of the cholera outbreak.
+
+## Clustering as a discovery tool
+
+Another example is how clustering has enabled researchers to enhance their understanding of cancer biology.
+
+. . .
+
+Tumors that appear to be the same based on their anatomical location and histopathology can be grouped into multiple clusters based on their molecular signatures, such as gene expression data.
+
+## Clustering as a discovery tool
+
+![Aure et al. (2017)](img/BreastCancerSubType_Biomed.png)
+
+## Intuition of clustering
+
+Intuitively, with clustering we try to group together **similar observations**.
+
+. . .
+
+But how do we define similarity?
+
+## Similarity
+
+![Credit: Holmes and Huber MSMB](img/clustering-cats-and-dogs.jpg)
+
+Are the rows or the columns more similar to each other?
+
+# Distance
+
+## Distance as a measure of similarity
+
+![https://xkcd.com/388/](img/fuck_grapefruit.png)
+
+
+## Distance as dissimilarity
+
+We have seen in our PCA lecture that we can think of observations as points in a multi-dimensional space defined by the variables that we measure on them.
+
+. . .
+
+It is intuitive to think that by measuring the distance between object in such a space will provide a way to group them.
+
+. . .
+
+But... **this is easier said than done!**
+
+## Where do we start...?
+
+- Do we need all the variables or only a subset of them?
+- Do we need to transform the variables? 
+    - Are they on the same scale? 
+    - Do they have a very skewed distribution?
+    - Should they all contribute equally to the clustering? (cf. standardization)
+- Which distance should I use? 
+
+## Euclidean distance
+
+::: {.callout-important}
+
+# Definition
+
+The Euclidean distance between two points $x =  [x_{1} \, \ldots \, x_{p}]$ and $y =  [y_{1} \, \ldots \, y_{p}]$ in a $p$-dimensional space is the square root of the sum of squares of the differences in all coordinate directions:
+$$
+d(x, y) = \sqrt{(x_1 - y_1)^2 + (x_2 - y_2)^2 + \ldots + (x_p - y_p)^2}.
+$$
+:::
+
+## Euclidean distance
+
+```{r}
+library(ggplot2)
+theme_set(theme_minimal())
+
+# Define two points
+p1 <- data.frame(x = 1, y = 1)
+p2 <- data.frame(x = 4, y = 3)
+
+# Data for segments (horizontal, vertical, and diagonal)
+segments <- data.frame(
+  x = c(p1$x, p2$x, p1$x),
+  y = c(p1$y, p1$y, p1$y),
+  xend = c(p2$x, p2$x, p2$x),
+  yend = c(p1$y, p2$y, p2$y),
+  type = c("a", "b", "distance")
+)
+
+ggplot() +
+  geom_point(data = rbind(p1, p2), aes(x, y), size = 3) +
+  geom_segment(data = segments,
+               aes(x = x, y = y, xend = xend, yend = yend, linetype = type),
+               linewidth = 1) +
+  annotate("text", x = p1$x, y = p1$y - 0.2, label = "x") +
+  annotate("text", x = p2$x, y = p2$y + 0.2, label = "y") +
+  annotate("text", x = (p1$x + p2$x)/2, y = p1$y - 0.3, label = "y2 - x2") +
+  annotate("text", x = p2$x + 0.2, y = (p1$y + p2$y)/2, label = "y1 - x1") +
+  coord_equal() +
+  labs(x = "var 1", y = "var 2") +
+  scale_linetype_manual(values = c("dashed", "dashed", "solid")) +
+  theme(legend.position = "none")
+```
+
+$$
+d(x, y)^2 = (y_1 - x_1)^2 + (y_2 - x_2)^2.
+$$
+
+## Example: flow cytometry
+
+At different stages of their development, immune cells express unique combinations of proteins on their surfaces. These protein-markers can be collected by flow cytometry (using fluorescence).
+
+. . .
+
+An example of a commonly used marker is CD4, which is expressed by helper T cells. Another one is CD3, which is expressed by all mature T cells. Hence, we can define CD4+ T cells as those cells that express both CD3 and CD4 markers.
+
+. . .
+
+Our dataset includes 91,392 cells and 41 markers.
+
+## Example: flow cytometry
+
+```{r}
+library(flowCore)
+library(flowViz)
+fcsB = read.FCS("~/Downloads/data/Bendall_2011.fcs", truncate_max_range = FALSE)
+markersB = readr::read_csv("~/Downloads/data/Bendall_2011_markers.csv")
+mt = match(markersB$isotope, colnames(fcsB))
+stopifnot(!any(is.na(mt)))
+colnames(fcsB)[mt] = markersB$marker
+asinhtrsf = arcsinhTransform(a = 0.1, b = 1)
+fcsBT = transform(fcsB, transformList(colnames(fcsB)[-c(1, 2, 41)], asinhtrsf))
+
+flowPlot(fcsBT, plotParameters = c("CD3all", "CD4"), logy = FALSE)
+```
+
+## Flow cytometry (first 10 cells)
+
+```{r}
+library(ggrepel)
+as.data.frame(exprs(fcsBT)) |>
+  dplyr::select(CD3all, CD4) |>
+  head(n = 10) -> cd10
+
+ggplot(cd10, aes(x = CD3all, y = CD4)) +
+  geom_point() +
+  geom_text_repel(label = 1:10) +
+  coord_equal()
+```
+
+## Flow cytometry (first 10 cells) {.smaller}
+
+Compute the distance in R.
+
+```{r}
+#| echo: true
+dist(cd10)
+```
+
+## Other distances
+
+The Euclidean distance is a natural choice, but not the only options.
+
+. . .
+
+There are many different distance metrics that we can use, here we see a few options.
+
+## Hamming distance
+
+Not all data are numbers!
+
+. . .
+
+For instance, we may be interested in clustering DNA sequences (e.g., in evolutionary biology).
+
+. . .
+
+The simplest way to compute distances between character strings is the _Hamming distance_ (aka the Edit distance): it simply counts the number of differences between two character strings.
+
+## Jaccard distance
+
+When we have binary data, e.g., presence / absence of a certain feature, co-occurence is often more informative than co-absence, espetially when the events are rare.
+
+. . .
+
+Let’s call $f_{11}$ the number of times a feature co-occurs both in $x$ and $y$, $f_{10}$ (and $f_{01}$) the number of times a feature occurs in $x$ but not in $y$ (and vice versa), and $f_{00}$ the number of times a feature is co-absent.
+
+. . .
+
+The Jaccard Index is 
+$$
+J(x, y) = \frac{f_{11}}{f_{01} + f_{10} + f_{11}}.
+$$
+
+## Jaccard Index
+
+Note that the Jaccard Index corresponds to the size of the _intersection_ of two sets divided by the size of their _union_ and is a natural way of measuring the similarity of two sets.
+
+$$
+J(A, B) = \frac{|A \cap B|}{|A \cup B|}.
+$$
+
+The Jaccard distance is
+$$
+d(x, y) = 1 - J(x, y).
+$$
+
+# Partitional methods
+
+## k-means
+
+K-means is probably the most widely used clustering algorithm. 
+
+It starts from pre-specifying the number of clusters, $k$.
+
+The main idea is to _partition_ the $n$ observations into $k$ groups so that the groups are those that **minimize the within-group sum of squares** (i.e., the within-group Euclidean distance).
+
+## k-means
+
+Naively, one could try _all possible groups_ and choose the one that minimizes the sum of squares.
+
+However, we have ${n \choose k}$ possible ways to group $n$ observations into $k$ groups.
+
+:::{.callout-note}
+Note that ${n \choose k} = \frac{n!}{k!(n-k)!}$.
+
+```{r}
+#| echo: true
+choose(10, 4)
+choose(100, 4)
+choose(1000, 4)
+```
+:::
+
+## k-means algorithm {.smaller}
+
+1. Randomly initialize $K$ centroids, $\mu_1, \ldots, \mu_K$.
+
+2. Assign each observation $i$ to the centroid $k$ that minimizes
+$$
+c_i = \arg \min_k \sum_{j=1}^p (x_{ij} - \mu_{kj})^2 = || x_i - \mu_k||^2.
+$$
+
+3. For each group $k$, compute the new centroid as
+$$
+\mu_k = \frac{\sum_{i=1}^n \mathbb{1}_{c_i=k} x_i}{\sum_{i=1}^n \mathbb{1}_{c_i=k}},
+$$
+where 
+$$
+\mathbb{1}_{c_i=k} = \begin{cases} 
+1 & \text{if } c_i = k, \\
+0 & \text{otherwise.}
+\end{cases}
+$$
+
+## Example: k-means
+
+
+
+## The curse of dimensionality
+
+## Evaluating clustering results
+
+## The silhouette width
+
+## The Rand index
+
+# Hierarchical clustering
+
+## Hierarchical clustering
+
+## Distance between groups
+
+## The dendrogram
+
+## Cutting the dendrogram
+
+## Partitional vs hierarchical clustering
