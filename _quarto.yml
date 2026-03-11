@@ -19,6 +19,7 @@ book:
     - glm.qmd
     - glm2.qmd
     - pca.qmd
+    - clustering.qmd
 #    - hdr.qmd
 #    - bayes.qmd
 

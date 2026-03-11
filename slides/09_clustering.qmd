@@ -621,10 +621,127 @@ adjustedRandIndex(labels, km$cluster)
 
 ## Hierarchical clustering
 
-## Distance between groups
+A different approach to clustering is to start from the observations and iteratively merge the closest ones into larger and larger groups, until all observations belong to the same group.
 
-## The dendrogram
+. . .
 
-## Cutting the dendrogram
+This allows us to avoid pre-specifying the number of clusters, and the result that we will get is not a single partition, but a _hierarchy_ of partitions, that we can visualize with a _dendrogram_.
 
-## Partitional vs hierarchical clustering
+## Example
+
+```{r}
+d <- dist(cd10)
+hc <- hclust(d)
+plot(hc)
+```
+
+## Distance between groups {.smaller}
+
+While intuitive, this method requires the definition of a distance between groups of observations, in order to decide which groups to merge at each step.
+
+. . .
+
+In fact, you can imagine several ways to define such distance:
+
+- the distance between the closest observations in the two groups;
+- the distance between the farthest observations in the two groups;
+- the average distance between all pairs of observations in the two groups;
+- the distance between the centroids of the two groups.
+
+## Single linkage
+
+The **single linkage** method defines the distance between two groups as the distance between the closest observations in the two groups.
+
+![Single Linkage](img/ClusterStepChoiceSingle1b.png)
+
+## Complete linkage
+
+The **complete linkage** method defines the distance between two groups as the distance between the farthest observations in the two groups.
+
+![Complete Linkage](img/ClusterStepChoiceComplete1b.png)
+
+## The Ward method
+
+The **Ward method** defines the distance between two groups as the increase in the within-group sum of squares that would result from merging the two groups (sum of squared distances between data points and their cluster centroid).
+
+![Ward Method](img/BetweenWithinb.png)
+
+## Which method to choose?
+
+The single linkage tend to create long clusters that look like long strings of points, while the complete linkage tends to create compact clusters.
+
+The Ward method gives often good results in practice, but may result in smaller cluster sizes.
+
+## Example
+
+```{r}
+#| echo: true
+
+d <- dist(cd10)
+hclust(d, method = "single") |> plot(main = "Single linkage")
+```
+
+## Example
+
+```{r}
+#| echo: true
+
+d <- dist(cd10)
+hclust(d, method = "single") |> plot(main = "Single linkage")
+```
+
+## Example
+
+```{r}
+#| echo: true
+
+hclust(d, method = "complete") |> plot(main = "Complete linkage")
+```
+
+## Example
+
+```{r}
+#| echo: true
+
+hclust(d, method = "ward.D2") |> plot(main = "Ward method")
+```
+
+## Cutting the dendrogram 
+
+While the dendrogram gives us a "global view" of the clustering, it may be practical to have a proper data partition.
+
+. . .
+
+In this case, we can "cut" the dendrogram at a certain height.
+
+Typically, we want to cut the dendrogram at a height that corresponds to a "big jump" in the distance between groups, but this is not always easy to identify.
+
+
+## Partitional vs hierarchical clustering {.smaller}
+
+Hierarchical clustering returns a hierarchy of groups, which one could argue is a more informative result than a single partition.
+
+. . .
+
+However, hierarchical clustering is more computationally expensive than partitional methods, and it does not scale well to large datasets.
+
+. . .
+
+Finally, great care needs to be taken in interpreting hierarchical clustering results:
+
+- we are imposing a hierarchy, which may not be present in the data;
+- the left-right order of the branches is arbitrary and may be tricky to interpret.
+
+## Can we identify CD4+ T cells?
+
+```{r}
+as.data.frame(exprs(fcsBT)) |>
+  dplyr::select(CD3all, CD4) -> cd_all
+
+km <- kmeans(cd_all, centers = 4, nstart = 10)
+
+cd_all$cluster <- paste0("Cluster", km$cluster)
+ggplot(cd_all, aes(x = CD3all, y = CD4, color = cluster)) +
+  geom_point(size = 0.5, alpha = 0.5) +
+  coord_equal()
+```
