@@ -12,11 +12,383 @@ execute:
 
 ## Lab
 
+### 1. Crabs data
+We consider a data that consists of information about 200 crabs.
+
+The variables available in the dataset are:
+
+  - **FL**: frontal lob length;
+  - **RW**: rear width;
+  - **CL**: carapace length;
+  - **CW**: carapace width;
+  - **BD**: body height;
+  - **TYPE**: sex and color (a: blu males, b: blue females,
+c: orange males, d: orange females)
+
+The goal is to study whether crabs of different “sex” and “color” also differ in their shapes?
+
+Load the data and and glimpse at the data
+```{r}
+library(dplyr)
+library(ggplot2)
+load("slides/data/crabs.rda")
+glimpse(crabs)
+```
+
+
+#### Data wrangling and exploration
+Compute the matrix of all correlations between the measurements from the crabs data and display the matrix in a heatmap. What do you notice ?
+
+
+```{r}
+cor(crabs[, names(crabs) != "TYPE"])
+library("pheatmap")
+pheatmap(cor(crabs[, names(crabs) != "TYPE"]), cell.width = 10, cell.height = 10)
+```
+
+From the correlation matrix, we can see that the variables are highly correlated.
+
+Produce all pairwise scatterplots for the crabs data (except TYPE). Use the package `GGally`.
+
+```{r}
+library(GGally)
+ggpairs(crabs[, -6], axisLabels = "none")
+
+```
+
+::: {.callout-important}
+# Exercise
+1. Guess the underlying or “true dimension” of the data?
+:::
+
+Repeat the above step, this time, however, by highlighting the different crab types.
+```{r}
+library(RColorBrewer)
+my_colors <- brewer.pal(n = 4, name = "Set2")
+ggpairs(
+  crabs,
+  columns = setdiff(names(crabs), "TYPE"),
+  aes(color = TYPE),
+  upper = list(continuous = wrap("cor", size = 4)),
+  lower = list(continuous = wrap("points",  size = 0.8)),
+  diag = list(continuous = wrap("box_no_facet"))
+)+
+  scale_color_manual(values = my_colors) 
+```
+
+From the plot, we can see that “color” and “sex” seem to influence the measurements, but it is not clear how.
+
+#### Principal Component Analysis
+
+Before performing Principal Component Analysis (PCA), we need to transform the data to some common scale because different variables are measured in different units. Therefore, they  are not directly comparable in their original form. Here, we centering and scaling the data so that the new data has mean 0, and standard deviation is 1.
+
+Compute the means and standard deviations of the crab data, then use the scale function to center and standardize the continuous variables.  
+
+
+```{r}
+apply(crabs[, -6], 2, sd)
+apply(crabs[, -6], 2, mean)
+scaledcrabs = scale(crabs[, -6])
+apply(scaledcrabs, 2, mean)
+apply(scaledcrabs, 2, sd)
+
+```
+
+Make a scatterplot of the scaled and centered crabs data and color the points by their types.
+```{r}
+scaledcrabs <- data.frame(scaledcrabs, TYPE = crabs$TYPE) 
+ggpairs(
+  scaledcrabs,
+  columns = setdiff(names(crabs), "TYPE"),
+  aes(color = TYPE),
+  upper = list(continuous = wrap("cor", size = 4)),
+  lower = list(continuous = wrap("points", size = 0.8)),
+  diag = list(continuous = wrap("box_no_facet"))
+)+
+  scale_color_manual(values = my_colors) 
+```
+
+We now can perform PCA on the crabs data using the function `prcomp`.
+
+```{r}
+pca_crabs =  prcomp(scaledcrabs[,-6])
+print(summary(pca_crabs))
+```
+
+These values help us to understand how useful each principal component is.
+
+1. **Standard Deviation** shown in PCA is the square root of the variance explained by each principal component. Therefore, higher standard deviation means component captures more variation in the data, so it is considered more important. PC1 captures the largest variation, so it is the most important component.
+
+2. **Proportion of Variance** shows the percentage of total dataset variance explained by each principal component. In this case, $PC1 =0.957767$ it means that the first component explain 95.78\% the total variance.
+
+3. **Cumulative Proportion** shows the total variance explained up to that component.
+Here,  $PC1 = 0.957767, PC2 = 0.03033704$, then Cumulative after $PC2 = 0.98810400 (98.81\%)$
+This helps decide how many components to keep.
+
+We also can look at how important each principal component is by looking at screeplot, which will help us choose a rank  for representing the data.
+
+```{r}
+library("factoextra")
+fviz_eig(pca_crabs, geom = "bar", bar_width = 0.3) + ggtitle("")
+```
+
+The screeplot shows a clear drop in the percentages after the first one. This indicates that a good approximation will be obtained at rank 1. 
+
+Now look at Component loadings that tell us how strongly each original variable contributes to each principal component.
+```{r}
+print(pca_crabs$rotation)
+```
+
+The first principal component is the linear combination of the  original variables
+
+$$Y_1 = 0.45 FL + 0.43 RW + 0.45 CL + 0.45CW + 0.45 BD$$
+
+::: {.callout-important}
+
+# Exercise
+What do you notice about the weight of variables ?
+:::
+
+When all variables are positively correlated, as in our case, the first principal component always turns out to be an average of the original variables which explains a lot in terms of variability. Yet, it is not necessarily useful to answer our research question, as it almost always “captures” a well known, if not obvious, characteristic of the phenomenon under study (in our case, it can be seen as a measure of the "total dimension" of the crab). Therefore, we are often more interested in later components (PC2, PC3) because they may reveal differences between variables.
+
+
+Now we look at the relationships between the variables, both old and new by drawing  the correlation circle. 
+
+```{r}
+fviz_pca_var(pca_crabs, col.var = "blue", repel = TRUE) + 
+  ggtitle("")+
+  xlim(c(-1.2, 1.2)) +
+  ylim(c(-0.5, 0.5))
+
+
+```
+
+::: {.callout-important}
+# Exercise
+What does the correlation circle tell you ?
+:::
+
+The correlation circle tells you:
+
+1. **Contribution of variables to principal components**: The lengths of the arrows indicate how strongly each variable contributes to the principal components (Long arrows means variable contributes strongly to the components; Short arrows means variable contributes weakly).
+
+2. **Correlation between variables**: Their correlations with each other are given by the angles between the vectors (Small angle means strong positive correlation, $180^0$ angle means strong negative correlation, $90^0$ angle means no correlation).
+
+3. **Relation of variables with components** Their correlations with the new principal components are given by the angles between the vectors and between the axes (Arrow pointing mainly horizontal means strongly related to PC1).
+
+
+We can plot both the samples and the variables on a biplots. 
+
+```{r}
+fviz_pca_biplot(pca_crabs, label = "var",
+                habillage = scaledcrabs$TYPE)+
+  scale_color_manual(values = my_colors)
+  ggtitle("")
+
+```
+
+::: {.callout-important}
+# Exercise
+1. Do the males or female crabs tend to have larger rear width?
+2. What do the arrows tell us about the correlations? What do you notice about the angles among arrows?
+:::
+
+
+
+
+Produce all pairwise scatterplots of the rotated data (i.e., coordinate of an observation in the new PC coordinate system) 
+
+```{r}
+data_pca <- cbind(pca_crabs$x, tibble(TYPE = scaledcrabs$TYPE)) 
+ggpairs(data_pca ,
+  columns = setdiff(names(data_pca), "TYPE"),
+  aes(color = TYPE),
+  upper = list(continuous = wrap("cor", size = 4)),
+  lower = list(continuous = wrap("points", size = 0.8)),
+  diag = list(continuous = wrap("box_no_facet"))
+)+
+  scale_color_manual(values = my_colors) 
+```
+
+::: {.callout-important}
+# Exercise
+1. Your comments? Is there something “interesting” going on with the boxplot?
+:::
+
+A zoom out on the scatterplot of the second and third principal component
+
+```{r}
+ggplot(data_pca, aes(x = PC2, y = PC3)) +
+  geom_point(aes(color = TYPE), size = 3)+
+  scale_color_manual(values = my_colors)
+```
+
+Now we look at biplot of data on the second and third priciple component
+```{r}
+fviz_pca_biplot(pca_crabs, axes = c(2, 3), 
+                label = "var", 
+                habillage = scaledcrabs$TYPE,
+                addEllipses = TRUE,
+                ellipse.level = 0.7) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+
+```
+
+::: {.callout-important}
+# Exercise
+1. Your comments? 
+:::
+
+### 2. How was European food in 1973?
+
+The dataset provides protein consumption of various countries divided by the sources of the same. The data were collected in 1973 which explains
+why some countries no longer exist! The names of the variables should be
+self-explanatory. Starch  represents largely potatoes. Nuts also includes oils and legumes (and, indeed, is composed almost exclusively of these, not of “nuts”).
+
+The goal is to study how was European food in 1973?
+
+Load the data and and glimpse at the data
+```{r}
+load("slides/data/protein.rda")
+glimpse(protein)
+```
+
+
+#### Data wrangling and exploration
+
+Display the matrix of all correlations between the measurements in a heatmap. What do you notice ?
+```{r}
+pheatmap(cor(protein), cell.width = 10, cell.height = 10)
+```
+
+
+Produce all pairwise scatterplots for the protein data
+
+```{r}
+ggpairs(protein, axisLabels = "none")
+```
+
+#### Principle component analysis
+
+Perform PCA on the protein data
+
+```{r}
+pca_protein =  prcomp(protein, scale. = TRUE)
+print(summary(pca_protein))
+```
+
+We also can look at how important each principal component is by looking at screeplot.
+
+```{r}
+fviz_eig(pca_protein, geom = "bar", bar_width = 0.3) + ggtitle("")
+```
+
+::: {.callout-important}
+
+# Exercise
+Your comments ? How many principle components that we should choose?
+:::
+
+We also can look on the biplot
+
+```{r}
+fviz_pca_biplot(pca_protein, 
+                geom.ind = "text",
+                label = "all", 
+                col.var = "red",
+                col.ind = "darkblue",
+                labelsize = 3)+
+  xlim(c(-4.5, 4.5)) +
+  ylim(c(-2.5, 5))+
+  ggtitle("")
+```
+
+
+::: {.callout-important}
+# Exercise
+1. With respect to the other countries, which was the most important source of protein in Romania in 1973?  Which countries had similar eating habits?
+
+
+2. How does the diet of the Iberian Peninsula (Spain and Portugal) differ from the rest of Europe?
+
+3. Which are the countries where many proteins are "recovered" by eating meat (white or red) or other products derived from "terrestrial" animals (i.e., eggs and milk)?
+
+4. Is fish consumption more prominent in Norway or Ireland?
+
+:::
+
+### 3. Hiiragi data [^1]
+The data consist of 101 columns correspond to the samples (each of these is a single cell), and 45101 rows correspond to the genes probed by the array, an Affymetrix mouse4302 array. The data were normalized using the RMA method.
+
+The data is included in the `Hiiragi2013` package. To import the data, we first need to install the `Hiiragi2013` package by `BiocManager::install("Hiiragi2013")`
+
+```{r}
+library(Hiiragi2013)
+data("x")
+dim(Biobase::exprs(x))
+
+```
+
+In this example, we select only the wildtype (WT) samples and the top 100 features with the highest overall variance.
+
+```{r}
+xwt <- x[, x$genotype == "WT"]
+ind_sel <- order(rowVars(exprs(xwt)), decreasing = TRUE)[1:100]
+xwt <- xwt[ind_sel, ]
+tab <- table(xwt$sampleGroup)
+tab
+```
+
+We see that the groups have very different sizes. To account for this, we reweigh each sample by the inverse of its group size. The weighted PCA can be performed by usng the  function `dudi.pca` in the `ade4` package. 
+
+```{r}
+library(ade4)
+xwt$weight <- 1 / as.numeric(tab[xwt$sampleGroup])
+pca_Hiiragi <- dudi.pca(
+  as.data.frame(t(exprs(xwt))),
+  row.w = xwt$weight,
+  center = TRUE,
+  scale = TRUE,
+  nf = 2,
+  scannf = FALSE
+)
+fviz_eig(pca_Hiiragi) + ggtitle("")
+```
+
+We can visualize groups on the space of the first and second compoment.
+
+```{r}
+fviz_pca_ind(pca_Hiiragi, geom = "point", col.ind = xwt$sampleGroup) +
+  ggtitle("") 
+```
+
+
+
+
 ## Homework
+**Exercise 1.** Many PCA functions have been created by different teams who worked in different areas at different times. This can lead to confusion, especially because they have different naming conventions. Compare these three function `princomp`, `prcomp`, and `dudi.pca`. What happens if you perform PCA on the original data?
+
+**Exercise 2.** Calibration of a near-infrared spectrophometer (NIR)
+
+Load the data `gasoline.rda`.
+
+The data give the octanes of 60 samples of a liquid similar to gasoline and their spectra in the near infrared.  The spectra are represented by the variables called `NIR.xxx nm` where `xxx` indicates the frequency.  There is a total of 401 frequencies, ranging from 900 to 1700~nm.
+
+  1. We could fit a linear regression model of `octane` as the response with all variables `NIR.xxx nm`?  
+
+  2. Extract from the NIR spectra a small number of principal components and use these as covariates in the linear regression model. 
+  
+    -  How many principle components that we should keep?
+    -  What does the result of liner model tell you?
+    -  How to predict the octanes of a new sample?
+
 
 ## Further reading
 
 - S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 7](https://www.huber.embl.de/msmb/07-chap.html).
+
+[^1]: The example about Hiiragi data comes from S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 7](https://www.huber.embl.de/msmb/07-chap.html).
 
 ## References {.unnumbered}
 
