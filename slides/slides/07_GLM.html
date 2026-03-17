@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="07_GLM_files/libs/clipboard/clipboard.min.js"></script>
+<script src="07_GLM_files/libs/quarto-html/tabby.min.js"></script>
+<script src="07_GLM_files/libs/quarto-html/popper.min.js"></script>
+<script src="07_GLM_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="07_GLM_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="07_GLM_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="07_GLM_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Davide Risso">
+  <title>Generalized Linear Models</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="07_GLM_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="07_GLM_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="07_GLM_files/libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link href="07_GLM_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="07_GLM_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="07_GLM_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="07_GLM_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Generalized Linear Models</h1>
+  <p class="subtitle">Advanced Statistics and Data Analysis</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Davide Risso 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="introduction" class="title-slide slide level1 center">
+<h1>Introduction</h1>
+
+</section>
+<section id="linear-models" class="slide level2">
+<h2>Linear models</h2>
+<p>Linear models are the most useful applied statistics technique.</p>
+<p>However, they have their limitations:</p>
+<ul>
+<li class="fragment">The response may not be continuous</li>
+<li class="fragment">The response may have a limited range of possible values</li>
+</ul>
+<div class="fragment">
+<p>In such cases, linear models are not ideal and we may want to consider <em>generalizations</em> of it.</p>
+</div>
+</section>
+<section id="generalized-linear-models-glms" class="slide level2">
+<h2>Generalized Linear Models (GLMs)</h2>
+<p>The <strong>Generalized Linear Model (GLM)</strong> is a family of models that <em>includes</em> the linear model and extend it to situations in which the response variable has a distribution of the <em>exponential family</em>.</p>
+<div class="fragment">
+<p>The <em>exponential family</em> is a family of distributions that includes the Gaussian, Poisson, Binomial, Gamma, among others.</p>
+</div>
+</section>
+<section id="exponential-family" class="slide level2">
+<h2>Exponential Family</h2>
+<p>The density function of a distribution of the exponential family can be written as <span class="math display">\[
+f(y_i; \theta_i, \phi) = \exp \left\{\frac{y_i \theta_i - b(\theta_i)}{a(\phi)} + c(y_i, \phi)\right\},
+\]</span> where:</p>
+<ul>
+<li class="fragment"><span class="math inline">\(\theta_i\)</span> are the <em>canonical parameters</em>;</li>
+<li class="fragment"><span class="math inline">\(\phi\)</span> is the <em>dispersion parameter</em>;</li>
+<li class="fragment"><span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and <span class="math inline">\(c\)</span> are functions that depend on the specific distribution.</li>
+</ul>
+</section>
+<section id="example-poisson-distribution" class="slide level2 smaller">
+<h2>Example: Poisson distribution</h2>
+<p>The probability function of a Poisson distribution can be written as <span class="math display">\[
+f(y_i; \lambda_i) = \frac{\lambda_i^{y_i} e^{-\lambda_i}}{y_i!},
+\]</span></p>
+<p>or equivalently as <span class="math display">\[
+f(y_i; \lambda_i) = \exp\left\{y_i \log(\lambda_i) - \lambda_i - \log(y_i!)\right\},
+\]</span></p>
+<p>which corresponds to an exponential family with:</p>
+<ul>
+<li class="fragment"><span class="math inline">\(\theta_i = \log(\lambda_i)\)</span>;</li>
+<li class="fragment"><span class="math inline">\(b(\theta_i) = \exp(\theta_i)\)</span>;</li>
+<li class="fragment"><span class="math inline">\(a(\phi) = 1\)</span>;</li>
+<li class="fragment"><span class="math inline">\(c(y_i, \phi) = -\log(y_i!)\)</span>.</li>
+</ul>
+</section>
+<section id="log-likelihood-function" class="slide level2 smaller">
+<h2>Log-likelihood function</h2>
+<p>Note that the log-likelihood function of the exponential family can be written as <span class="math display">\[
+\ell(\lambda; y) = \sum_{i=1}^n \frac{y_i \theta_i - b(\theta_i)}{a(\phi)} + c(y_i, \phi).
+\]</span></p>
+<p>One can show that: <span class="math display">\[
+E[Y_i] = \mu_i = b'(\theta_i)
+\]</span> and <span class="math display">\[
+Var(Y_i) = b''(\theta_i) a(\phi),
+\]</span></p>
+<p>where <span class="math inline">\(b'()\)</span> and <span class="math inline">\(b''()\)</span> are the first and second derivative of <span class="math inline">\(b\)</span>.</p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p>Note that the variance depends on the mean!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="example-poisson-distribution-1" class="slide level2">
+<h2>Example: Poisson distribution</h2>
+<p>In the case of the Poisson, <span class="math inline">\(b(\theta_i) = \exp(\theta_i)\)</span> and <span class="math inline">\(a(\phi) = 1\)</span>, hence:</p>
+<p><span class="math display">\[
+E[Y_i] = \exp(\theta_i) = \lambda_i
+\]</span> and</p>
+<p><span class="math display">\[
+Var(Y_i) = \exp(\theta_i) = \lambda_i.
+\]</span></p>
+</section>
+<section id="generalizations-of-the-linear-model" class="slide level2 scrollable">
+<h2>Generalizations of the linear model</h2>
+<p>We can think of GLMs as a two-way generalization of linear models:</p>
+<ol type="1">
+<li class="fragment"><p>We can use a <em>function</em> of the linear predictor to transform it to a range of values that is more useful for the application.</p></li>
+<li class="fragment"><p>We can use a different <em>distribution</em> for the error terms other than the Gaussian.</p></li>
+</ol>
+</section>
+<section id="likelihood-estimation" class="slide level2">
+<h2>Likelihood estimation</h2>
+<p>Recall that ordinary least squares can be seen as the <em>maximum likelihood estimate</em> of the linear regression parameters.</p>
+<div class="fragment">
+<p>The idea is that by changing the distribution of the response variable, we can still use maximum likelihood to estimate the regression coefficients, but specifying a <em>different likelihood function</em>.</p>
+</div>
+</section>
+<section id="the-three-components-of-a-glm" class="slide level2 scrollable">
+<h2>The three components of a GLM</h2>
+<p>The three components that we need in order to fully specify a GLM are:</p>
+<ol type="1">
+<li class="fragment"><p>An <em>exponential family</em> distribution for the response.</p></li>
+<li class="fragment"><p>A <em>link function</em> that connects the linear predictor to the response.</p></li>
+<li class="fragment"><p>A <em>variance function</em> that specifies how the variance depends on the mean.</p></li>
+</ol>
+</section>
+<section id="example-the-normal-linear-model" class="slide level2 scrollable">
+<h2>Example: the normal linear model</h2>
+<p>If we assume that:</p>
+<ol type="1">
+<li class="fragment"><p>The response variable is distributed as a Gaussian r.v.</p></li>
+<li class="fragment"><p>The link function is the <em>identity function</em>.</p></li>
+<li class="fragment"><p>The variance is <em>constant</em> with respect to the mean.</p></li>
+</ol>
+<div class="fragment">
+<p>Then, we have the standard linear model.</p>
+</div>
+</section>
+<section id="example-the-normal-linear-model-1" class="slide level2 scrollable">
+<h2>Example: the normal linear model</h2>
+<p>In formulas:</p>
+<ol type="1">
+<li class="fragment"><p><span class="math inline">\(Y \sim \mathcal{N}( \mu, \sigma^2)\)</span>.</p></li>
+<li class="fragment"><p><span class="math inline">\(E[Y | X] = X \beta\)</span>.</p></li>
+<li class="fragment"><p><span class="math inline">\(V(\mu) = \sigma^2\)</span>.</p></li>
+</ol>
+</section>
+<section id="example-logistic-regression" class="slide level2 scrollable">
+<h2>Example: logistic regression</h2>
+<p>Logistic regression assumes that:</p>
+<ol type="1">
+<li class="fragment"><p>The response variable is distributed as a Bernoulli r.v.</p></li>
+<li class="fragment"><p>The link function is the <em>logistic function</em>.</p></li>
+<li class="fragment"><p>The variance is <em>a function</em> of the mean.</p></li>
+</ol>
+</section>
+<section id="example-logistic-regression-1" class="slide level2 scrollable">
+<h2>Example: logistic regression</h2>
+<p>In formulas:</p>
+<ol type="1">
+<li class="fragment"><p><span class="math inline">\(Y \sim \mathcal{Be}(\mu)\)</span>.</p></li>
+<li class="fragment"><p><span class="math inline">\(g(E[Y | X]) = X \beta\)</span>, where <span class="math inline">\(g(\mu) = \log \left(\frac{\mu}{1-\mu}\right)\)</span>.</p></li>
+<li class="fragment"><p><span class="math inline">\(V(\mu) = \mu (1 - \mu)\)</span>.</p></li>
+</ol>
+<div class="fragment">
+<p>Note that the link function implies that <span class="math display">\[
+\mu = \frac{\exp(X \beta)}{1 + \exp(X\beta)}.
+\]</span></p>
+</div>
+</section>
+<section id="example-logistic-regression-2" class="slide level2">
+<h2>Example: logistic regression</h2>
+<ul>
+<li class="fragment"><p>Assume that we have collected data from 299 patients that had heart failure.</p></li>
+<li class="fragment"><p>For each patient we measure if they died or survived after a follow-up period.</p></li>
+<li class="fragment"><p>We can use a set of 13 clinical features to try to predict patient survival.</p></li>
+</ul>
+<ul>
+<li class="fragment">In total, 96 patients out of 299 died.</li>
+</ul>
+</section>
+<section id="example-logistic-regression-3" class="slide level2">
+<h2>Example: logistic regression</h2>
+
+<img data-src="07_GLM_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="example-logistic-regression-4" class="slide level2">
+<h2>Example: logistic regression</h2>
+
+<img data-src="07_GLM_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="example-poisson-regression" class="slide level2 scrollable">
+<h2>Example: Poisson regression</h2>
+<p>Poisson regression (or log-linear regression) assumes that:</p>
+<ol type="1">
+<li class="fragment"><p>The response variable is distributed as a Poisson r.v.</p></li>
+<li class="fragment"><p>The link function is the <em>log function</em>.</p></li>
+<li class="fragment"><p>The variance is <em>a function</em> of the mean.</p></li>
+</ol>
+</section>
+<section id="example-poisson-regression-1" class="slide level2 scrollable">
+<h2>Example: Poisson regression</h2>
+<p>In formulas:</p>
+<ol type="1">
+<li class="fragment"><p><span class="math inline">\(Y \sim \mathcal{Poi}(\mu)\)</span>.</p></li>
+<li class="fragment"><p><span class="math inline">\(g(E[Y | X]) = X \beta\)</span>, where <span class="math inline">\(g(\mu) = \log(\mu)\)</span>.</p></li>
+<li class="fragment"><p><span class="math inline">\(V(\mu) = \mu\)</span>.</p></li>
+</ol>
+<div class="fragment">
+<p>Note that the link function implies that <span class="math display">\[
+\mu = \exp(X \beta)
+\]</span></p>
+<div class="callout callout-important no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p>The log is called the <em>canonical link function</em> because it is equal to the function that transforms the mean into the <em>canonical parameter</em> in the exponential family formulation.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-poisson-regression-2" class="slide level2">
+<h2>Example: Poisson regression</h2>
+<ul>
+<li class="fragment"><p>We measure the expression of two genes, DUSP1 and VCAM1, in airway smooth muscle (ASM) cell lines.</p></li>
+<li class="fragment"><p>The DUSP1 gene plays an important role in the human cellular response to environmental stress.</p></li>
+<li class="fragment"><p>The VCAM1 gene is involved in cell adhesion and signal transduction.</p></li>
+<li class="fragment"><p>The genes are measured with an assay that yields counts as a measure of gene expression.</p></li>
+</ul>
+</section>
+<section id="example-poisson-regression-3" class="slide level2">
+<h2>Example: Poisson regression</h2>
+
+<img data-src="07_GLM_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="example-poisson-regression-4" class="slide level2">
+<h2>Example: Poisson regression</h2>
+
+<img data-src="07_GLM_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+</section>
+<section>
+<section id="parameter-estimation" class="title-slide slide level1 center">
+<h1>Parameter estimation</h1>
+
+</section>
+<section id="log-likelihood-of-a-glm" class="slide level2">
+<h2>Log-likelihood of a GLM</h2>
+<p>In principle, we can maximize the log-likelihood as a function of the regression coefficients.</p>
+<p>In fact, once we have defined a relationship between the parameter of the model and the predictors, we can write the likelihood as a function of <span class="math inline">\(\beta\)</span>.</p>
+<div class="fragment">
+<p>In the case of the Poisson, the log-likelihood is <span class="math display">\[
+\ell(\beta; X, y) = \sum_{i=1}^n y_i \eta_i- \exp\{\eta_i\},
+\]</span> where <span class="math inline">\(\eta_i = \log(\mu_i) = \sum_{k=1}^p x_{ik} \beta_k\)</span>.</p>
+</div>
+</section>
+<section id="score-function" class="slide level2 smaller">
+<h2>Score function</h2>
+<p>The derivative of the log-likelihood with respect to <span class="math inline">\(\theta\)</span> is also called <em>the score function</em>.</p>
+<p>One can show that in the exponential family, the score function <span class="math display">\[
+S(\theta) = \sum_{i=1}^n \frac{y_i - \mu_i}{a(\phi)},
+\]</span></p>
+<div class="fragment">
+<p>when you want to derive for <span class="math inline">\(\beta\)</span>, the chain rule of differentiation gives <span class="math display">\[
+S(\beta) = \sum_{i=1}^n \frac{Y_i - \mu_i}{Var(Y_i)} \frac{d \mu_i}{d \eta_i} X^\top = X^\top A (Y - \mu),
+\]</span></p>
+<p>where <span class="math inline">\(A\)</span> is a diagonal matrix with elements <span class="math inline">\(a_{ii} = (Var(Y_i) \frac{d \eta_i}{d \mu_i})^{-1}\)</span>.</p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p>Note the relation with least squares!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="poisson-example" class="slide level2">
+<h2>Poisson example</h2>
+<p>In Poisson data:</p>
+<ul>
+<li class="fragment"><span class="math inline">\(Var(Y_i) = E[Y_i] = \mu_i\)</span>;</li>
+<li class="fragment"><span class="math inline">\(\eta_i = \log(\mu_i)\)</span>, hence <span class="math inline">\(\frac{d \eta_i}{d \mu_i} = \frac{1}{\mu_i}\)</span>.</li>
+</ul>
+<div class="fragment">
+<p>Hence, <span class="math inline">\(A = I\)</span>, the identity matrix and <span class="math display">\[
+S(\beta) = X^\top (Y - \mu).
+\]</span></p>
+</div>
+</section>
+
+<section id="solving-the-score-equations" class="slide level2">
+<h2>Solving the score equations</h2>
+<p>To find the MLE we need to solve the equation <span class="math display">\[
+S(\beta) = X^\top A (Y - \mu) = 0.
+\]</span></p>
+<p>The problem is that this is non linear in <span class="math inline">\(\beta\)</span> because of the link function.</p>
+<p>We hence need numerical algorithms to find the values of <span class="math inline">\(\beta\)</span> that solve this equation.</p>
+</section>
+<section id="newton-raphson" class="slide level2">
+<h2>Newton-Raphson</h2>
+
+<img data-src="07_GLM_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:75.0%"></section>
+<section id="newton-raphson-1" class="slide level2">
+<h2>Newton-Raphson</h2>
+<p>The Newton-Raphson algorithm is a numerical algorithm to find the “root” of a function, i.e., to find the value for which that function is equal to 0.</p>
+<div class="fragment">
+<p>It starts from an initial guess, say <span class="math inline">\(\beta_k\)</span>, and moves in the direction of the derivative until it intersects the zero line.</p>
+</div>
+</section>
+<section id="newton-raphson-2" class="slide level2 scrollable">
+<h2>Newton-Raphson</h2>
+<p>Specifically:</p>
+<ol type="1">
+<li class="fragment">Choose an initial parameter estimate <span class="math inline">\(\beta_k\)</span>;</li>
+<li class="fragment">Calculate the score <span class="math inline">\(S(\beta_k)\)</span>;</li>
+<li class="fragment">Calculate the derivative <span class="math inline">\(\frac{\partial S(\beta)}{\partial \beta}\)</span> at the value <span class="math inline">\(\beta_k\)</span>;</li>
+<li class="fragment">Go in the direction of the derivative until the point, <span class="math inline">\(\beta_{k+1}\)</span> in which it crosses the zero line;</li>
+<li class="fragment">Update the value of <span class="math inline">\(\beta\)</span> to <span class="math inline">\(\beta_{k+1}\)</span>;</li>
+<li class="fragment">Iterate 2-5 until convergence.</li>
+</ol>
+</section>
+<section id="derivative-of-the-score" class="slide level2">
+<h2>Derivative of the score</h2>
+<p>For the Newton-Raphson algorithm to work, we need to compute the derivative of the score function.</p>
+<p>One can show that it is <span class="math display">\[
+\frac{\partial S(\beta)}{\partial \beta} = - X^\top W X,
+\]</span> where <span class="math inline">\(W\)</span> is a diagonal matrix with elements <span class="math display">\[
+w_{ii} = \frac{(d \mu_i / d \eta_i)^2}{Var(Y_i)}
+\]</span></p>
+</section>
+<section id="iteratively-reweighted-least-squares" class="slide level2 smaller">
+<h2>Iteratively Reweighted Least Squares</h2>
+<p>Now that we know the derivative, we can rewrite the Newton-Raphson algorithm as the <em>Iteratively Reweighted Least Squares</em> (IRLS).</p>
+<p>In fact we can show that <span class="math display">\[
+\beta_{k+1} = \beta_k + (X^\top W X)^{-1} S(\beta_k)
+\]</span> or equivalently <span class="math display">\[
+\beta_{k+1} = (X^\top W X)^{-1} X^\top W Z,
+\]</span> where <span class="math display">\[
+Z = X \beta_k + \frac{\partial \eta}{\partial \mu} (Y - \mu).
+\]</span></p>
+</section>
+
+<section id="interpretation-of-irls" class="slide level2">
+<h2>Interpretation of IRLS</h2>
+<p>Note that the estimate of <span class="math inline">\(\beta\)</span> at iteration <span class="math inline">\(k\)</span> is similar to the least squares estimator, but it is weighted by a function of the variance.</p>
+<p>This is a way to account for the heteroschedasticity of the data.</p>
+</section>
+
+
+<section id="in-r-the-glm-function" class="slide level2">
+<h2>In R: the <code>glm()</code> function</h2>
+<p>In R there is a very convenient function that implements the IRLS algorithm and has a syntax very similar to the <code>lm()</code> function.</p>
+<p>In addition to the formula, you need to specify the <code>family</code> of distributions you want to specify for the response variable and (implicitly or explicitly) the link function.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">family =</span> poisson)</span>
+<span id="cb1-2"><a href=""></a></span>
+<span id="cb1-3"><a href=""></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-poisson-regression-6" class="slide level2 scrollable">
+<h2>Example: Poisson regression</h2>
+<p>In the airway smooth muscle (ASM) cell lines, we have two additional variables to consider:</p>
+<ol type="1">
+<li class="fragment"><p>The cell lines were either untreated or treated with dexamethasone (<code>dex</code>).</p></li>
+<li class="fragment"><p>The cell lines were derived from four distinct donors (<code>cell</code>).</p></li>
+</ol>
+<div class="fragment">
+<p>It is of interest to check whether the DUSP1 gene changes between treated and control cells, potentially accounting for the differences in cell lines.</p>
+</div>
+</section>
+<section id="example-poisson-regression-7" class="slide level2">
+<h2>Example: Poisson regression</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glm(formula = DUSP1 ~ dex, family = poisson, data = df)
+
+Coefficients:
+(Intercept)       dextrt  
+      6.742        1.903  
+
+Degrees of Freedom: 7 Total (i.e. Null);  6 Residual
+Null Deviance:      16880 
+Residual Deviance: 831.4    AIC: 911.5</code></pre>
+</div>
+</div>
+</section>
+<section id="interpretation-of-the-parameters" class="slide level2 smaller">
+<h2>Interpretation of the parameters</h2>
+<p>The Poisson regression model can be written as <span class="math display">\[
+\log \mu_i = \beta_0 + \beta_1 x_{i},
+\]</span> where <span class="math inline">\(x_i=1\)</span> if the cells are treated and <span class="math inline">\(x_i=0\)</span> if untreated.</p>
+<p>Hence, <span class="math display">\[
+\log(\mu_i | x_i = 1) - \log(\mu_i | x_i = 0) = \beta_1
+\]</span></p>
+<p>which leads to <span class="math display">\[
+\beta_1 = \log \left(\frac{\mu_i | x_i = 1}{\mu_i | x_i = 0}\right).
+\]</span></p>
+</section>
+<section id="example-logistic-regression-5" class="slide level2">
+<h2>Example: logistic regression</h2>
+<p>In the heart failure dataset, we may be interested in the relation between diabetes and heart failure.</p>
+</section>
+<section id="example-logistic-regression-6" class="slide level2">
+<h2>Example: logistic regression</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glm(formula = DEATH_EVENT ~ diabetes, family = binomial, data = heart)
+
+Coefficients:
+(Intercept)     diabetes  
+  -0.745333    -0.008439  
+
+Degrees of Freedom: 298 Total (i.e. Null);  297 Residual
+Null Deviance:      375.3 
+Residual Deviance: 375.3    AIC: 379.3</code></pre>
+</div>
+</div>
+</section>
+<section id="interpretation-of-the-parameters-1" class="slide level2 smaller">
+<h2>Interpretation of the parameters</h2>
+<p>The logistic regression model can be written as <span class="math display">\[
+\log \left( \frac{\mu_i}{1-\mu_i} \right)= \beta_0 + \beta_1 x_{i},
+\]</span> where <span class="math inline">\(x_i=1\)</span> if the subject has diabetes and <span class="math inline">\(x_i=0\)</span> if not.</p>
+<p>Hence, <span class="math display">\[
+\log \left( \frac{\mu_1}{1-\mu_1} \right) - \log \left( \frac{\mu_0}{1-\mu_0} \right) = \beta_1,
+\]</span> where we indicate with <span class="math inline">\(\mu_1 = E[Y|x=1]\)</span> and <span class="math inline">\(\mu_0 =  E[Y|x=0]\)</span>.</p>
+<p>We can thus interpret <span class="math inline">\(\beta_1\)</span> as the <em>log odds ratio</em> <span class="math display">\[
+\beta_1 = \log OR = \log \left(\frac{\mu_1 / (1-\mu_1)}{\mu_0 / (1-\mu_0)}\right).
+\]</span></p>
+</section></section>
+<section>
+<section id="inference" class="title-slide slide level1 center">
+<h1>Inference</h1>
+
+</section>
+<section id="likelihood-ratio-test" class="slide level2">
+<h2>Likelihood Ratio Test</h2>
+<p>The analogous of the sum of squares and the F test in GLMs is the log-likelihood and the likelihood ratio test.</p>
+<div class="fragment">
+<p>We can use the likelihood to compare two models, as we have done with the F statistics in linear models.</p>
+</div>
+<div class="fragment">
+<p>One can show that, when <span class="math inline">\(n \to \infty\)</span>, <span class="math display">\[
+D = 2 [\ell(\hat\beta) - \ell(\hat\beta^0)] \stackrel{H_0}{\sim} \chi^2_{df-df_0},
+\]</span></p>
+<p>where <span class="math inline">\(\hat\beta\)</span> and <span class="math inline">\(\hat\beta^0\)</span> are the estimates of the coefficient under the full and reduced model, with <span class="math inline">\(df\)</span> and <span class="math inline">\(df_0\)</span> degrees of freedom, respectively.</p>
+</div>
+</section>
+<section id="wald-test" class="slide level2 smaller">
+<h2>Wald Test</h2>
+<p>An alternative to the LRT is the Wald test, that leverages the fact that when <span class="math inline">\(n \to \infty\)</span>, <span class="math display">\[
+\hat\beta \stackrel{H_0}{\sim} \mathcal{N}(\beta, (X^\top W X)^{-1}).
+\]</span></p>
+<p>Hence, the statistic <span class="math display">\[
+t = \frac{\hat\beta_k}{\sqrt{[(X^\top W X)^{-1}]_{kk}}} \stackrel{H_0}{\sim} N(0, 1)
+\]</span> can be used to compute confidence intervals and test the null hypothesis <span class="math inline">\(\beta_k = 0\)</span>.</p>
+</section>
+<section id="example-poisson-regression-8" class="slide level2 scrollable">
+<h2>Example: Poisson regression</h2>
+<p>In the airway smooth muscle (ASM) cell lines, we have two additional variables to consider:</p>
+<ol type="1">
+<li class="fragment"><p>The cell lines were either untreated or treated with dexamethasone (<code>dex</code>).</p></li>
+<li class="fragment"><p>The cell lines were derived from four distinct donors (<code>cell</code>).</p></li>
+</ol>
+<div class="fragment">
+<p>It is of interest to check whether the DUSP1 gene changes between treated and control cells, potentially accounting for the differences in cell lines.</p>
+</div>
+</section>
+<section id="poisson-regression-wald-test" class="slide level2">
+<h2>Poisson regression: Wald test</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = DUSP1 ~ dex, family = poisson, data = df)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  6.74200    0.01718   392.5   &lt;2e-16 ***
+dextrt       1.90328    0.01841   103.4   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 16883.9  on 7  degrees of freedom
+Residual deviance:   831.4  on 6  degrees of freedom
+AIC: 911.48
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</section>
+<section id="poisson-regression-wald-test-1" class="slide level2">
+<h2>Poisson regression: Wald Test</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = DUSP1 ~ dex + cell, family = poisson, data = df)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  6.61541    0.02075 318.808   &lt;2e-16 ***
+dextrt       1.90328    0.01841 103.363   &lt;2e-16 ***
+cellN061011  0.26966    0.01751  15.403   &lt;2e-16 ***
+cellN080611  0.21694    0.01771  12.249   &lt;2e-16 ***
+cellN61311  -0.01206    0.01870  -0.645    0.519    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 16883.90  on 7  degrees of freedom
+Residual deviance:   416.88  on 3  degrees of freedom
+AIC: 502.96
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</section>
+<section id="poisson-regression-lrt" class="slide level2">
+<h2>Poisson regression: LRT</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: DUSP1 ~ dex
+Model 2: DUSP1 ~ dex + cell
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1         6     831.40                          
+2         3     416.88  3   414.52 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="logistic-regression" class="slide level2">
+<h2>Logistic regression:</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = DEATH_EVENT ~ . - time, family = binomial, data = heart)
+
+Coefficients:
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)               4.964e+00  4.601e+00   1.079 0.280625    
+age                       5.569e-02  1.313e-02   4.241 2.23e-05 ***
+anaemia                   4.179e-01  3.009e-01   1.389 0.164904    
+creatinine_phosphokinase  2.905e-04  1.428e-04   2.034 0.041907 *  
+diabetes                  1.514e-01  2.974e-01   0.509 0.610644    
+ejection_fraction        -7.032e-02  1.486e-02  -4.731 2.23e-06 ***
+high_blood_pressure       4.189e-01  3.061e-01   1.369 0.171092    
+platelets                -7.094e-07  1.617e-06  -0.439 0.660857    
+serum_creatinine          6.619e-01  1.734e-01   3.817 0.000135 ***
+serum_sodium             -5.667e-02  3.338e-02  -1.698 0.089558 .  
+sex                      -3.990e-01  3.508e-01  -1.137 0.255394    
+smoking                   1.356e-01  3.486e-01   0.389 0.697300    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 375.35  on 298  degrees of freedom
+Residual deviance: 294.28  on 287  degrees of freedom
+AIC: 318.28
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+</section>
+<section id="logistic-regression-wald-test" class="slide level2">
+<h2>Logistic regression: Wald test</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: DEATH_EVENT ~ age + sex + smoking
+Model 2: DEATH_EVENT ~ (age + anaemia + creatinine_phosphokinase + diabetes + 
+    ejection_fraction + high_blood_pressure + platelets + serum_creatinine + 
+    serum_sodium + sex + smoking + time) - time
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1       295     355.82                          
+2       287     294.28  8   61.536 2.327e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="07_GLM_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="07_GLM_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="07_GLM_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="07_GLM_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="07_GLM_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="07_GLM_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="07_GLM_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="07_GLM_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="07_GLM_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="07_GLM_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

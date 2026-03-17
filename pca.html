@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -96,6 +130,35 @@ div.csl-indent {
   </style>
   
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -204,7 +267,12 @@ div.csl-indent {
    
   <ul>
   <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">8.1</span> Lecture Slides</a></li>
-  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">8.2</span> Lab</a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">8.2</span> Lab</a>
+  <ul class="collapse">
+  <li><a href="#crabs-data" id="toc-crabs-data" class="nav-link" data-scroll-target="#crabs-data"><span class="header-section-number">8.2.1</span> 1. Crabs data</a></li>
+  <li><a href="#how-was-european-food-in-1973" id="toc-how-was-european-food-in-1973" class="nav-link" data-scroll-target="#how-was-european-food-in-1973"><span class="header-section-number">8.2.2</span> 2. How was European food in 1973?</a></li>
+  <li><a href="#hiiragi-data-1" id="toc-hiiragi-data-1" class="nav-link" data-scroll-target="#hiiragi-data-1"><span class="header-section-number">8.2.3</span> 3. Hiiragi data </a></li>
+  </ul></li>
   <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">8.3</span> Homework</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">8.4</span> Further reading</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -243,9 +311,565 @@ div.csl-indent {
 </section>
 <section id="lab" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">8.2</span> Lab</h2>
+<section id="crabs-data" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="crabs-data"><span class="header-section-number">8.2.1</span> 1. Crabs data</h3>
+<p>We consider a data that consists of information about 200 crabs.</p>
+<p>The variables available in the dataset are:</p>
+<ul>
+<li><strong>FL</strong>: frontal lob length;</li>
+<li><strong>RW</strong>: rear width;</li>
+<li><strong>CL</strong>: carapace length;</li>
+<li><strong>CW</strong>: carapace width;</li>
+<li><strong>BD</strong>: body height;</li>
+<li><strong>TYPE</strong>: sex and color (a: blu males, b: blue females, c: orange males, d: orange females)</li>
+</ul>
+<p>The goal is to study whether crabs of different “sex” and “color” also differ in their shapes?</p>
+<p>Load the data and and glimpse at the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slides/data/crabs.rda"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(crabs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 200
+Columns: 6
+$ FL   &lt;dbl&gt; 8.1, 8.8, 9.2, 9.6, 9.8, 10.8, 11.1, 11.6, 11.8, 11.8, 12.2, 12.3…
+$ RW   &lt;dbl&gt; 6.7, 7.7, 7.8, 7.9, 8.0, 9.0, 9.9, 9.1, 9.6, 10.5, 10.8, 11.0, 10…
+$ CL   &lt;dbl&gt; 16.1, 18.1, 19.0, 20.1, 20.3, 23.0, 23.8, 24.5, 24.2, 25.2, 27.3,…
+$ CW   &lt;dbl&gt; 19.0, 20.8, 22.4, 23.1, 23.0, 26.5, 27.1, 28.4, 27.8, 29.3, 31.6,…
+$ BD   &lt;dbl&gt; 7.0, 7.4, 7.7, 8.2, 8.2, 9.8, 9.8, 10.4, 9.7, 10.3, 10.9, 11.4, 1…
+$ TYPE &lt;fct&gt; a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,…</code></pre>
+</div>
+</div>
+<section id="data-wrangling-and-exploration" class="level4" data-number="8.2.1.1">
+<h4 data-number="8.2.1.1" class="anchored" data-anchor-id="data-wrangling-and-exploration"><span class="header-section-number">8.2.1.1</span> Data wrangling and exploration</h4>
+<p>Compute the matrix of all correlations between the measurements from the crabs data and display the matrix in a heatmap. What do you notice ?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(crabs[, <span class="fu">names</span>(crabs) <span class="sc">!=</span> <span class="st">"TYPE"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          FL        RW        CL        CW        BD
+FL 1.0000000 0.9069876 0.9788418 0.9649558 0.9876272
+RW 0.9069876 1.0000000 0.8927430 0.9004021 0.8892054
+CL 0.9788418 0.8927430 1.0000000 0.9950225 0.9832038
+CW 0.9649558 0.9004021 0.9950225 1.0000000 0.9678117
+BD 0.9876272 0.8892054 0.9832038 0.9678117 1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"pheatmap"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pheatmap</span>(<span class="fu">cor</span>(crabs[, <span class="fu">names</span>(crabs) <span class="sc">!=</span> <span class="st">"TYPE"</span>]), <span class="at">cell.width =</span> <span class="dv">10</span>, <span class="at">cell.height =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From the correlation matrix, we can see that the variables are highly correlated.</p>
+<p>Produce all pairwise scatterplots for the crabs data (except TYPE). Use the package <code>GGally</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(crabs[, <span class="sc">-</span><span class="dv">6</span>], <span class="at">axisLabels =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Guess the underlying or “true dimension” of the data?</li>
+</ol>
+</div>
+</div>
+<p>Repeat the above step, this time, however, by highlighting the different crab types.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>my_colors <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">name =</span> <span class="st">"Set2"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  crabs,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(crabs), <span class="st">"TYPE"</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">color =</span> TYPE),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"cor"</span>, <span class="at">size =</span> <span class="dv">4</span>)),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"points"</span>,  <span class="at">size =</span> <span class="fl">0.8</span>)),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">diag =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"box_no_facet"</span>))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)<span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> my_colors) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From the plot, we can see that “color” and “sex” seem to influence the measurements, but it is not clear how.</p>
+</section>
+<section id="principal-component-analysis" class="level4" data-number="8.2.1.2">
+<h4 data-number="8.2.1.2" class="anchored" data-anchor-id="principal-component-analysis"><span class="header-section-number">8.2.1.2</span> Principal Component Analysis</h4>
+<p>Before performing Principal Component Analysis (PCA), we need to transform the data to some common scale because different variables are measured in different units. Therefore, they are not directly comparable in their original form. Here, we centering and scaling the data so that the new data has mean 0, and standard deviation is 1.</p>
+<p>Compute the means and standard deviations of the crab data, then use the scale function to center and standardize the continuous variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(crabs[, <span class="sc">-</span><span class="dv">6</span>], <span class="dv">2</span>, sd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      FL       RW       CL       CW       BD 
+3.495325 2.573340 7.118983 7.871955 3.424772 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(crabs[, <span class="sc">-</span><span class="dv">6</span>], <span class="dv">2</span>, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     FL      RW      CL      CW      BD 
+15.5830 12.7385 32.1055 36.4145 14.0305 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>scaledcrabs <span class="ot">=</span> <span class="fu">scale</span>(crabs[, <span class="sc">-</span><span class="dv">6</span>])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(scaledcrabs, <span class="dv">2</span>, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           FL            RW            CL            CW            BD 
+-6.076086e-17 -7.926711e-17  1.027292e-16  4.211171e-16  2.897856e-17 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(scaledcrabs, <span class="dv">2</span>, sd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>FL RW CL CW BD 
+ 1  1  1  1  1 </code></pre>
+</div>
+</div>
+<p>Make a scatterplot of the scaled and centered crabs data and color the points by their types.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>scaledcrabs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(scaledcrabs, <span class="at">TYPE =</span> crabs<span class="sc">$</span>TYPE) </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  scaledcrabs,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(crabs), <span class="st">"TYPE"</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">color =</span> TYPE),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"cor"</span>, <span class="at">size =</span> <span class="dv">4</span>)),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"points"</span>, <span class="at">size =</span> <span class="fl">0.8</span>)),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">diag =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"box_no_facet"</span>))</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)<span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> my_colors) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We now can perform PCA on the crabs data using the function <code>prcomp</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pca_crabs <span class="ot">=</span>  <span class="fu">prcomp</span>(scaledcrabs[,<span class="sc">-</span><span class="dv">6</span>])</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(pca_crabs))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1     PC2     PC3     PC4     PC5
+Standard deviation     2.1883 0.38947 0.21595 0.10552 0.04137
+Proportion of Variance 0.9578 0.03034 0.00933 0.00223 0.00034
+Cumulative Proportion  0.9578 0.98810 0.99743 0.99966 1.00000</code></pre>
+</div>
+</div>
+<p>These values help us to understand how useful each principal component is.</p>
+<ol type="1">
+<li><p><strong>Standard Deviation</strong> shown in PCA is the square root of the variance explained by each principal component. Therefore, higher standard deviation means component captures more variation in the data, so it is considered more important. PC1 captures the largest variation, so it is the most important component.</p></li>
+<li><p><strong>Proportion of Variance</strong> shows the percentage of total dataset variance explained by each principal component. In this case, <span class="math inline">\(PC1 =0.957767\)</span> it means that the first component explain 95.78% the total variance.</p></li>
+<li><p><strong>Cumulative Proportion</strong> shows the total variance explained up to that component. Here, <span class="math inline">\(PC1 = 0.957767, PC2 = 0.03033704\)</span>, then Cumulative after <span class="math inline">\(PC2 = 0.98810400 (98.81\%)\)</span> This helps decide how many components to keep.</p></li>
+</ol>
+<p>We also can look at how important each principal component is by looking at screeplot, which will help us choose a rank for representing the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"factoextra"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_crabs, <span class="at">geom =</span> <span class="st">"bar"</span>, <span class="at">bar_width =</span> <span class="fl">0.3</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The screeplot shows a clear drop in the percentages after the first one. This indicates that a good approximation will be obtained at rank 1.</p>
+<p>Now look at Component loadings that tell us how strongly each original variable contributes to each principal component.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pca_crabs<span class="sc">$</span>rotation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         PC1        PC2         PC3          PC4         PC5
+FL 0.4520437  0.1375813  0.53076841  0.696923372  0.09649156
+RW 0.4280774 -0.8981307 -0.01197915 -0.083703203 -0.05441759
+CL 0.4531910  0.2682381 -0.30968155 -0.001444633 -0.79168267
+CW 0.4511127  0.1805959 -0.65256956  0.089187816  0.57452672
+BD 0.4511336  0.2643219  0.44316103 -0.706636423  0.17574331</code></pre>
+</div>
+</div>
+<p>The first principal component is the linear combination of the original variables</p>
+<p><span class="math display">\[Y_1 = 0.45 FL + 0.43 RW + 0.45 CL + 0.45CW + 0.45 BD\]</span></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do you notice about the weight of variables ?</p>
+</div>
+</div>
+<p>When all variables are positively correlated, as in our case, the first principal component always turns out to be an average of the original variables which explains a lot in terms of variability. Yet, it is not necessarily useful to answer our research question, as it almost always “captures” a well known, if not obvious, characteristic of the phenomenon under study (in our case, it can be seen as a measure of the “total dimension” of the crab). Therefore, we are often more interested in later components (PC2, PC3) because they may reveal differences between variables.</p>
+<p>Now we look at the relationships between the variables, both old and new by drawing the correlation circle.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_crabs, <span class="at">col.var =</span> <span class="st">"blue"</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>)<span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="fl">1.2</span>)) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What does the correlation circle tell you ?</p>
+</div>
+</div>
+<p>The correlation circle tells you:</p>
+<ol type="1">
+<li><p><strong>Contribution of variables to principal components</strong>: The lengths of the arrows indicate how strongly each variable contributes to the principal components (Long arrows means variable contributes strongly to the components; Short arrows means variable contributes weakly).</p></li>
+<li><p><strong>Correlation between variables</strong>: Their correlations with each other are given by the angles between the vectors (Small angle means strong positive correlation, <span class="math inline">\(180^0\)</span> angle means strong negative correlation, <span class="math inline">\(90^0\)</span> angle means no correlation).</p></li>
+<li><p><strong>Relation of variables with components</strong> Their correlations with the new principal components are given by the angles between the vectors and between the axes (Arrow pointing mainly horizontal means strongly related to PC1).</p></li>
+</ol>
+<p>We can plot both the samples and the variables on a biplots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_crabs, <span class="at">label =</span> <span class="st">"var"</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">habillage =</span> scaledcrabs<span class="sc">$</span>TYPE)<span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> my_colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;ggplot2::labels&gt; List of 1
+ $ title: chr ""</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Do the males or female crabs tend to have larger rear width?</li>
+<li>What do the arrows tell us about the correlations? What do you notice about the angles among arrows?</li>
+</ol>
+</div>
+</div>
+<p>Produce all pairwise scatterplots of the rotated data (i.e., coordinate of an observation in the new PC coordinate system)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data_pca <span class="ot">&lt;-</span> <span class="fu">cbind</span>(pca_crabs<span class="sc">$</span>x, <span class="fu">tibble</span>(<span class="at">TYPE =</span> scaledcrabs<span class="sc">$</span>TYPE)) </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(data_pca ,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(data_pca), <span class="st">"TYPE"</span>),</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">color =</span> TYPE),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"cor"</span>, <span class="at">size =</span> <span class="dv">4</span>)),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"points"</span>, <span class="at">size =</span> <span class="fl">0.8</span>)),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">diag =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"box_no_facet"</span>))</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>)<span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> my_colors) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Your comments? Is there something “interesting” going on with the boxplot?</li>
+</ol>
+</div>
+</div>
+<p>A zoom out on the scatterplot of the second and third principal component</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_pca, <span class="fu">aes</span>(<span class="at">x =</span> PC2, <span class="at">y =</span> PC3)) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> TYPE), <span class="at">size =</span> <span class="dv">3</span>)<span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> my_colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we look at biplot of data on the second and third priciple component</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_crabs, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>), </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">label =</span> <span class="st">"var"</span>, </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">habillage =</span> scaledcrabs<span class="sc">$</span>TYPE,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">addEllipses =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">ellipse.level =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> my_colors)<span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Your comments?</li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+<section id="how-was-european-food-in-1973" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="how-was-european-food-in-1973"><span class="header-section-number">8.2.2</span> 2. How was European food in 1973?</h3>
+<p>The dataset provides protein consumption of various countries divided by the sources of the same. The data were collected in 1973 which explains why some countries no longer exist! The names of the variables should be self-explanatory. Starch represents largely potatoes. Nuts also includes oils and legumes (and, indeed, is composed almost exclusively of these, not of “nuts”).</p>
+<p>The goal is to study how was European food in 1973?</p>
+<p>Load the data and and glimpse at the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slides/data/protein.rda"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(protein)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 25
+Columns: 9
+$ RedMeat   &lt;dbl&gt; 10.1, 8.9, 13.5, 7.8, 9.7, 10.6, 8.4, 9.5, 18.0, 10.2, 5.3, …
+$ WhiteMeat &lt;dbl&gt; 1.4, 14.0, 9.3, 6.0, 11.4, 10.8, 11.6, 4.9, 9.9, 3.0, 12.4, …
+$ Eggs      &lt;dbl&gt; 0.5, 4.3, 4.1, 1.6, 2.8, 3.7, 3.7, 2.7, 3.3, 2.8, 2.9, 4.7, …
+$ Milk      &lt;dbl&gt; 8.9, 19.9, 17.5, 8.3, 12.5, 25.0, 11.1, 33.7, 19.5, 17.6, 9.…
+$ Fish      &lt;dbl&gt; 0.2, 2.1, 4.5, 1.2, 2.0, 9.9, 5.4, 5.8, 5.7, 5.9, 0.3, 2.2, …
+$ Cereals   &lt;dbl&gt; 42.3, 28.0, 26.6, 56.7, 34.3, 21.9, 24.6, 26.3, 28.1, 41.7, …
+$ Starch    &lt;dbl&gt; 0.6, 3.6, 5.7, 1.1, 5.0, 4.8, 6.5, 5.1, 4.8, 2.2, 4.0, 6.2, …
+$ Nuts      &lt;dbl&gt; 5.5, 1.3, 2.1, 3.7, 1.1, 0.7, 0.8, 1.0, 2.4, 7.8, 5.4, 1.6, …
+$ FrVeg     &lt;dbl&gt; 1.7, 4.3, 4.0, 4.2, 4.0, 2.4, 3.6, 1.4, 6.5, 6.5, 4.2, 2.9, …</code></pre>
+</div>
+</div>
+<section id="data-wrangling-and-exploration-1" class="level4" data-number="8.2.2.1">
+<h4 data-number="8.2.2.1" class="anchored" data-anchor-id="data-wrangling-and-exploration-1"><span class="header-section-number">8.2.2.1</span> Data wrangling and exploration</h4>
+<p>Display the matrix of all correlations between the measurements in a heatmap. What do you notice ?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pheatmap</span>(<span class="fu">cor</span>(protein), <span class="at">cell.width =</span> <span class="dv">10</span>, <span class="at">cell.height =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Produce all pairwise scatterplots for the protein data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(protein, <span class="at">axisLabels =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="principle-component-analysis" class="level4" data-number="8.2.2.2">
+<h4 data-number="8.2.2.2" class="anchored" data-anchor-id="principle-component-analysis"><span class="header-section-number">8.2.2.2</span> Principle component analysis</h4>
+<p>Perform PCA on the protein data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pca_protein <span class="ot">=</span>  <span class="fu">prcomp</span>(protein, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(pca_protein))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2    PC3    PC4     PC5     PC6     PC7
+Standard deviation     2.0016 1.2787 1.0620 0.9771 0.68106 0.57020 0.52116
+Proportion of Variance 0.4452 0.1817 0.1253 0.1061 0.05154 0.03613 0.03018
+Cumulative Proportion  0.4452 0.6268 0.7521 0.8582 0.90976 0.94589 0.97607
+                           PC8     PC9
+Standard deviation     0.34102 0.31482
+Proportion of Variance 0.01292 0.01101
+Cumulative Proportion  0.98899 1.00000</code></pre>
+</div>
+</div>
+<p>We also can look at how important each principal component is by looking at screeplot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_protein, <span class="at">geom =</span> <span class="st">"bar"</span>, <span class="at">bar_width =</span> <span class="fl">0.3</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Your comments ? How many principle components that we should choose?</p>
+</div>
+</div>
+<p>We also can look on the biplot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_protein, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom.ind =</span> <span class="st">"text"</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">label =</span> <span class="st">"all"</span>, </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.var =</span> <span class="st">"red"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.ind =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">labelsize =</span> <span class="dv">3</span>)<span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">4.5</span>, <span class="fl">4.5</span>)) <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="dv">5</span>))<span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>With respect to the other countries, which was the most important source of protein in Romania in 1973? Which countries had similar eating habits?</p></li>
+<li><p>How does the diet of the Iberian Peninsula (Spain and Portugal) differ from the rest of Europe?</p></li>
+<li><p>Which are the countries where many proteins are “recovered” by eating meat (white or red) or other products derived from “terrestrial” animals (i.e., eggs and milk)?</p></li>
+<li><p>Is fish consumption more prominent in Norway or Ireland?</p></li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+<section id="hiiragi-data-1" class="level3" data-number="8.2.3">
+<h3 data-number="8.2.3" class="anchored" data-anchor-id="hiiragi-data-1"><span class="header-section-number">8.2.3</span> 3. Hiiragi data <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h3>
+<p>The data consist of 101 columns correspond to the samples (each of these is a single cell), and 45101 rows correspond to the genes probed by the array, an Affymetrix mouse4302 array. The data were normalized using the RMA method.</p>
+<p>The data is included in the <code>Hiiragi2013</code> package. To import the data, we first need to install the <code>Hiiragi2013</code> package by <code>BiocManager::install("Hiiragi2013")</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hiiragi2013)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"x"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Biobase<span class="sc">::</span><span class="fu">exprs</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 45101   101</code></pre>
+</div>
+</div>
+<p>In this example, we select only the wildtype (WT) samples and the top 100 features with the highest overall variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>xwt <span class="ot">&lt;-</span> x[, x<span class="sc">$</span>genotype <span class="sc">==</span> <span class="st">"WT"</span>]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>ind_sel <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">rowVars</span>(<span class="fu">exprs</span>(xwt)), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>]</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>xwt <span class="ot">&lt;-</span> xwt[ind_sel, ]</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(xwt<span class="sc">$</span>sampleGroup)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     E3.25 E3.5 (EPI)  E3.5 (PE) E4.5 (EPI)  E4.5 (PE) 
+        36         11         11          4          4 </code></pre>
+</div>
+</div>
+<p>We see that the groups have very different sizes. To account for this, we reweigh each sample by the inverse of its group size. The weighted PCA can be performed by usng the function <code>dudi.pca</code> in the <code>ade4</code> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ade4)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>xwt<span class="sc">$</span>weight <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">as.numeric</span>(tab[xwt<span class="sc">$</span>sampleGroup])</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>pca_Hiiragi <span class="ot">&lt;-</span> <span class="fu">dudi.pca</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(<span class="fu">t</span>(<span class="fu">exprs</span>(xwt))),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.w =</span> xwt<span class="sc">$</span>weight,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nf =</span> <span class="dv">2</span>,</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">scannf =</span> <span class="cn">FALSE</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_Hiiragi) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can visualize groups on the space of the first and second compoment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_Hiiragi, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">col.ind =</span> xwt<span class="sc">$</span>sampleGroup) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pca_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="homework" class="level2" data-number="8.3">
 <h2 data-number="8.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">8.3</span> Homework</h2>
+<p><strong>Exercise 1.</strong> Many PCA functions have been created by different teams who worked in different areas at different times. This can lead to confusion, especially because they have different naming conventions. Compare these three function <code>princomp</code>, <code>prcomp</code>, and <code>dudi.pca</code>. What happens if you perform PCA on the original data?</p>
+<p><strong>Exercise 2.</strong> Calibration of a near-infrared spectrophometer (NIR)</p>
+<p>Load the data <code>gasoline.rda</code>.</p>
+<p>The data give the octanes of 60 samples of a liquid similar to gasoline and their spectra in the near infrared. The spectra are represented by the variables called <code>NIR.xxx nm</code> where <code>xxx</code> indicates the frequency. There is a total of 401 frequencies, ranging from 900 to 1700~nm.</p>
+<ol type="1">
+<li><p>We could fit a linear regression model of <code>octane</code> as the response with all variables <code>NIR.xxx nm</code>?</p></li>
+<li><p>Extract from the NIR spectra a small number of principal components and use these as covariates in the linear regression model.</p></li>
+</ol>
+<pre><code>-  How many principle components that we should keep?
+-  What does the result of liner model tell you?
+-  How to predict the octanes of a new sample?</code></pre>
 </section>
 <section id="further-reading" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">8.4</span> Further reading</h2>
@@ -260,6 +884,12 @@ div.csl-indent {
 </div>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>The example about Hiiragi data comes from S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/07-chap.html">Chapter 7</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
