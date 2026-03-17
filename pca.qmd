@@ -73,7 +73,8 @@ ggpairs(
   lower = list(continuous = wrap("points",  size = 0.8)),
   diag = list(continuous = wrap("box_no_facet"))
 )+
-  scale_color_manual(values = my_colors) 
+  scale_color_manual(values = my_colors) +
+  scale_fill_manual(values = my_colors)
 ```
 
 From the plot, we can see that “color” and “sex” seem to influence the measurements, but it is not clear how.
@@ -105,7 +106,8 @@ ggpairs(
   lower = list(continuous = wrap("points", size = 0.8)),
   diag = list(continuous = wrap("box_no_facet"))
 )+
-  scale_color_manual(values = my_colors) 
+  scale_color_manual(values = my_colors) +
+  scale_fill_manual(values = my_colors)
 ```
 
 We now can perform PCA on the crabs data using the function `prcomp`.
@@ -207,7 +209,8 @@ ggpairs(data_pca ,
   lower = list(continuous = wrap("points", size = 0.8)),
   diag = list(continuous = wrap("box_no_facet"))
 )+
-  scale_color_manual(values = my_colors) 
+  scale_color_manual(values = my_colors) +
+  scale_fill_manual(values = my_colors)
 ```
 
 ::: {.callout-important}
