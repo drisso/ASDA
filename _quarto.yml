@@ -4,7 +4,7 @@ project:
 book:
   title: "Advanced Statistics and Data Analysis"
   author: 
-    name: "Davide Risso"
+    name: "Davide Risso and Kim Nguyen"
     affiliation: "Department of Statistical Sciences, University of Padova"
   date: last-modified
   chapters:
