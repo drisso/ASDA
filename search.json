@@ -548,5 +548,45 @@
     "crumbs": [
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Clustering</span>"
     ]
+  },
+  {
+    "objectID": "hdr.html",
+    "href": "hdr.html",
+    "title": "10  High-dimensional regression",
+    "section": "",
+    "text": "10.1 Lecture Slides\nView slides in full screen",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>High-dimensional regression</span>"
+    ]
+  },
+  {
+    "objectID": "hdr.html#lab",
+    "href": "hdr.html#lab",
+    "title": "10  High-dimensional regression",
+    "section": "10.2 Lab",
+    "text": "10.2 Lab",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>High-dimensional regression</span>"
+    ]
+  },
+  {
+    "objectID": "hdr.html#homework",
+    "href": "hdr.html#homework",
+    "title": "10  High-dimensional regression",
+    "section": "10.3 Homework",
+    "text": "10.3 Homework",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>High-dimensional regression</span>"
+    ]
+  },
+  {
+    "objectID": "hdr.html#further-reading",
+    "href": "hdr.html#further-reading",
+    "title": "10  High-dimensional regression",
+    "section": "10.4 Further reading",
+    "text": "10.4 Further reading\n\nJames, Witten, Hastie, Tibshirani. An introduction to statistical learning. Chapter 6\nEfron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. Chapter 16",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>High-dimensional regression</span>"
+    ]
   }
 ]

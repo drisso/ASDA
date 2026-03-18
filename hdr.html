@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Clustering – Advanced Statistics and Data Analysis</title>
+<title>10&nbsp; High-dimensional regression – Advanced Statistics and Data Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -49,8 +30,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./hdr.html" rel="next">
-<link href="./pca.html" rel="prev">
+<link href="./clustering.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -108,7 +88,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./clustering.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Clustering</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hdr.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">High-dimensional regression</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -189,13 +169,13 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./clustering.html" class="sidebar-item-text sidebar-link active">
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Clustering</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./hdr.html" class="sidebar-item-text sidebar-link">
+  <a href="./hdr.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">High-dimensional regression</span></span></a>
   </div>
 </li>
@@ -209,11 +189,10 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">9.1</span> Lecture Slides</a></li>
-  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">9.2</span> Lab</a></li>
-  <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">9.3</span> Homework</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">9.4</span> Further reading</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">10.1</span> Lecture Slides</a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">10.2</span> Lab</a></li>
+  <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">10.3</span> Homework</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">10.4</span> Further reading</a></li>
   </ul>
 </nav>
     </div>
@@ -222,7 +201,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Clustering</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">High-dimensional regression</span></h1>
 </div>
 
 
@@ -239,31 +218,26 @@ div.csl-indent {
 </header>
 
 
-<section id="lecture-slides" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">9.1</span> Lecture Slides</h2>
-    <p><a href="slides/09_clustering.html" target="_blank">View slides in full screen</a></p>
+<section id="lecture-slides" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="lecture-slides"><span class="header-section-number">10.1</span> Lecture Slides</h2>
+    <p><a href="slides/08_Lasso.html" target="_blank">View slides in full screen</a></p>
        <div>
-      <iframe class="slide-deck" src="slides/09_clustering.html" height="475px"></iframe>
+      <iframe class="slide-deck" src="slides/08_Lasso.html" height="475px"></iframe>
     </div>
   
 </section>
-<section id="lab" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">9.2</span> Lab</h2>
+<section id="lab" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">10.2</span> Lab</h2>
 </section>
-<section id="homework" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">9.3</span> Homework</h2>
+<section id="homework" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">10.3</span> Homework</h2>
 </section>
-<section id="further-reading" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">9.4</span> Further reading</h2>
+<section id="further-reading" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">10.4</span> Further reading</h2>
 <ul>
-<li>S. Holmes and W. Huber. Modern Statistics for Modern Biology. <a href="https://www.huber.embl.de/msmb/05-chap.html">Chapter 5</a>.</li>
+<li>James, Witten, Hastie, Tibshirani. An introduction to statistical learning. <a href="https://www.statlearning.com/">Chapter 6</a></li>
+<li>Efron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. <a href="https://hastie.su.domains/CASI/">Chapter 16</a></li>
 </ul>
-</section>
-<section id="references" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
-<div id="refs" role="list" style="display: none">
-
-</div>
 
 
 </section>
@@ -688,14 +662,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./pca.html" class="pagination-link" aria-label="Principal Component Analysis">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span>
+      <a href="./clustering.html" class="pagination-link" aria-label="Clustering">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Clustering</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./hdr.html" class="pagination-link" aria-label="High-dimensional regression">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">High-dimensional regression</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
