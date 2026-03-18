@@ -20,7 +20,7 @@ book:
     - glm2.qmd
     - pca.qmd
     - clustering.qmd
-#    - hdr.qmd
+    - hdr.qmd
 #    - bayes.qmd
 
 bibliography: references.bib
