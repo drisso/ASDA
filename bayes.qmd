@@ -1,5 +1,5 @@
 ---
-title: "Nonparametric and Bayesian methods"
+title: "Bayesian inference"
 execute:
   echo: true
   warning: false
