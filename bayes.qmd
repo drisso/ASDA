@@ -8,7 +8,7 @@ execute:
 
 ## Lecture Slides
 
-{{< revealjs "slides/09_nonparametrics.html" >}}
+{{< revealjs "slides/11_Bayes.html" >}}
 
 ## Further reading
 

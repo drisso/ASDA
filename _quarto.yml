@@ -21,7 +21,7 @@ book:
     - pca.qmd
     - clustering.qmd
     - hdr.qmd
-#    - bayes.qmd
+    - bayes.qmd
 
 bibliography: references.bib
 
