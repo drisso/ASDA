@@ -344,6 +344,28 @@ A natural choice of $\lambda$ is the value that minimizes the cross-validation m
 
 If we want to emphasize sparsity, we can use the "one-standard-error rule", choosing the largest value of $\lambda$ that yields an error within one standard error above its minimum value.
 
+## Mean Squared Error (MSE)
+
+The mean squared error is defined as
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2,
+$$
+
+where $\hat{y} = X \hat{\beta}(\lambda_0)$ is the predicted value of $y_i$ based on the model fitted on the training set by setting $\lambda = \lambda_0$.
+
+## Variance-bias tradeoff
+
+One important equivalence is that we can write the mean squared error as the sum of the variance and the squared bias of the estimator:
+$$
+\text{MSE}(\hat{Y}) = \text{Var}(\hat{Y}) + \mathbb{E}[\hat{Y} - Y]^2.
+$$
+
+Hence, by choosing the value of $\lambda$ that minimizes the MSE, we are looking for the best variance-bias tradeoff.
+
+$$
+\text{MSE} = \text{Variance} + \text{Bias}^2.
+$$
+
 ## In R: the `glmnet()` function
 
 In R there is a very convenient function that implements the lasso, ridge and elastic net algorithms.
