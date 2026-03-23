@@ -8,7 +8,7 @@ execute:
 
 ## Lecture Slides
 
-{{< revealjs "slides/08_Lasso.html" >}}
+{{< revealjs "slides/10_Lasso.html" >}}
 
 ## Lab
 
