@@ -1,16 +1,22 @@
 ---
-title: "Bayesian inference"
+title: "Beyond classical statistics"
 execute:
   echo: true
   warning: false
   message: false
 ---
 
-## Lecture Slides
+## Bayesian inference
 
 {{< revealjs "slides/11_Bayes.html" >}}
+
+## Machine Learning
+
+{{< revealjs "slides/12_TwoCultures.html" >}}
+
 
 ## Further reading
 
 - S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 2](https://www.huber.embl.de/msmb/02-chap.html#bayesian-thinking).
 - Efron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. [Chapter 16](https://hastie.su.domains/CASI/)
+- Leo Breiman (2001) [Statistical Modeling: The Two Cultures](https://projecteuclid.org/journals/statistical-science/volume-16/issue-3/Statistical-Modeling--The-Two-Cultures-with-comments-and-a/10.1214/ss/1009213726.full). _Statistical Science_
