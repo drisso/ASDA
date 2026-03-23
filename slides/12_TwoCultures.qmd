@@ -1,0 +1,42 @@
+---
+title: "Statistics vs Machine Learning: the Two Cultures"
+subtitle: "Advanced Statistics and Data Analysis"
+author: "Davide Risso"
+format: 
+    revealjs:
+        theme: default
+        incremental: true
+        scrollable: true
+html-math-method:
+    method: mathjax
+    url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+knitr:
+    opts_chunk:
+        out-width: 75%
+        fig-align: center
+---
+
+# The Two Cultures of Statistical Modeling
+
+## Introduction
+
+## The Data Modeling Culture
+
+## The Algorithmic Modeling Culture
+
+## Prediction vs. Explanation
+
+## Example: Linear Regression
+
+# Principles
+
+## The multiplicity of good models
+
+## Simplicity vs. accuracy
+
+## The curse of dimensionality
+
+## Information from a black box
+
+# What about AI?
+

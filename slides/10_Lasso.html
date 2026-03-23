@@ -371,22 +371,22 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 <tr class="odd">
 <td style="text-align: left;">X208748_s_at</td>
 <td style="text-align: right;">0.343</td>
-<td style="text-align: right;">0.297</td>
+<td style="text-align: right;">0.305</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">X208749_x_at</td>
 <td style="text-align: right;">0.211</td>
-<td style="text-align: right;">0.042</td>
+<td style="text-align: right;">0.052</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">X210142_x_at</td>
 <td style="text-align: right;">-0.291</td>
-<td style="text-align: right;">-0.153</td>
+<td style="text-align: right;">-0.162</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">X213819_s_at</td>
 <td style="text-align: right;">0.180</td>
-<td style="text-align: right;">0.165</td>
+<td style="text-align: right;">0.167</td>
 </tr>
 </tbody>
 </table>
@@ -501,6 +501,23 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 <p>If we want to emphasize sparsity, we can use the “one-standard-error rule”, choosing the largest value of <span class="math inline">\(\lambda\)</span> that yields an error within one standard error above its minimum value.</p>
 </div>
 </section>
+<section id="mean-squared-error-mse" class="slide level2">
+<h2>Mean Squared Error (MSE)</h2>
+<p>The mean squared error is defined as <span class="math display">\[
+\text{MSE} = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2,
+\]</span></p>
+<p>where <span class="math inline">\(\hat{y} = X \hat{\beta}(\lambda_0)\)</span> is the predicted value of <span class="math inline">\(y_i\)</span> based on the model fitted on the training set by setting <span class="math inline">\(\lambda = \lambda_0\)</span>.</p>
+</section>
+<section id="variance-bias-tradeoff" class="slide level2">
+<h2>Variance-bias tradeoff</h2>
+<p>One important equivalence is that we can write the mean squared error as the sum of the variance and the squared bias of the estimator: <span class="math display">\[
+\text{MSE}(\hat{Y}) = \text{Var}(\hat{Y}) + \mathbb{E}[\hat{Y} - Y]^2.
+\]</span></p>
+<p>Hence, by choosing the value of <span class="math inline">\(\lambda\)</span> that minimizes the MSE, we are looking for the best variance-bias tradeoff.</p>
+<p><span class="math display">\[
+\text{MSE} = \text{Variance} + \text{Bias}^2.
+\]</span></p>
+</section>
 <section id="in-r-the-glmnet-function" class="slide level2">
 <h2>In R: the <code>glmnet()</code> function</h2>
 <p>In R there is a very convenient function that implements the lasso, ridge and elastic net algorithms.</p>
@@ -544,13 +561,13 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>fit.cv<span class="sc">$</span>lambda.min</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.0735996</code></pre>
+<pre><code>[1] 0.3927789</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>fit.cv<span class="sc">$</span>lambda<span class="fl">.1</span>se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 8.462165</code></pre>
+<pre><code>[1] 7.025438</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -558,17 +575,17 @@ F-statistic: 9.556 on 4 and 339 DF,  p-value: 2.481e-07</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>11 x 1 sparse Matrix of class "dgCMatrix"
             lambda.1se
-(Intercept)  152.13348
-AGE            .      
-SEX            .      
-BMI          487.39654
-BP           162.47851
-S1             .      
-S2             .      
-S3           -84.78566
-S4             .      
-S5           423.04969
-S6             .      </code></pre>
+(Intercept)   152.1335
+AGE             .     
+SEX             .     
+BMI           498.9226
+BP            180.6782
+S1              .     
+S2              .     
+S3           -103.3203
+S4              .     
+S5            433.5640
+S6              .     </code></pre>
 </div>
 </div>
 </section></section>
