@@ -45,7 +45,7 @@ library(pheatmap)
 library(RColorBrewer)
 library(GGally)
 
-load("/Users/KimHue/ASDA/clustering/vini.rda")
+load("slides/data/vini.rda")
 glimpse(vini)
 ```
 
