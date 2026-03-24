@@ -10,15 +10,435 @@ execute:
 
 {{< revealjs "slides/09_clustering.html" >}}
 
+
 ## Lab
 
+### Are red wines of the Langhe region different?
+
+The data consits of 177 samples of red wine produced in the municipalities of (and bordering) Alba, Morra and Barolo.  In fact, the data is complete because the variable vintages identifies the grape variety. Let us suppose that we don’t know the variety. Our goal is to study which groups get "detected" by the clustering algorithms.
+
+The 13 organoleptic characteristics available in the dataset are:
+
+  - **alcohol**  percentage of alcohol in the wine
+  - **malic.acid** concentration of malic acid
+  - **ash**  mineral content remaining after burning the sample
+  - **ash.alkalinity** alkalinity level of the ash
+  - **magnesium**  magnesium content
+  - **total..phenols** amount of phenolic compounds
+  - **flavanoids** a specific class of phenolic compounds affecting taste and color
+  - **non.flav..phenols**  phenols that are not flavonoids
+  - **proanth** compounds contributing to bitterness and astringency
+  - **color..int** strength of wine color
+  - **col..hue** shade of the wine color
+  - **OD.ratio** ratio measuring phenolic concentration using spectrophotometry
+  - **proline**  amino acid concentration related to grape ripeness
+
+  
+  Load the data and and glimpse at the data
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(factoextra)
+library(ade4)
+library(pheatmap)
+library(RColorBrewer)
+library(GGally)
+
+load("slides/data/vini.rda")
+glimpse(vini)
+```
+
+#### Data wrangling and exploration
+
+Display the matrix of all correlations between the measurements in a heatmap. What do you notice ?
+
+```{r}
+pheatmap(cor(vini[,-1]), cell.width = 10, cell.height = 10)
+```
+
+Produce all pairwise scatterplots for the vini data (except vintages)
+```{r}
+ggpairs(vini[, -1], axisLabels = "none")
+```
+
+::: {.callout-important}
+# Exercise
+Does the plot tell you anything?
+
+:::
+
+Try to plot the data on the PC component space
+
+```{r}
+pca_vini =  prcomp(vini[,-1], scale. = TRUE)
+print(summary(pca_vini))
+fviz_pca_biplot(pca_vini, label = "var") +
+  ggtitle("")
+
+```
+::: {.callout-important}
+# Exercise
+What do you notice from the biplot? How many groups should we choose?
+
+
+:::
+
+Now you can check your answer with the true grape variety
+
+```{r}
+my_colors <- brewer.pal(n = 3, name = "Set2")
+fviz_pca_biplot(pca_vini, 
+                label = "var", 
+                habillage = vini$vintages) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+
+```
+
+
+#### Clustering
+
+To avoid the final outcome depends on the measurement scales of the data, distances should be calculated on “standardized variables”.
+
+```{r}
+scaledvini <- scale(vini[,-1])
+```
+
+Compute the Euclidean distance 
+```{r}
+dist_E <- dist(scaledvini)
+
+```
+
+##### Hierarchical clustering
+Perform hierarchical clustering on the scaled data using Single linkage, Complete linkage, and Ward method. What do you notice?
+```{r}
+hclust(dist_E, method = "single") |> plot(main = "Single linkage", cex=0.5)
+hclust(dist_E, method = "complete") |> plot(main = "Complete linkage", cex=0.5)
+hc_W <- hclust(dist_E, method = "ward.D2") 
+plot(hc_W ,main = "Ward method", cex=0.5)
+```
+
+::: {.callout-important}
+# Exercise
+1. Which method should we choose?
+2. How many groups should we choose?
+
+:::
+
+**Decision rule**  choose the method that:
+
+  - Shows largest vertical gaps before merging
+  - Produces compact, balanced clusters
+  - Has a clear number of clusters
+  - Matches your real-world understanding
+
+
+From the dendrogram, we can see the Ward method has the large jump before clusters merge and a clear number of cluster. Moreover, the data is complete, so we can check if the result of the hierarchical clustering discover the true cluster, i.e., the variable vintages. We add colors by using the `mypclust` function from the `rafalib` package.
+
+```{r}
+library(rafalib)
+vintages <- as.character(vini$vintages)
+myplclust(hc_W, labels=vintages, lab.col=as.fumeric(vintages), cex=0.5)
+```
+
+It does seem that hierarchical clustering using the Ward method has discovered the variety. 
+
+Hierarchical clustering does not directly define specific clusters. Instead, the dendrogram shows the distance between groups: the height at which two branches split indicates how dissimilar those groups are. To obtain clusters, we need to cut the dendrogram at a chosen distance threshold, and all samples connected below that level are grouped into the same cluster. For example,  if we cut the dendrogram at 27 we have three clusters; and if we cut the dendrogram at 12 we, have five clusters
+
+```{r}
+myplclust(hc_W, labels=vintages, lab.col=as.fumeric(vintages), cex=0.5)
+abline(h=27, col="red")
+abline(h=12, col="orange")
+```
+
+In this example, the dendrogram clearly suggest three clusters because there is a clear separation before and after clusters merge. We also can examine how the clusters overlap with the actual vintages
+
+```{r}
+hclusters <- cutree(hc_W, h=27)
+table(true=vintages, cluster=hclusters)
+
+```
+
+We can also ask to cut the dendrogram in order to have a specific number of clusters by using the `cutree` function.
+
+```{r}
+hclusters <- cutree(hc_W, k=3)
+table(hclusters )
+```
+
+::: {.callout-important}
+# Exercise
+
+Does this result match the actual vintages?
+:::
+```{r}
+table(hclusters,vini$vintages) |> fisher.test()
+```
+
+
+Calculate the Adjusted Rand Index (ARI)
+
+```{r}
+library(mclust)
+adjustedRandIndex(vini$vintages, hclusters)
+```
+
+::: {.callout-important}
+# Exercise
+What the Adjusted Rand Index tell you?
+:::
+
+If we do not have the true clusters we also can evaluate clustering result by calculating the silhouette width
+
+```{r}
+library(cluster)
+sil <- silhouette(hclusters , dist_E)
+plot(sil, col = my_colors, border = NA)
+
+```
+
+::: {.callout-important}
+# Exercise
+What the silhouette width tell you?
+:::
+
+```{r}
+fviz_pca_biplot(pca_vini, 
+                label = "var", 
+                habillage = hclusters) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+```
+
+
+::: {.callout-important}
+# Exercise
+How do these groups differ from each other?
+:::
+
+
+##### K-means
+
+Perform the k-means algorithm 
+
+```{r}
+set.seed(123)
+km <- kmeans(dist_E, centers = 3, nstart = 10)
+
+```
+
+Calculate the  Adjusted Rand Index and the silhouette width. Do they tell you the same story as Hierarchical clustering?
+
+```{r}
+adjustedRandIndex(vini$vintages, km$cluster)
+table(vini$vintages, km$cluster) |> fisher.test()
+
+adjustedRandIndex(hclusters, km$cluster)
+table(hclusters, km$cluster) |> fisher.test()
+
+sil <- silhouette(km$cluster , dist_E)
+plot(sil, col = my_colors, border = NA)
+```
+
+
+### 2. RNA gene expression [^1]
+
+The data represent RNA expression measurements for 22,215 genes from 189 samples. Each sample is labeled with a tissue of origin.
+
+| Tissue          | Description                                                         |
+| --------------- | ------------------------------------------------------------------- |
+| **kidney**      | Renal tissue, involved in filtering blood and urine production      |
+| **hippocampus** | Brain region important for memory formation                         |
+| **cerebellum**  | Brain region controlling coordination and balance                   |
+| **colon**       | Part of the large intestine                                         |
+| **liver**       | Metabolic organ; detoxification, protein synthesis, bile production |
+| **endometrium** | Lining of the uterus                                                |
+| **placenta**    | Fetal-maternal organ during pregnancy                               |
+
+The data is in the `tissuesGeneExpression` package available on Github. 
+To install we use comment
+
+```{r, eval=FALSE}
+library(devtools)
+install_github("genomicsclass/tissuesGeneExpression")
+```
+
+Load the data and glimse at the data
+
+```{r}
+library(tissuesGeneExpression)
+data(tissuesGeneExpression)
+dim(e)
+table(tissue)
+
+```
+
+Plot the heatmap of the 50 most variable genes, i.e., 50 genes with most  variance over all samples using the `heatmap.2` function from `gplots` package.
+
+```{r}
+# select the top 50 most variable genes
+library(genefilter)
+rv <- rowVars(e)
+idx <- order(rv,decreasing = TRUE)
+exp_50 <- e[idx[1:50],]
+# generate color for heatmap
+hmcol <- colorRampPalette(brewer.pal(9, "GnBu"))(100)
+library(gplots)
+heatmap.2(exp_50, labCol=tissue,
+          trace="none",
+          ColSideColors=as.character(as.fumeric(tissue)+1),
+          col=hmcol)
+```
+We did not use tissue information to create this heatmap, but just with 50 most variable genes, we have a good separation across tissues.
+
+Calculate the range of the mean and variance of the data
+```{r}
+range(apply(e,1,mean))
+range(apply(e,1,sd))
+```
+
+::: {.callout-important}
+# Exercise
+What do you notice?
+:::
+
+#### Clustering
+
+Compute the Euclidean distance 
+```{r}
+dist_E <- dist(t(e))
+
+```
+
+##### Hierarchical clustering
+Perform hierarchical clustering using Single linkage, Complete linkage, and Ward method. What do you notice?
+```{r}
+hclust(dist_E, method = "single") |> plot(main = "Single linkage", cex=0.5)
+hclust(dist_E, method = "complete") |> plot(main = "Complete linkage", cex=0.5)
+hc_W <- hclust(dist_E, method = "ward.D2") 
+plot(hc_W ,main = "Ward method", cex=0.5)
+```
+
+::: {.callout-important}
+# Exercise
+1. Which method should we choose?
+2. How many groups should we choose?
+
+:::
+
+
+```{r}
+myplclust(hc_W, labels=tissue, lab.col=as.fumeric(tissue), cex=0.5)
+```
+
+It does seem that hierarchical clustering using the Ward method has discovered the tissue. 
+
+Now, let cut the dendrogram at a certain height we wish to cut. We use 350 as an example:
+
+```{r}
+myplclust(hc_W, labels=tissue, lab.col=as.fumeric(tissue), cex=0.5)
+abline(h=350, col="red")
+hclusters <- cutree(hc_W, h=350)
+table(true=tissue, cluster=hclusters)
+```
+
+::: {.callout-important}
+# Exercise
+Does this result match the actual tissue?
+:::
+
+Most tissues are clearly associated with a single cluster; however, in some cases, a tissue is split across two clusters. This is typically a consequence of overestimating the number of clusters. Selecting the right number of clusters remains a difficult and actively studied problem.
+
+Calculate the Adjusted Rand Index (ARI)
+
+```{r}
+adjustedRandIndex(tissue, hclusters)
+```
+
+::: {.callout-important}
+# Exercise
+What the Adjusted Rand Index tell you?
+:::
+
+Evaluate clustering result by calculating the silhouette width
+
+```{r}
+my_colors <- brewer.pal(n = 8, name = "Set2")
+sil <- silhouette(hclusters , dist_E)
+plot(sil, col = my_colors, border = NA)
+
+```
+
+::: {.callout-important}
+# Exercise
+What the silhouette width tell you?
+:::
+
+
+##### K-means
+
+Perform k-means algorithm 
+
+```{r}
+set.seed(123)
+km <- kmeans(dist_E, centers = 7, nstart = 10)
+
+```
+
+Calculate the  Adjusted Rand Index. Do they tell you the same story as Hierarchical clustering?
+
+```{r}
+adjustedRandIndex(tissue, km$cluster)
+adjustedRandIndex(hclusters, km$cluster)
+```
+
+##### Repeat everything on the subdata with the 50 most variable genes. What do you notice? Do these results agree with the results that you performed on the full data?
+```{r}
+dist_E50 <- dist(t(exp_50))
+
+# Hierarchical clustering
+hc_W50 <- hclust(dist_E50, method = "ward.D2") 
+myplclust(hc_W50, labels=tissue, lab.col=as.fumeric(tissue), cex=0.5)
+hclusters50 <- cutree(hc_W50, k=8)
+table(true=tissue, cluster=hclusters50)
+adjustedRandIndex(tissue, hclusters50)
+adjustedRandIndex(hclusters, hclusters50)
+```
+
+```{r}
+pca_exp <- prcomp(t(exp_50), scale. = TRUE)
+fviz_pca_ind(pca_exp, geom = "point", habillage = tissue) 
+ggtitle("")
+```
+
+
+
 ## Homework
+**Exercise 1.**  Repeat all the analysis that we did for Example 2 on the scale data. What do you notice? Do the new result agree with the result from Example 2 ?
+
+**Exercise 2.** The `fiumi.rda` dataset includes measurements of chemical concentrations for 37 rivers or creeks of a particular geographical area. The variables available are:
+
+  - **NO3**: nitrate $NO_{3^-}$;
+  - **SO4**: sulfate $SO_{4}^{2-}$;
+  - **CL**: chloride $Cl^-$;
+  - **CA**: calcium $Ca^{2+}$;
+
+1. Check if the data is already standardized.
+
+2. Repeat the previous analysis (we did in Example 1) by using both, hierarchical clustering and K-Means. How many groups are there? Do hierarchical clustering and K-Means agree?  What are the differences among the groups? Could the difference among the detected groups be due to the different sources of pollution in the catchment area of the rivers?
+
 
 ## Further reading
 
 - S. Holmes and W. Huber. Modern Statistics for Modern Biology. [Chapter 5](https://www.huber.embl.de/msmb/05-chap.html).
 
+
 ## References {.unnumbered}
+
+[^1]: The example 2 about gene expression comes from from [Data Analysis for the Life Sciences](https://leanpub.com/dataanalysisforthelifesciences). 
+
 
 ::: {#refs}
 :::
