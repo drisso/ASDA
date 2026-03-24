@@ -592,21 +592,31 @@
   {
     "objectID": "bayes.html",
     "href": "bayes.html",
-    "title": "11  Bayesian inference",
+    "title": "11  Beyond classical statistics",
     "section": "",
-    "text": "11.1 Lecture Slides\nView slides in full screen",
+    "text": "11.1 Bayesian inference\nView slides in full screen",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Bayesian inference</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Beyond classical statistics</span>"
+    ]
+  },
+  {
+    "objectID": "bayes.html#machine-learning",
+    "href": "bayes.html#machine-learning",
+    "title": "11  Beyond classical statistics",
+    "section": "11.2 Machine Learning",
+    "text": "11.2 Machine Learning\n    View slides in full screen",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Beyond classical statistics</span>"
     ]
   },
   {
     "objectID": "bayes.html#further-reading",
     "href": "bayes.html#further-reading",
-    "title": "11  Bayesian inference",
-    "section": "11.2 Further reading",
-    "text": "11.2 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 2.\nEfron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. Chapter 16",
+    "title": "11  Beyond classical statistics",
+    "section": "11.3 Further reading",
+    "text": "11.3 Further reading\n\nS. Holmes and W. Huber. Modern Statistics for Modern Biology. Chapter 2.\nEfron, Hastie. Computer Age Statistical Inference: Algorithms, Evidence, and Data Science. Chapter 16\nLeo Breiman (2001) Statistical Modeling: The Two Cultures. Statistical Science",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Bayesian inference</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Beyond classical statistics</span>"
     ]
   }
 ]
