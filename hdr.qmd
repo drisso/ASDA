@@ -12,7 +12,548 @@ execute:
 
 ## Lab
 
+### Hitters dataset
+
+The data records information about Major League Baseball from the 1986 and 1987 seasons. We wish to predict a baseball player’s Salary on the basis of various statistics associated with performance in the previous year.
+
+To load the data, we need to install library `ISLR` 
+```{r}
+library(ISLR)
+data(Hitters)
+dim(Hitters)
+```
+
+Get information about the data 
+```{r, eval=FALSE}
+help(Hitters)
+```
+
+#### Data wrangling and exploration 
+
+Get a glimse at the data and numerical summary of the data
+```{r}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+glimpse(Hitters)
+summary(Hitters)
+```
+
+::: {.callout-important}
+# Exercise
+What do you notice about the values of Salary?
+:::
+
+We see that Salary is missing for 59 players, indicated as `NA`. How to handle missing data is outside the aim of the lecture. Thus, we will simply eliminate the missing data and we will work with the complete rows of the dataset.  The `na.omit()` function removes all of the rows that have missing values in any variables.
+
+```{r }
+## how many missing data?
+sum(is.na(Hitters))
+## clean the dataset
+hitters <- na.omit(Hitters)
+dim(hitters)
+sum(is.na(hitters))
+
+```
+
+Boxplot the Salary on the original scale and log scale
+
+```{r fig.height=4, fig.width=10}
+df <- hitters %>%
+  mutate(log_Salary = log(Salary)) %>%
+  pivot_longer(cols = c(Salary, log_Salary),
+               names_to = "Scale",
+               values_to = "Value")
+
+ggplot(df, aes(x = Scale, y = Value)) +
+  geom_boxplot(fill = "skyblue") +
+  facet_wrap(~Scale, scales = "free") +
+  labs(title = "Salary: Original vs Log Scale", y = "Value") +
+  theme_minimal()
+
+```
+
+::: {.callout-important}
+# Exercise
+What do you notice? Which scale that we should choose?
+:::
+
+Choose the logarithmic transformation. 
+```{r}
+hitters$Salary <- log(hitters$Salary)
+```
+
+We wish to predict a baseball player’s Salary on the basis of various statistics associated with performance in the previous year. To evaluate the performance of models, we split the data into test-train datasets with 80% samples are in the training set.
+
+```{r}
+set.seed (123)
+train <- sample (1: nrow(hitters), nrow(hitters)*0.8)
+hitters_train <- hitters[train,]
+dim(hitters_train)
+hitters_test <- hitters[-train,]
+dim(hitters_test )
+```
+
+
+#### Ridge and Lasso regression
+
+Ridge and Lasso regression can be applied using the function `glmnet()` inside library `glmnet`, which needs the matrix of covariates `X` and the vector of observations from `y`. The parameter `alpha` controls the type of regularization: `alpha = 0` yields ridge regression, while `alpha = 1` produces a Lasso model.
+
+```{r }
+library(glmnet)
+y <- hitters_train$Salary
+X <- model.matrix(Salary ~ ., data=hitters_train)[,-1]
+```
+
+Function `model.matrix()` creates the matrix with covariates and in the meanwhile it transforms qualitative variables into dummies. Remember to eliminate the first column corresponding to the intercept.
+
+##### Ridge regression
+
+Perform Ridge regression on the train data with Salary as the response 
+
+```{r }
+m.ridge <- glmnet(X, y, alpha=0, standardize=TRUE)
+```
+
+By default the `glmnet()` function performs Ridge regression for an automatically selected range of lambda values. However, we can implement the function over a grid of values via parameter `lambda`.
+
+The `glmnet()` function also standardizes the variables so that they are on the same scale. To turn off this default setting, use the argument `standardize=FALSE`
+
+The output reports the value of many quantities
+
+```{r }
+names(m.ridge)
+```
+
+
+  -  **a0**: estimated intercept for each model fitted with a different $\lambda$ 
+  -  **beta**: p x (#lambdas) matrix with the estimates of the coefficients
+  -  **lambda**: values of $\lambda$ 
+  -  **dev.ratio**: 1 - model deviance/null deviance;  
+  -  **nulldev**: null deviance
+
+
+How many $\lambda$ are considered?
+
+```{r }
+length(m.ridge$lambda)
+```
+
+As `lambda` increases, Ridge regression shrinks the coefficients more, so their $L_2$ norm tends to decrease. Below are the coefficient estimates for `lambda = 420.9926` and `lambda = 0.2465762`
+
+```{r}
+# lambda = 420.9926
+m.ridge$lambda [5]
+coef(m.ridge)[,5]
+sqrt(sum(coef(m.ridge)[-1,5]^2) )
+
+# lambda = 0.2465762
+m.ridge$lambda [85]
+coef(m.ridge)[,85]
+sqrt(sum(coef(m.ridge)[-1,85]^2) )
+```
+
+
+Graphical evaluation of the coefficients associated to the covariates
+
+```{r fig.height=6, fig.width=10}
+plot(m.ridge, xvar='lambda', sign.lambda =1, xlab=expression(log(lambda)))
+```
+
+Option `xvar='lambda'` specifies that the x-axis is expressed in terms of $\lambda$. Alternatives are deviance values and $L_1$-norm values.
+
+Option `xlab=expression(log(lambda))` insert the mathematical symbol for $\lambda$ in the axis. Numbers (19, repeated) over the graph indicate the number of covariates entering the model as $\lambda$ varies: 19 is repeated, as ridge regression is not a selection method.
+
+Look for the best $\lambda$ using cross validation, using function `cv.glmnet()`, with a syntax similar to that in `glmnet()`.
+Fix the seed
+
+```{r }
+set.seed(123)
+cv.ridge <- cv.glmnet(X, y, alpha=0)
+```
+
+For default, `R` considers $10-$fold cross validation.
+The resulting object includes several quantities, such as 
+
+  -  **lambda**: values of $\lambda$ 
+  -  **cvm**: the Mean Squared Error for each $\lambda$ 	
+  -  **cvsd**: the estimate of the standard error of \texttt{cvm}  
+  -  **lambda.min**: the value of $\lambda$ associated to the minimum `cvm`	
+  -  **lambda.1se**: the values of $\lambda$ associated to the minimum `cvm` within 1 standard error.
+
+Graphical representation
+
+```{r fig.height=6, fig.width=10}
+plot(cv.ridge,sign.lambda =1, xlab=expression(log(lambda)))
+```
+
+The plots shows the values of MSE `cvm` for each $\log(\lambda)$ together with the associated confidence interval. The two dashed lines are the values of `log(lambda.min)` and `log(lambda.1se)`.
+
+$\lambda$ from cross validation
+
+```{r fig.height=6, fig.width=10}
+(best.lambda <- cv.ridge$lambda.min)
+(lambda.1se <- cv.ridge$lambda.1se)
+ind <- which(cv.ridge$lambda==best.lambda)
+plot(cv.ridge,sign.lambda =1, xlab=expression(log(lambda)))
+abline(h=cv.ridge$cvup[ind], col="blue")
+```
+
+Find the minimum MSE 
+
+```{r }
+cv.ridge$cvm[ind]
+## or, equivalently,
+min(cv.ridge$cvm)
+```
+
+Re-estimate the model using the best $\lambda$ 
+
+```{r }
+m.ridge.min <- glmnet(X, y, alpha=0, lambda=best.lambda)
+m.ridge.min 
+```
+
+Coefficients of the model
+
+```{r }
+coef(m.ridge.min)
+```
+
+We can use the `predict()` function to obtain the Ridge regression coefficients for a new value of `lambda`, say `best.lambda`:
+
+```{r}
+predict (m.ridge, s=best.lambda, type ="coefficients")
+```
+
+::: {.callout-important}
+# Exercise
+Re-estimate the model using `lambda.1se`. 
+Comprare to the coefficients of Ridge regression using `best.lambda`. What do you notice?
+:::
+
+
+Graphical representation of the coefficients for the `best.lambda` and model deviance
+
+```{r fig.height=4, fig.width=10}
+par(mfrow=c(1,2))
+plot(m.ridge, xvar='lambda', sign.lambda =1, xlab=expression(log(lambda)))
+abline(v=log(best.lambda), lty=2)
+## deviance
+plot(log(m.ridge$lambda), m.ridge$dev.ratio, type='l', 
+     xlab=expression(log(lambda)), ylab='Explained deviance')
+abline(v=log(best.lambda), lty=2)
+```
+
+
+##### Lasso regression
+
+Now move to Lasso. The syntax is similar to that for Ridge regression, but specifying `alpha=1` 
+
+```{r }
+m.lasso <- glmnet(X, y, alpha=1)
+```
+
+Graphical representation of the coefficients  
+
+```{r fig.height=6, fig.width=10}
+par(mfrow=c(1,1))
+plot(m.lasso, xvar='lambda', sign.lambda =1, xlab=expression(log(lambda)))
+```
+
+::: {.callout-important}
+# Exercise
+What do you notice about the values of coefficients?
+:::
+
+Look for $\lambda$ that minimizes the MSE
+
+```{r }
+## fix the seed to the same value used for ridge regression  
+set.seed(123)
+cv.lasso <- cv.glmnet(X, y, alpha=1)
+plot(cv.lasso, sign.lambda =1, xlab=expression(log(lambda)))
+```
+
+Minimum $\lambda$ from cross validation
+
+```{r }
+(best.lambda.lasso <- cv.lasso$lambda.min)
+(lambda.1se.lasso <- cv.lasso$lambda.1se)
+```
+
+Minimum MSE
+
+```{r }
+min(cv.lasso$cvm)
+```
+
+Re-estimate the model using the best lambda from cross-validation
+
+```{r }
+m.lasso.min <- glmnet(X, y, alpha=1, lambda=best.lambda.lasso)
+m.lasso.min 
+```
+
+Coefficients
+
+```{r }
+coef(m.lasso.min)
+```
+
+Some of the coefficients are zero, so the Lasso performed a model selection.
+
+Graphical representation of the coefficients for the best labmda and model deviance 
+
+```{r fig.height=4, fig.width=10}
+par(mfrow=c(1,2))
+plot(m.lasso, xvar='lambda', sign.lambda =1, xlab=expression(log(lambda)))
+abline(v=log(best.lambda.lasso), lty=2)
+## deviance
+plot(log(m.lasso$lambda), m.lasso$dev.ratio, type='l', 
+     xlab=expression(log(lambda)), ylab='Explained deviance')
+abline(v=log(best.lambda.lasso), lty=2)
+```
+
+::: {.callout-important}
+# Exercise
+1. Refit Lasso regression using `lambda=lambda.1se.lasso`
+2. Compare the Lasso and Ridge regression with the best lambda obtained from cross- validation. Which model is preferable?
+:::
+
+```{r }
+m.lasso.1se <- glmnet(X, y, alpha=1, lambda=lambda.1se.lasso)
+m.lasso.1se
+```
+
+Coefficients
+
+```{r }
+coef(m.lasso.1se)
+```
+
+##### Prediction Performance
+
+We evaluate Ridge and Lasso regression by calculating its MSE on the test set, using `lambda` equals to the best value obtained from cross-validation. We use the `predict()` function to get predictions for a test set, by replacing `type="coefficients"` with the `newx` argument.
+
+```{r}
+y_test <- hitters_test$Salary
+X_test <- model.matrix(Salary ~ ., data=hitters_test)[,-1]
+ridge.pred <- predict (m.ridge, s=best.lambda, newx=X_test)
+mean((ridge.pred - y_test)^2)
+
+```
+
+The test MSE is 0.4745414. Note that if we had instead simply fit a model
+with just an intercept, we would have predicted each test observation using
+the mean of the training observations. In that case, we could compute the
+test set MSE like this:
+
+```{r}
+mean((mean(y) - y_test)^2)
+```
+
+or equivalent to fitting a ridge regression model with
+a very large value of lambda
+
+```{r}
+ridge.pred1=predict (m.ridge,s=1e10 ,newx=X_test)
+mean((ridge.pred1 - y_test)^2)
+```
+
+So fitting a ridge regression model with `lambda=best.lambda` leads to a lower test
+MSE than fitting a model with just an intercept. We now check the benefit to performing Lasso regression with `lambda=best.lambda.lasso` 
+
+```{r}
+Lasso.pred <- predict (m.lasso, s=best.lambda.lasso, newx=X_test)
+mean((Lasso.pred - y_test)^2)
+```
+
+The result confirms that the model fitted with Lasso is preferable.
+
+Refit Lasso regression with `lambda=lambda.lasso.1se` 
+
+```{r}
+Lasso.pred.se <- predict (m.lasso, s=lambda.1se.lasso, newx=X_test)
+mean(( Lasso.pred.se - y_test)^2)
+```
+
+::: {.callout-important}
+# Exercise
+ Refit Ridge and Lasso regression on the full data and calulate MSE for each model with lambda obtained from cross-validation. What do you notice? Does the result tell you the same story?
+:::
+
+### Leukemia dataset
+
+Consider the Leukemia data about the gene expression in cancer cells obtained from 72 subjects with acute myeloid leukemia and acute lymphoblastic leukemia. 
+
+Load the data
+
+```{r }
+load("slides/data/Leukemia.RData")
+names(Leukemia)
+```
+
+There are the objects `x` and `y`. Response `y` is categorical (diseased/nondiseased)
+
+```{r }
+table(Leukemia$y)
+```
+
+Object `x` is the matrix with the observations for the covariates
+
+```{r }
+dim(Leukemia$x)
+```
+
+There are `r dim(Leukemia$x)[2]` covariates. Clearly, a standard logistic regression model cannot work here. In fact, look at the output 
+
+```{r }
+m <- glm(y ~ x, data=Leukemia, family='binomial')
+```
+
+here not reported for space reason. Use Ridge and lasso regression instead.
+
+#### Ridge regression
+
+```{r }
+leukemia.ridge <- glmnet(Leukemia$x, Leukemia$y, alpha=0, family='binomial')
+```
+
+Note that we specify `family='binomial'` as $y$ is a binary indicator.
+
+```{r fig.height=6, fig.width=10}
+par(mfrow=c(1,1))
+plot(leukemia.ridge, sign.lambda =1, xvar='lambda', xlab=expression(log(lambda)))
+```
+
+Which values of $\lambda$ are used?
+
+```{r }
+summary(leukemia.ridge$lambda)
+```
+
+Select the best value of $\lambda$ using cross validation, previously extending the grid of values of $\lambda$ through option \texttt{lambda.min}
+
+```{r }
+set.seed(123)
+cv.leukemia.ridge <- cv.glmnet(Leukemia$x, Leukemia$y, alpha=0, family='binomial',
+                               lambda.min = 1e-4)
+(best.lambda.leukemia <- cv.leukemia.ridge$lambda.min)
+min(cv.leukemia.ridge$cvm)
+```
+
+
+```{r fig.height=6, fig.width=10}
+plot(cv.leukemia.ridge, sign.lambda =1)
+```
+
+Re-estimate the model using the best $\lambda$ chosen from cross-validation
+
+```{r }
+leukemia.ridge.min <- glmnet(Leukemia$x, Leukemia$y, alpha=0, family='binomial',
+                             lambda=best.lambda.leukemia)
+leukemia.ridge.min 
+```
+
+Graphical representation of the coefficients for the best  $\lambda$ and model deviance. Remember to extend the grid of values of $\lambda$
+
+```{r }
+leukemia.ridge <- glmnet(Leukemia$x, Leukemia$y, alpha=0, family='binomial',
+                         lambda.min = 1e-4)
+```
+
+```{r fig.height=6, fig.width=10}
+par(mfrow=c(1,2))
+plot(leukemia.ridge, xvar='lambda', xlab=expression(log(lambda)))
+abline(v=log(best.lambda.leukemia), lty=2)
+## deviance
+plot(log(leukemia.ridge$lambda), leukemia.ridge$dev.ratio, type='l', 
+     sign.lambda =1, xlab=expression(log(lambda)), ylab='Explained deviance')
+abline(v=log(best.lambda.leukemia), lty=2)
+```
+
+
+#### Lasso
+
+```{r }
+leukemia.lasso <- glmnet(Leukemia$x, Leukemia$y, alpha=1, family='binomial',
+                         lambda.min = 1e-4)
+```
+
+
+```{r fig.height=6, fig.width=10}
+par(mfrow=c(1,1))
+plot(leukemia.lasso, xvar='lambda', sign.lambda =1, xlab=expression(log(lambda)))
+```
+
+Select $\lambda$ from cross validation
+
+```{r }
+set.seed(123)
+cv.leukemia.lasso <- cv.glmnet(Leukemia$x, Leukemia$y, alpha=1, family='binomial',
+                               lambda.min = 1e-4)
+(best.lambda.leukemia.lasso <- cv.leukemia.lasso$lambda.min)
+(lambda.leukemia.1se.lasso <- cv.leukemia.lasso$lambda.1se)
+min(cv.leukemia.lasso$cvm)
+```
+
+
+```{r fig.height=6, fig.width=10}
+plot(cv.leukemia.lasso, sign.lambda =1)
+```
+
+Re-estimate the model using the best $\lambda$ from cross-validation
+
+```{r }
+leukemia.lasso.min <- glmnet(Leukemia$x, Leukemia$y, alpha=1, family='binomial', 
+                             lambda=best.lambda.leukemia.lasso)
+leukemia.lasso.min
+```
+
+How many coefficients are set equal to zero? None in ridge regression.
+
+```{r }
+id.zero <- which(coef(leukemia.lasso.min)==0)
+length(id.zero)
+nonzero <- length(coef(leukemia.lasso.min))-length(id.zero)
+nonzero
+```
+
+There are `r length(id.zero)` zero coefficients, so lasso selects only `r nonzero-1` variables (we need to eliminate the intercept). The chosen variables are
+
+```{r }
+varnames <- rownames(coef(leukemia.lasso.min))[-id.zero]
+values <- coef(leukemia.lasso.min)[-id.zero]
+names(values) <- varnames 
+values
+```
+
+::: {.callout-important}
+# Exercise
+ Try to see what happens when using `lambda=lambda.1se` 
+:::
+
+
 ## Homework 
+
+Boston dataset records housing values `medv` and other information for 506 neighborhoods around Boston. We aim to predict `medv` using 13 other variables as predictors.
+
+  1. Load the Boston data set from the `MASS` library using the function `data()`.
+  2. Splitting the data into test-train datasets with 80% houses are in the training set.
+  
+Perform Ridge and Lasso regression
+
+  1. Fit the ridge regression model with `medv` as the response variable, and consider all other variables as predictors. Plot the coefficients versus $L_1$ norm and $\log(\lambda)$. Your comments?
+  2. Use cross-validation to select a good $\lambda$ value, using 10 folds. Plot the mean square error (MSE) versus $\log(\lambda)$. Your comments? What are the values of minimum lambda and 1-SE lambda? Estimate coefficients using minimum lambda and using 1-SE rule lambda.
+  3. Fit the lasso regression model with `medv` as the response variable, and consider all other variables as predictors. Plot the coefficients versus $L_1$ norm and $\log(\lambda)$. Your comments?
+  4. Use cross-validation to select a good $\lambda$ value, using 10 folds. Plot MSE versus $\log(\lambda)$. Estimate coefficients using minimum lambda and using 1-SE rule lambda. Your comments?
+
+On test dataset do what follows
+
+  1. Calculate MSE on the test set using 1-SE rule lambda for Ridge regression.  Your comments.
+  2. Calculate MSE on the test set using 1-SE rule lambda for Lasso regression. Your comments.
 
 ## Further reading
 
