@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -77,6 +111,35 @@ ul.task-list li input[type="checkbox"] {
   </style>
   
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -197,7 +260,11 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides"><span class="header-section-number">10.1</span> Lecture Slides</a></li>
-  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">10.2</span> Lab</a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab"><span class="header-section-number">10.2</span> Lab</a>
+  <ul class="collapse">
+  <li><a href="#hitters-dataset" id="toc-hitters-dataset" class="nav-link" data-scroll-target="#hitters-dataset"><span class="header-section-number">10.2.1</span> Hitters dataset</a></li>
+  <li><a href="#leukemia-dataset" id="toc-leukemia-dataset" class="nav-link" data-scroll-target="#leukemia-dataset"><span class="header-section-number">10.2.2</span> Leukemia dataset</a></li>
+  </ul></li>
   <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">10.3</span> Homework</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">10.4</span> Further reading</a></li>
   </ul>
@@ -235,9 +302,919 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="lab" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="lab"><span class="header-section-number">10.2</span> Lab</h2>
+<section id="hitters-dataset" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="hitters-dataset"><span class="header-section-number">10.2.1</span> Hitters dataset</h3>
+<p>The data records information about Major League Baseball from the 1986 and 1987 seasons. We wish to predict a baseball player’s Salary on the basis of various statistics associated with performance in the previous year.</p>
+<p>To load the data, we need to install library <code>ISLR</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Hitters)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 322  20</code></pre>
+</div>
+</div>
+<p>Get information about the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(Hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="data-wrangling-and-exploration" class="level4" data-number="10.2.1.1">
+<h4 data-number="10.2.1.1" class="anchored" data-anchor-id="data-wrangling-and-exploration"><span class="header-section-number">10.2.1.1</span> Data wrangling and exploration</h4>
+<p>Get a glimse at the data and numerical summary of the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 322
+Columns: 20
+$ AtBat     &lt;int&gt; 293, 315, 479, 496, 321, 594, 185, 298, 323, 401, 574, 202, …
+$ Hits      &lt;int&gt; 66, 81, 130, 141, 87, 169, 37, 73, 81, 92, 159, 53, 113, 60,…
+$ HmRun     &lt;int&gt; 1, 7, 18, 20, 10, 4, 1, 0, 6, 17, 21, 4, 13, 0, 7, 3, 20, 2,…
+$ Runs      &lt;int&gt; 30, 24, 66, 65, 39, 74, 23, 24, 26, 49, 107, 31, 48, 30, 29,…
+$ RBI       &lt;int&gt; 29, 38, 72, 78, 42, 51, 8, 24, 32, 66, 75, 26, 61, 11, 27, 1…
+$ Walks     &lt;int&gt; 14, 39, 76, 37, 30, 35, 21, 7, 8, 65, 59, 27, 47, 22, 30, 11…
+$ Years     &lt;int&gt; 1, 14, 3, 11, 2, 11, 2, 3, 2, 13, 10, 9, 4, 6, 13, 3, 15, 5,…
+$ CAtBat    &lt;int&gt; 293, 3449, 1624, 5628, 396, 4408, 214, 509, 341, 5206, 4631,…
+$ CHits     &lt;int&gt; 66, 835, 457, 1575, 101, 1133, 42, 108, 86, 1332, 1300, 467,…
+$ CHmRun    &lt;int&gt; 1, 69, 63, 225, 12, 19, 1, 0, 6, 253, 90, 15, 41, 4, 36, 3, …
+$ CRuns     &lt;int&gt; 30, 321, 224, 828, 48, 501, 30, 41, 32, 784, 702, 192, 205, …
+$ CRBI      &lt;int&gt; 29, 414, 266, 838, 46, 336, 9, 37, 34, 890, 504, 186, 204, 1…
+$ CWalks    &lt;int&gt; 14, 375, 263, 354, 33, 194, 24, 12, 8, 866, 488, 161, 203, 2…
+$ League    &lt;fct&gt; A, N, A, N, N, A, N, A, N, A, A, N, N, A, N, A, N, A, A, N, …
+$ Division  &lt;fct&gt; E, W, W, E, E, W, E, W, W, E, E, W, E, E, E, W, W, W, W, W, …
+$ PutOuts   &lt;int&gt; 446, 632, 880, 200, 805, 282, 76, 121, 143, 0, 238, 304, 211…
+$ Assists   &lt;int&gt; 33, 43, 82, 11, 40, 421, 127, 283, 290, 0, 445, 45, 11, 151,…
+$ Errors    &lt;int&gt; 20, 10, 14, 3, 4, 25, 7, 9, 19, 0, 22, 11, 7, 6, 8, 0, 10, 1…
+$ Salary    &lt;dbl&gt; NA, 475.000, 480.000, 500.000, 91.500, 750.000, 70.000, 100.…
+$ NewLeague &lt;fct&gt; A, N, A, N, N, A, A, A, N, A, A, N, N, A, N, A, N, A, A, N, …</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     AtBat            Hits         HmRun            Runs       
+ Min.   : 16.0   Min.   :  1   Min.   : 0.00   Min.   :  0.00  
+ 1st Qu.:255.2   1st Qu.: 64   1st Qu.: 4.00   1st Qu.: 30.25  
+ Median :379.5   Median : 96   Median : 8.00   Median : 48.00  
+ Mean   :380.9   Mean   :101   Mean   :10.77   Mean   : 50.91  
+ 3rd Qu.:512.0   3rd Qu.:137   3rd Qu.:16.00   3rd Qu.: 69.00  
+ Max.   :687.0   Max.   :238   Max.   :40.00   Max.   :130.00  
+                                                               
+      RBI             Walks            Years            CAtBat       
+ Min.   :  0.00   Min.   :  0.00   Min.   : 1.000   Min.   :   19.0  
+ 1st Qu.: 28.00   1st Qu.: 22.00   1st Qu.: 4.000   1st Qu.:  816.8  
+ Median : 44.00   Median : 35.00   Median : 6.000   Median : 1928.0  
+ Mean   : 48.03   Mean   : 38.74   Mean   : 7.444   Mean   : 2648.7  
+ 3rd Qu.: 64.75   3rd Qu.: 53.00   3rd Qu.:11.000   3rd Qu.: 3924.2  
+ Max.   :121.00   Max.   :105.00   Max.   :24.000   Max.   :14053.0  
+                                                                     
+     CHits            CHmRun           CRuns             CRBI        
+ Min.   :   4.0   Min.   :  0.00   Min.   :   1.0   Min.   :   0.00  
+ 1st Qu.: 209.0   1st Qu.: 14.00   1st Qu.: 100.2   1st Qu.:  88.75  
+ Median : 508.0   Median : 37.50   Median : 247.0   Median : 220.50  
+ Mean   : 717.6   Mean   : 69.49   Mean   : 358.8   Mean   : 330.12  
+ 3rd Qu.:1059.2   3rd Qu.: 90.00   3rd Qu.: 526.2   3rd Qu.: 426.25  
+ Max.   :4256.0   Max.   :548.00   Max.   :2165.0   Max.   :1659.00  
+                                                                     
+     CWalks        League  Division    PutOuts          Assists     
+ Min.   :   0.00   A:175   E:157    Min.   :   0.0   Min.   :  0.0  
+ 1st Qu.:  67.25   N:147   W:165    1st Qu.: 109.2   1st Qu.:  7.0  
+ Median : 170.50                    Median : 212.0   Median : 39.5  
+ Mean   : 260.24                    Mean   : 288.9   Mean   :106.9  
+ 3rd Qu.: 339.25                    3rd Qu.: 325.0   3rd Qu.:166.0  
+ Max.   :1566.00                    Max.   :1378.0   Max.   :492.0  
+                                                                    
+     Errors          Salary       NewLeague
+ Min.   : 0.00   Min.   :  67.5   A:176    
+ 1st Qu.: 3.00   1st Qu.: 190.0   N:146    
+ Median : 6.00   Median : 425.0            
+ Mean   : 8.04   Mean   : 535.9            
+ 3rd Qu.:11.00   3rd Qu.: 750.0            
+ Max.   :32.00   Max.   :2460.0            
+                 NA's   :59                </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do you notice about the values of Salary?</p>
+</div>
+</div>
+<p>We see that Salary is missing for 59 players, indicated as <code>NA</code>. How to handle missing data is outside the aim of the lecture. Thus, we will simply eliminate the missing data and we will work with the complete rows of the dataset. The <code>na.omit()</code> function removes all of the rows that have missing values in any variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## how many missing data?</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(Hitters))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 59</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## clean the dataset</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 263  20</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(hitters))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>Boxplot the Salary on the original scale and log scale</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> hitters <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_Salary =</span> <span class="fu">log</span>(Salary)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Salary, log_Salary),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Scale"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Scale, <span class="at">y =</span> Value)) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Scale, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Salary: Original vs Log Scale"</span>, <span class="at">y =</span> <span class="st">"Value"</span>) <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do you notice? Which scale that we should choose?</p>
+</div>
+</div>
+<p>Choose the logarithmic transformation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>hitters<span class="sc">$</span>Salary <span class="ot">&lt;-</span> <span class="fu">log</span>(hitters<span class="sc">$</span>Salary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We wish to predict a baseball player’s Salary on the basis of various statistics associated with performance in the previous year. To evaluate the performance of models, we split the data into test-train datasets with 80% samples are in the training set.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">123</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span> (<span class="dv">1</span><span class="sc">:</span> <span class="fu">nrow</span>(hitters), <span class="fu">nrow</span>(hitters)<span class="sc">*</span><span class="fl">0.8</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>hitters_train <span class="ot">&lt;-</span> hitters[train,]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hitters_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 210  20</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>hitters_test <span class="ot">&lt;-</span> hitters[<span class="sc">-</span>train,]</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hitters_test )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 53 20</code></pre>
+</div>
+</div>
+</section>
+<section id="ridge-and-lasso-regression" class="level4" data-number="10.2.1.2">
+<h4 data-number="10.2.1.2" class="anchored" data-anchor-id="ridge-and-lasso-regression"><span class="header-section-number">10.2.1.2</span> Ridge and Lasso regression</h4>
+<p>Ridge and Lasso regression can be applied using the function <code>glmnet()</code> inside library <code>glmnet</code>, which needs the matrix of covariates <code>X</code> and the vector of observations from <code>y</code>. The parameter <code>alpha</code> controls the type of regularization: <code>alpha = 0</code> yields ridge regression, while <code>alpha = 1</code> produces a Lasso model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> hitters_train<span class="sc">$</span>Salary</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(Salary <span class="sc">~</span> ., <span class="at">data=</span>hitters_train)[,<span class="sc">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Function <code>model.matrix()</code> creates the matrix with covariates and in the meanwhile it transforms qualitative variables into dummies. Remember to eliminate the first column corresponding to the intercept.</p>
+<section id="ridge-regression" class="level5" data-number="10.2.1.2.1">
+<h5 data-number="10.2.1.2.1" class="anchored" data-anchor-id="ridge-regression"><span class="header-section-number">10.2.1.2.1</span> Ridge regression</h5>
+<p>Perform Ridge regression on the train data with Salary as the response</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m.ridge <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">standardize=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>By default the <code>glmnet()</code> function performs Ridge regression for an automatically selected range of lambda values. However, we can implement the function over a grid of values via parameter <code>lambda</code>.</p>
+<p>The <code>glmnet()</code> function also standardizes the variables so that they are on the same scale. To turn off this default setting, use the argument <code>standardize=FALSE</code></p>
+<p>The output reports the value of many quantities</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(m.ridge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "a0"        "beta"      "df"        "dim"       "lambda"    "dev.ratio"
+ [7] "nulldev"   "npasses"   "jerr"      "offset"    "call"      "nobs"     </code></pre>
+</div>
+</div>
+<ul>
+<li><strong>a0</strong>: estimated intercept for each model fitted with a different <span class="math inline">\(\lambda\)</span></li>
+<li><strong>beta</strong>: p x (#lambdas) matrix with the estimates of the coefficients</li>
+<li><strong>lambda</strong>: values of <span class="math inline">\(\lambda\)</span></li>
+<li><strong>dev.ratio</strong>: 1 - model deviance/null deviance;<br>
+</li>
+<li><strong>nulldev</strong>: null deviance</li>
+</ul>
+<p>How many <span class="math inline">\(\lambda\)</span> are considered?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(m.ridge<span class="sc">$</span>lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100</code></pre>
+</div>
+</div>
+<p>As <code>lambda</code> increases, Ridge regression shrinks the coefficients more, so their <span class="math inline">\(L_2\)</span> norm tends to decrease. Below are the coefficient estimates for <code>lambda = 420.9926</code> and <code>lambda = 0.2465762</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lambda = 420.9926</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>m.ridge<span class="sc">$</span>lambda [<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 420.9926</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m.ridge)[,<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept)         AtBat          Hits         HmRun          Runs 
+ 5.883302e+00  6.102546e-06  2.128836e-05  7.542851e-05  3.576002e-05 
+          RBI         Walks         Years        CAtBat         CHits 
+ 3.483989e-05  4.238852e-05  2.360877e-04  5.892773e-07  2.135565e-06 
+       CHmRun         CRuns          CRBI        CWalks       LeagueN 
+ 1.413825e-05  4.249999e-06  3.995179e-06  4.658210e-06  1.545914e-05 
+    DivisionW       PutOuts       Assists        Errors    NewLeagueN 
+-8.065510e-04  1.418649e-06  1.031898e-06 -3.271702e-06 -9.772981e-06 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">sum</span>(<span class="fu">coef</span>(m.ridge)[<span class="sc">-</span><span class="dv">1</span>,<span class="dv">5</span>]<span class="sc">^</span><span class="dv">2</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0008469593</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lambda = 0.2465762</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>m.ridge<span class="sc">$</span>lambda [<span class="dv">85</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2465762</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m.ridge)[,<span class="dv">85</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept)         AtBat          Hits         HmRun          Runs 
+ 4.606675e+00  2.027434e-04  2.092035e-03 -4.430437e-04  3.552485e-03 
+          RBI         Walks         Years        CAtBat         CHits 
+ 1.482311e-03  4.478763e-03  2.545204e-02  3.981659e-05  1.709054e-04 
+       CHmRun         CRuns          CRBI        CWalks       LeagueN 
+ 2.806923e-04  3.048923e-04  1.800087e-04  3.824910e-05  1.127844e-01 
+    DivisionW       PutOuts       Assists        Errors    NewLeagueN 
+-1.564256e-01  8.875327e-05  2.768044e-04 -1.083528e-02  2.974468e-02 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">sum</span>(<span class="fu">coef</span>(m.ridge)[<span class="sc">-</span><span class="dv">1</span>,<span class="dv">85</span>]<span class="sc">^</span><span class="dv">2</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1971777</code></pre>
+</div>
+</div>
+<p>Graphical evaluation of the coefficients associated to the covariates</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m.ridge, <span class="at">xvar=</span><span class="st">'lambda'</span>, <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Option <code>xvar='lambda'</code> specifies that the x-axis is expressed in terms of <span class="math inline">\(\lambda\)</span>. Alternatives are deviance values and <span class="math inline">\(L_1\)</span>-norm values.</p>
+<p>Option <code>xlab=expression(log(lambda))</code> insert the mathematical symbol for <span class="math inline">\(\lambda\)</span> in the axis. Numbers (19, repeated) over the graph indicate the number of covariates entering the model as <span class="math inline">\(\lambda\)</span> varies: 19 is repeated, as ridge regression is not a selection method.</p>
+<p>Look for the best <span class="math inline">\(\lambda\)</span> using cross validation, using function <code>cv.glmnet()</code>, with a syntax similar to that in <code>glmnet()</code>. Fix the seed</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>cv.ridge <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(X, y, <span class="at">alpha=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For default, <code>R</code> considers <span class="math inline">\(10-\)</span>fold cross validation. The resulting object includes several quantities, such as</p>
+<ul>
+<li><strong>lambda</strong>: values of <span class="math inline">\(\lambda\)</span></li>
+<li><strong>cvm</strong>: the Mean Squared Error for each <span class="math inline">\(\lambda\)</span><br>
+</li>
+<li><strong>cvsd</strong>: the estimate of the standard error of <br>
+</li>
+<li><strong>lambda.min</strong>: the value of <span class="math inline">\(\lambda\)</span> associated to the minimum <code>cvm</code></li>
+<li><strong>lambda.1se</strong>: the values of <span class="math inline">\(\lambda\)</span> associated to the minimum <code>cvm</code> within 1 standard error.</li>
+</ul>
+<p>Graphical representation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.ridge,<span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plots shows the values of MSE <code>cvm</code> for each <span class="math inline">\(\log(\lambda)\)</span> together with the associated confidence interval. The two dashed lines are the values of <code>log(lambda.min)</code> and <code>log(lambda.1se)</code>.</p>
+<p><span class="math inline">\(\lambda\)</span> from cross validation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>(best.lambda <span class="ot">&lt;-</span> cv.ridge<span class="sc">$</span>lambda.min)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2246711</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(lambda<span class="fl">.1</span>se <span class="ot">&lt;-</span> cv.ridge<span class="sc">$</span>lambda<span class="fl">.1</span>se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.410385</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ind <span class="ot">&lt;-</span> <span class="fu">which</span>(cv.ridge<span class="sc">$</span>lambda<span class="sc">==</span>best.lambda)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.ridge,<span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span>cv.ridge<span class="sc">$</span>cvup[ind], <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Find the minimum MSE</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>cv.ridge<span class="sc">$</span>cvm[ind]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3898321</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="do">## or, equivalently,</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(cv.ridge<span class="sc">$</span>cvm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3898321</code></pre>
+</div>
+</div>
+<p>Re-estimate the model using the best <span class="math inline">\(\lambda\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>m.ridge.min <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda=</span>best.lambda)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>m.ridge.min </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glmnet(x = X, y = y, alpha = 0, lambda = best.lambda) 
+
+  Df  %Dev Lambda
+1 19 57.13 0.2247</code></pre>
+</div>
+</div>
+<p>Coefficients of the model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m.ridge.min)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20 x 1 sparse Matrix of class "dgCMatrix"
+                       s0
+(Intercept)  4.602315e+00
+AtBat        1.834763e-04
+Hits         2.125588e-03
+HmRun       -5.492596e-04
+Runs         3.621911e-03
+RBI          1.483989e-03
+Walks        4.593315e-03
+Years        2.603353e-02
+CAtBat       3.990386e-05
+CHits        1.749825e-04
+CHmRun       2.758551e-04
+CRuns        3.108771e-04
+CRBI         1.776969e-04
+CWalks       1.753579e-05
+LeagueN      1.170669e-01
+DivisionW   -1.588782e-01
+PutOuts      8.975081e-05
+Assists      2.906300e-04
+Errors      -1.125927e-02
+NewLeagueN   2.778177e-02</code></pre>
+</div>
+</div>
+<p>We can use the <code>predict()</code> function to obtain the Ridge regression coefficients for a new value of <code>lambda</code>, say <code>best.lambda</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span> (m.ridge, <span class="at">s=</span>best.lambda, <span class="at">type =</span><span class="st">"coefficients"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20 x 1 sparse Matrix of class "dgCMatrix"
+              s=0.2246711
+(Intercept)  4.601096e+00
+AtBat        1.829743e-04
+Hits         2.135727e-03
+HmRun       -5.074681e-04
+Runs         3.626481e-03
+RBI          1.482032e-03
+Walks        4.585321e-03
+Years        2.620382e-02
+CAtBat       4.004634e-05
+CHits        1.739085e-04
+CHmRun       2.668579e-04
+CRuns        3.089330e-04
+CRBI         1.778910e-04
+CWalks       1.953547e-05
+LeagueN      1.171582e-01
+DivisionW   -1.588772e-01
+PutOuts      8.960028e-05
+Assists      2.903550e-04
+Errors      -1.126613e-02
+NewLeagueN   2.777435e-02</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Re-estimate the model using <code>lambda.1se</code>. Comprare to the coefficients of Ridge regression using <code>best.lambda</code>. What do you notice?</p>
+</div>
+</div>
+<p>Graphical representation of the coefficients for the <code>best.lambda</code> and model deviance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m.ridge, <span class="at">xvar=</span><span class="st">'lambda'</span>, <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">log</span>(best.lambda), <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="do">## deviance</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">log</span>(m.ridge<span class="sc">$</span>lambda), m.ridge<span class="sc">$</span>dev.ratio, <span class="at">type=</span><span class="st">'l'</span>, </span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)), <span class="at">ylab=</span><span class="st">'Explained deviance'</span>)</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">log</span>(best.lambda), <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lasso-regression" class="level5" data-number="10.2.1.2.2">
+<h5 data-number="10.2.1.2.2" class="anchored" data-anchor-id="lasso-regression"><span class="header-section-number">10.2.1.2.2</span> Lasso regression</h5>
+<p>Now move to Lasso. The syntax is similar to that for Ridge regression, but specifying <code>alpha=1</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>m.lasso <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, y, <span class="at">alpha=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Graphical representation of the coefficients</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m.lasso, <span class="at">xvar=</span><span class="st">'lambda'</span>, <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do you notice about the values of coefficients?</p>
+</div>
+</div>
+<p>Look for <span class="math inline">\(\lambda\)</span> that minimizes the MSE</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="do">## fix the seed to the same value used for ridge regression  </span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>cv.lasso <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(X, y, <span class="at">alpha=</span><span class="dv">1</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.lasso, <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Minimum <span class="math inline">\(\lambda\)</span> from cross validation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>(best.lambda.lasso <span class="ot">&lt;-</span> cv.lasso<span class="sc">$</span>lambda.min)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01346868</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>(lambda<span class="fl">.1</span>se.lasso <span class="ot">&lt;-</span> cv.lasso<span class="sc">$</span>lambda<span class="fl">.1</span>se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2000056</code></pre>
+</div>
+</div>
+<p>Minimum MSE</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(cv.lasso<span class="sc">$</span>cvm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3985837</code></pre>
+</div>
+</div>
+<p>Re-estimate the model using the best lambda from cross-validation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>m.lasso.min <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, y, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">lambda=</span>best.lambda.lasso)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>m.lasso.min </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glmnet(x = X, y = y, alpha = 1, lambda = best.lambda.lasso) 
+
+  Df  %Dev  Lambda
+1 12 57.67 0.01347</code></pre>
+</div>
+</div>
+<p>Coefficients</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m.lasso.min)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20 x 1 sparse Matrix of class "dgCMatrix"
+                       s0
+(Intercept)  4.539243e+00
+AtBat        .           
+Hits         2.926571e-03
+HmRun        .           
+Runs         4.180394e-03
+RBI          6.978941e-04
+Walks        5.637244e-03
+Years        3.702355e-02
+CAtBat       .           
+CHits        4.515252e-04
+CHmRun       .           
+CRuns        1.554899e-04
+CRBI         .           
+CWalks       .           
+LeagueN      1.481440e-01
+DivisionW   -1.660544e-01
+PutOuts      5.538561e-05
+Assists      1.928669e-04
+Errors      -1.119452e-02
+NewLeagueN   .           </code></pre>
+</div>
+</div>
+<p>Some of the coefficients are zero, so the Lasso performed a model selection.</p>
+<p>Graphical representation of the coefficients for the best labmda and model deviance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m.lasso, <span class="at">xvar=</span><span class="st">'lambda'</span>, <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">log</span>(best.lambda.lasso), <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="do">## deviance</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">log</span>(m.lasso<span class="sc">$</span>lambda), m.lasso<span class="sc">$</span>dev.ratio, <span class="at">type=</span><span class="st">'l'</span>, </span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)), <span class="at">ylab=</span><span class="st">'Explained deviance'</span>)</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">log</span>(best.lambda.lasso), <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Refit Lasso regression using <code>lambda=lambda.1se.lasso</code></li>
+<li>Compare the Lasso and Ridge regression with the best lambda obtained from cross- validation. Which model is preferable?</li>
+</ol>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>m.lasso<span class="fl">.1</span>se <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, y, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">lambda=</span>lambda<span class="fl">.1</span>se.lasso)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>m.lasso<span class="fl">.1</span>se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glmnet(x = X, y = y, alpha = 1, lambda = lambda.1se.lasso) 
+
+  Df  %Dev Lambda
+1  4 46.07    0.2</code></pre>
+</div>
+</div>
+<p>Coefficients</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m.lasso<span class="fl">.1</span>se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20 x 1 sparse Matrix of class "dgCMatrix"
+                      s0
+(Intercept) 5.1894774636
+AtBat       .           
+Hits        0.0018877447
+HmRun       .           
+Runs        .           
+RBI         .           
+Walks       0.0023221273
+Years       .           
+CAtBat      .           
+CHits       0.0000801348
+CHmRun      .           
+CRuns       0.0010421218
+CRBI        .           
+CWalks      .           
+LeagueN     .           
+DivisionW   .           
+PutOuts     .           
+Assists     .           
+Errors      .           
+NewLeagueN  .           </code></pre>
+</div>
+</div>
+</section>
+<section id="prediction-performance" class="level5" data-number="10.2.1.2.3">
+<h5 data-number="10.2.1.2.3" class="anchored" data-anchor-id="prediction-performance"><span class="header-section-number">10.2.1.2.3</span> Prediction Performance</h5>
+<p>We evaluate Ridge and Lasso regression by calculating its MSE on the test set, using <code>lambda</code> equals to the best value obtained from cross-validation. We use the <code>predict()</code> function to get predictions for a test set, by replacing <code>type="coefficients"</code> with the <code>newx</code> argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> hitters_test<span class="sc">$</span>Salary</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>X_test <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(Salary <span class="sc">~</span> ., <span class="at">data=</span>hitters_test)[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>ridge.pred <span class="ot">&lt;-</span> <span class="fu">predict</span> (m.ridge, <span class="at">s=</span>best.lambda, <span class="at">newx=</span>X_test)</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((ridge.pred <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4745414</code></pre>
+</div>
+</div>
+<p>The test MSE is 0.4745414. Note that if we had instead simply fit a model with just an intercept, we would have predicted each test observation using the mean of the training observations. In that case, we could compute the test set MSE like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((<span class="fu">mean</span>(y) <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6426093</code></pre>
+</div>
+</div>
+<p>or equivalent to fitting a ridge regression model with a very large value of lambda</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>ridge.pred1<span class="ot">=</span><span class="fu">predict</span> (m.ridge,<span class="at">s=</span><span class="fl">1e10</span> ,<span class="at">newx=</span>X_test)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((ridge.pred1 <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6426093</code></pre>
+</div>
+</div>
+<p>So fitting a ridge regression model with <code>lambda=best.lambda</code> leads to a lower test MSE than fitting a model with just an intercept. We now check the benefit to performing Lasso regression with <code>lambda=best.lambda.lasso</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>Lasso.pred <span class="ot">&lt;-</span> <span class="fu">predict</span> (m.lasso, <span class="at">s=</span>best.lambda.lasso, <span class="at">newx=</span>X_test)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((Lasso.pred <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4771632</code></pre>
+</div>
+</div>
+<p>The result confirms that the model fitted with Lasso is preferable.</p>
+<p>Refit Lasso regression with <code>lambda=lambda.lasso.1se</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>Lasso.pred.se <span class="ot">&lt;-</span> <span class="fu">predict</span> (m.lasso, <span class="at">s=</span>lambda<span class="fl">.1</span>se.lasso, <span class="at">newx=</span>X_test)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(( Lasso.pred.se <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4447958</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Refit Ridge and Lasso regression on the full data and calulate MSE for each model with lambda obtained from cross-validation. What do you notice? Does the result tell you the same story?</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="leukemia-dataset" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="leukemia-dataset"><span class="header-section-number">10.2.2</span> Leukemia dataset</h3>
+<p>Consider the Leukemia data about the gene expression in cancer cells obtained from 72 subjects with acute myeloid leukemia and acute lymphoblastic leukemia.</p>
+<p>Load the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slides/data/Leukemia.RData"</span>)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Leukemia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "x" "y"</code></pre>
+</div>
+</div>
+<p>There are the objects <code>x</code> and <code>y</code>. Response <code>y</code> is categorical (diseased/nondiseased)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Leukemia<span class="sc">$</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 0  1 
+47 25 </code></pre>
+</div>
+</div>
+<p>Object <code>x</code> is the matrix with the observations for the covariates</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Leukemia<span class="sc">$</span>x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]   72 3571</code></pre>
+</div>
+</div>
+<p>There are 3571 covariates. Clearly, a standard logistic regression model cannot work here. In fact, look at the output</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data=</span>Leukemia, <span class="at">family=</span><span class="st">'binomial'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>here not reported for space reason. Use Ridge and lasso regression instead.</p>
+<section id="ridge-regression-1" class="level4" data-number="10.2.2.1">
+<h4 data-number="10.2.2.1" class="anchored" data-anchor-id="ridge-regression-1"><span class="header-section-number">10.2.2.1</span> Ridge regression</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>leukemia.ridge <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(Leukemia<span class="sc">$</span>x, Leukemia<span class="sc">$</span>y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">family=</span><span class="st">'binomial'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that we specify <code>family='binomial'</code> as <span class="math inline">\(y\)</span> is a binary indicator.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leukemia.ridge, <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xvar=</span><span class="st">'lambda'</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Which values of <span class="math inline">\(\lambda\)</span> are used?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(leukemia.ridge<span class="sc">$</span>lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  4.093  12.946  40.942  89.194 129.462 409.310 </code></pre>
+</div>
+</div>
+<p>Select the best value of <span class="math inline">\(\lambda\)</span> using cross validation, previously extending the grid of values of <span class="math inline">\(\lambda\)</span> through option </p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>cv.leukemia.ridge <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(Leukemia<span class="sc">$</span>x, Leukemia<span class="sc">$</span>y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">family=</span><span class="st">'binomial'</span>,</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">lambda.min =</span> <span class="fl">1e-4</span>)</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>(best.lambda.leukemia <span class="ot">&lt;-</span> cv.leukemia.ridge<span class="sc">$</span>lambda.min)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.04093098</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(cv.leukemia.ridge<span class="sc">$</span>cvm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1253959</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.leukemia.ridge, <span class="at">sign.lambda =</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Re-estimate the model using the best <span class="math inline">\(\lambda\)</span> chosen from cross-validation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>leukemia.ridge.min <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(Leukemia<span class="sc">$</span>x, Leukemia<span class="sc">$</span>y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">family=</span><span class="st">'binomial'</span>,</span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lambda=</span>best.lambda.leukemia)</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>leukemia.ridge.min </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glmnet(x = Leukemia$x, y = Leukemia$y, family = "binomial", alpha = 0,      lambda = best.lambda.leukemia) 
+
+    Df  %Dev  Lambda
+1 3571 99.76 0.04093</code></pre>
+</div>
+</div>
+<p>Graphical representation of the coefficients for the best <span class="math inline">\(\lambda\)</span> and model deviance. Remember to extend the grid of values of <span class="math inline">\(\lambda\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>leukemia.ridge <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(Leukemia<span class="sc">$</span>x, Leukemia<span class="sc">$</span>y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">family=</span><span class="st">'binomial'</span>,</span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lambda.min =</span> <span class="fl">1e-4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leukemia.ridge, <span class="at">xvar=</span><span class="st">'lambda'</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">log</span>(best.lambda.leukemia), <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a><span class="do">## deviance</span></span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">log</span>(leukemia.ridge<span class="sc">$</span>lambda), leukemia.ridge<span class="sc">$</span>dev.ratio, <span class="at">type=</span><span class="st">'l'</span>, </span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)), <span class="at">ylab=</span><span class="st">'Explained deviance'</span>)</span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">log</span>(best.lambda.leukemia), <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lasso" class="level4" data-number="10.2.2.2">
+<h4 data-number="10.2.2.2" class="anchored" data-anchor-id="lasso"><span class="header-section-number">10.2.2.2</span> Lasso</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>leukemia.lasso <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(Leukemia<span class="sc">$</span>x, Leukemia<span class="sc">$</span>y, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">family=</span><span class="st">'binomial'</span>,</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lambda.min =</span> <span class="fl">1e-4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leukemia.lasso, <span class="at">xvar=</span><span class="st">'lambda'</span>, <span class="at">sign.lambda =</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="fu">expression</span>(<span class="fu">log</span>(lambda)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Select <span class="math inline">\(\lambda\)</span> from cross validation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>cv.leukemia.lasso <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(Leukemia<span class="sc">$</span>x, Leukemia<span class="sc">$</span>y, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">family=</span><span class="st">'binomial'</span>,</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">lambda.min =</span> <span class="fl">1e-4</span>)</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>(best.lambda.leukemia.lasso <span class="ot">&lt;-</span> cv.leukemia.lasso<span class="sc">$</span>lambda.min)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0003817237</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>(lambda.leukemia<span class="fl">.1</span>se.lasso <span class="ot">&lt;-</span> cv.leukemia.lasso<span class="sc">$</span>lambda<span class="fl">.1</span>se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02756354</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(cv.leukemia.lasso<span class="sc">$</span>cvm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1720613</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.leukemia.lasso, <span class="at">sign.lambda =</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hdr_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Re-estimate the model using the best <span class="math inline">\(\lambda\)</span> from cross-validation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>leukemia.lasso.min <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(Leukemia<span class="sc">$</span>x, Leukemia<span class="sc">$</span>y, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">family=</span><span class="st">'binomial'</span>, </span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lambda=</span>best.lambda.leukemia.lasso)</span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>leukemia.lasso.min</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glmnet(x = Leukemia$x, y = Leukemia$y, family = "binomial", alpha = 1,      lambda = best.lambda.leukemia.lasso) 
+
+  Df %Dev    Lambda
+1 30 99.9 0.0003817</code></pre>
+</div>
+</div>
+<p>How many coefficients are set equal to zero? None in ridge regression.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>id.zero <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">coef</span>(leukemia.lasso.min)<span class="sc">==</span><span class="dv">0</span>)</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(id.zero)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3541</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>nonzero <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(leukemia.lasso.min))<span class="sc">-</span><span class="fu">length</span>(id.zero)</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>nonzero</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 31</code></pre>
+</div>
+</div>
+<p>There are 3541 zero coefficients, so lasso selects only 30 variables (we need to eliminate the intercept). The chosen variables are</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>varnames <span class="ot">&lt;-</span> <span class="fu">rownames</span>(<span class="fu">coef</span>(leukemia.lasso.min))[<span class="sc">-</span>id.zero]</span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>values <span class="ot">&lt;-</span> <span class="fu">coef</span>(leukemia.lasso.min)[<span class="sc">-</span>id.zero]</span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(values) <span class="ot">&lt;-</span> varnames </span>
+<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a>values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> (Intercept)         V158         V219         V456         V657         V672 
+-3.031146632  0.003568605 -0.245193058 -0.974262846 -0.105051860 -1.486415768 
+        V888         V918         V926         V956         V979        V1007 
+ 0.161690544  0.209617719  0.051362087  0.670893605  2.189600799  0.046130612 
+       V1219        V1569        V1652        V1835        V1946        V2230 
+-0.367200323  0.011167219  0.332043309  0.060130068  0.992660643  0.143028820 
+       V2239        V2481        V2537        V2727        V2831        V2859 
+-0.121573634  1.243637531  0.006414938 -0.157861841  0.020748897 -0.079490071 
+       V2888        V2929        V3038        V3098        V3125        V3158 
+ 0.370993478  0.107639742  0.162978944  0.607169957  0.031250694  0.077881558 
+       V3181 
+-0.137068176 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Try to see what happens when using <code>lambda=lambda.1se</code></p>
+</div>
+</div>
+</section>
+</section>
 </section>
 <section id="homework" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="homework"><span class="header-section-number">10.3</span> Homework</h2>
+<p>Boston dataset records housing values <code>medv</code> and other information for 506 neighborhoods around Boston. We aim to predict <code>medv</code> using 13 other variables as predictors.</p>
+<ol type="1">
+<li>Load the Boston data set from the <code>MASS</code> library using the function <code>data()</code>.</li>
+<li>Splitting the data into test-train datasets with 80% houses are in the training set.</li>
+</ol>
+<p>Perform Ridge and Lasso regression</p>
+<ol type="1">
+<li>Fit the ridge regression model with <code>medv</code> as the response variable, and consider all other variables as predictors. Plot the coefficients versus <span class="math inline">\(L_1\)</span> norm and <span class="math inline">\(\log(\lambda)\)</span>. Your comments?</li>
+<li>Use cross-validation to select a good <span class="math inline">\(\lambda\)</span> value, using 10 folds. Plot the mean square error (MSE) versus <span class="math inline">\(\log(\lambda)\)</span>. Your comments? What are the values of minimum lambda and 1-SE lambda? Estimate coefficients using minimum lambda and using 1-SE rule lambda.</li>
+<li>Fit the lasso regression model with <code>medv</code> as the response variable, and consider all other variables as predictors. Plot the coefficients versus <span class="math inline">\(L_1\)</span> norm and <span class="math inline">\(\log(\lambda)\)</span>. Your comments?</li>
+<li>Use cross-validation to select a good <span class="math inline">\(\lambda\)</span> value, using 10 folds. Plot MSE versus <span class="math inline">\(\log(\lambda)\)</span>. Estimate coefficients using minimum lambda and using 1-SE rule lambda. Your comments?</li>
+</ol>
+<p>On test dataset do what follows</p>
+<ol type="1">
+<li>Calculate MSE on the test set using 1-SE rule lambda for Ridge regression. Your comments.</li>
+<li>Calculate MSE on the test set using 1-SE rule lambda for Lasso regression. Your comments.</li>
+</ol>
 </section>
 <section id="further-reading" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">10.4</span> Further reading</h2>
