@@ -1,0 +1,136 @@
+---
+title: "High-dimensional regression Homework"
+execute:
+  echo: true
+  warning: false
+  message: false
+format:
+  html:
+    embed-resources: true
+---
+
+
+## Homework 
+
+Boston dataset records housing values `medv` and other information for 506 neighborhoods around Boston. We aim to predict `medv` using 13 other variables as predictors.
+
+  1. Load the Boston data set from the `MASS` library using the function `data()`.
+  
+```{r}
+library(dplyr)
+library(tidyr)
+library(MASS)
+data("Boston")
+
+help("Boston")
+glimpse(Boston)
+
+## Change variable `chas` and `rad` to `factor` with the `as.factor` function.
+### Variable "chas"
+Boston$chas <- as.factor(Boston$chas) 
+levels(Boston$chas)
+### Variable "rad"
+Boston$rad <- as.factor(Boston$rad)
+levels(Boston$rad)
+### scale quantitative variables except the response "medv" 
+quali_variables <- which(colnames(Boston) %in% c("chas","rad","medv"))
+Boston[,-quali_variables] <- scale(Boston[,-quali_variables])
+```
+  
+  2. Splitting the data into test-train datasets with 80% houses are in the training set.
+```{r}
+### create test-train datasets
+n.house <- nrow(Boston) 
+size <- round(0.8*n.house)
+set.seed(123)
+ind <- sample(n.house, size = size)
+train_data <- Boston[ind,]
+test_data <- Boston[-ind,]
+
+###  Check on categorical variables (we must have all levels of categorical variables
+## in both training and test sets)
+dim(train_data)
+summary(train_data)
+
+dim(test_data)
+summary(test_data)
+```
+  
+  
+## Perform Ridge and Lasso regression
+
+  1. Fit the ridge regression model with `medv` as the response variable, and consider all other variables as predictors. Plot the coefficients versus $L_1$ norm and $\log(\lambda)$. Your comments?
+```{r}
+library(glmnet)
+X <- model.matrix(medv ~ ., train_data)[, -1]
+y <- train_data$medv
+fit_ridge <- glmnet(X, y, alpha = 0)
+par(mfrow=c(1,2))
+plot(fit_ridge, xvar = "norm", sign.lambda =1, label = TRUE)
+plot(fit_ridge, xvar = "lambda", sign.lambda =1, xlab=expression(log(lambda)))
+```
+
+As expected, as we increase lambda, or equivalently as the L1 norm decreases, the values of the coefficients are shrunk towards zero. Since ridge regression uses the L2 norm, the shrinkage is "smooth" and no coefficient is exactly equal to zero until very large values of lambda.
+
+  2. Use cross-validation to select a good $\lambda$ value, using 10 folds. Plot the mean square error (MSE) versus $\log(\lambda)$. Your comments? What are the values of minimum lambda and 1-SE lambda? Estimate coefficients using minimum lambda and using 1-SE rule lambda.
+```{r}
+fit_ridge_cv <- cv.glmnet(X, y, alpha = 0, nfolds=10)
+par(mfrow=c(1,1))
+plot(fit_ridge_cv, sign.lambda =1, xlab=expression(log(lambda)))
+ind_opt <- which(fit_ridge_cv$lambda== fit_ridge_cv$lambda.min)
+abline(h=fit_ridge_cv$cvup[ind_opt],col="blue")
+
+# minimum lambda
+fit_ridge_cv$lambda.min
+# lambda.1se
+fit_ridge_cv$lambda.1se
+# estimated coefficients using minimum lambda
+coef(fit_ridge_cv, s = "lambda.min")
+# estimated coefficients using 1-SE rule lambda
+coef(fit_ridge_cv, s = "lambda.1se")
+```
+
+In this case, the mean squared error increases as we move towards larger values of lambda, suggesting that a model with very small lambda is the best at predicting unseen observations.
+
+While the model achieves good predictive performance, it may be hard to interpret the values of the coefficients, because we have a lot of variables to account for.
+
+  3. Fit the lasso regression model with `medv` as the response variable, and consider all other variables as predictors. Plot the coefficients versus $L_1$ norm and $\log(\lambda)$. Your comments?
+
+```{r}
+fit_lasso <- glmnet(X, y, alpha = 1)
+par(mfrow=c(1,2))
+plot(fit_lasso, xvar = "norm", sign.lambda =1, label = TRUE)
+plot(fit_lasso, xvar = "lambda", sign.lambda =1, xlab=expression(log(lambda)))
+```
+Unlike ridge regression, the coefficient paths of the lasso are less smooth and result, with a large enough lambda, in some coefficient to be shrunk exactly to zero. This is the variable selection effect of the lasso.
+
+  4. Use cross-validation to select a good $\lambda$ value, using 10 folds. Plot MSE versus $\log(\lambda)$. Estimate coefficients using minimum lambda and using 1-SE rule lambda. Your comments?
+```{r}
+fit_lasso_cv = cv.glmnet(X, y, alpha = 1,nfolds=10)
+par(mfrow=c(1,1))
+plot(fit_lasso_cv, sign.lambda =1, xlab=expression(log(lambda)))
+# estimated coefficients using minimum lambda
+coef(fit_lasso_cv, s = "lambda.min")
+# estimated coefficients using 1-SE rule lambda
+coef(fit_lasso_cv, s = "lambda.1se")
+```
+
+Also in this case, it looks like a model with a small lambda is preferable. However the MSE curve is more flat and that results in a larger 1-SE lambda, which we can use to fit a more interpretable, sparser model.
+
+## On test dataset do what follows
+
+  1. Calculate MSE on the test set using 1-SE rule lambda for Ridge regression.  Your comments.
+```{r}
+X_test <- model.matrix(medv ~ ., test_data)[, -1]
+y_test <- test_data$medv
+yhat_ridge_1se <- predict(fit_ridge_cv, X_test, s = "lambda.1se")
+mean((y_test - yhat_ridge_1se)^2)
+```
+
+  2. Calculate MSE on the test set using 1-SE rule lambda for Lasso regression. Your comments.
+```{r}
+yhat_lasso_1se <- predict(fit_lasso_cv, X_test, s = "lambda.1se")
+mean((y_test - yhat_lasso_1se)^2)
+```
+
+We can see that the MSE is slightly lower for ridge than for lasso, suggesting that the former has better prediction performance in test data.

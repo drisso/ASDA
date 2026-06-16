@@ -1,0 +1,221 @@
+---
+title: "Clustering Homework"
+execute:
+  echo: true
+  warning: false
+  message: false
+format:
+  html:
+    embed-resources: true
+---
+
+## Homework
+**Exercise 1.**  Repeat all the analysis that we did for Example 2 on the scale data. What do you notice? Do the new result agree with the result from Example 2 ?
+
+**Exercise 2.** The `fiumi.rda` dataset includes measurements of chemical concentrations for 37 rivers or creeks of a particular geographical area. The variables available are:
+
+  - **NO3**: nitrate $NO_{3^-}$;
+  - **SO4**: sulfate $SO_{4}^{2-}$;
+  - **CL**: chloride $Cl^-$;
+  - **CA**: calcium $Ca^{2+}$;
+
+1. Check if the data is already standardized.
+```{r}
+library(dplyr)
+load("data/fiumi.rda")
+head(fiumi)
+glimpse(fiumi)
+apply(fiumi,2,mean)
+apply(fiumi,2, sd)
+```
+
+We can see that all variables have approximately mean 0 and variance 1. We can hence consider that the data have already been standardized.
+
+2. Repeat the previous analysis (we did in Example 1) by using both, hierarchical clustering and K-Means. How many groups are there? Do hierarchical clustering and K-Means agree?  What are the differences among the groups? Could the difference among the detected groups be due to the different sources of pollution in the catchment area of the rivers?
+
+Compute the Euclidean distance 
+```{r}
+dist_E <- dist(fiumi)
+```
+
+## Hierarchical clustering
+
+Perform hierarchical clustering on the scaled data using Single linkage, Complete linkage, and Ward method. What do you notice?
+```{r}
+hclust(dist_E, method = "single") |> plot(main = "Single linkage", cex=0.5)
+hclust(dist_E, method = "complete") |> plot(main = "Complete linkage", cex=0.5)
+hc_W <- hclust(dist_E, method = "ward.D2") 
+plot(hc_W ,main = "Ward method", cex=0.5)
+```
+
+
+From the dendrograms, we can see that all methods agree in splitting the data in two groups, with a large "jump" before clusters merge.
+
+Finer grained partitions may exist, but depending on the linkage we will get different results.
+
+### $k=2$
+
+```{r}
+hclusters_2 <- cutree(hc_W, k=2)
+table(hclusters_2 )
+```
+
+We also can evaluate clustering result by calculating the silhouette width.
+
+```{r}
+library(cluster)
+library(RColorBrewer)
+my_colors <- brewer.pal(n = 4, name = "Set2")
+sil <- silhouette(hclusters_2 , dist_E)
+plot(sil, col = my_colors[1:2], border = NA)
+
+```
+
+A biplot of the results shows that the first Principal Component, clearly separates the two groups. In particular, cluster 1 is characterized by high values of sulfate, while group 2 by high values of nitrate, chloride and calcium.
+
+```{r}
+library(factoextra)
+pca_fiumi =  prcomp(fiumi)
+print(summary(pca_fiumi))
+fviz_pca_biplot(pca_fiumi, 
+                label = "var", 
+                habillage = hclusters_2) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+```
+
+### $k=4$
+
+Looking at the Ward dendrogram, we see the possibility of clustering the data into 4 groups.
+
+```{r}
+hclusters_4 <- cutree(hc_W, k=4)
+table(hclusters_4 )
+```
+
+Again, we can evaluate clustering result by calculating the silhouette width.
+
+```{r}
+sil <- silhouette(hclusters_4 , dist_E)
+plot(sil, col = my_colors, border = NA)
+
+```
+
+As expected, the average silhouette is lower: this is because when we split the data in two groups there is a clear separation (see also the height of the jump in the dendrogram), while when choosing four groups the separation becomes less pronounced.
+
+```{r}
+fviz_pca_biplot(pca_fiumi, 
+                label = "var", 
+                habillage = hclusters_4) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+```
+
+The biplot shows that Cluster 4 is characterized by high values of nitrate, while cluster 3 by high values of chloride and calcium. Both cluster 1 and cluster 2 show high values of sulfate, with perhaps slightly higher values of chloride and calcium in cluster 1 and of nitrate in cluster 2, but these subtle differences may be a result of over-clustering and these groups may be merged into a single cluster.
+
+## K-means
+
+### $k=2$
+
+We now try k-means with $k=2$.
+
+```{r}
+set.seed(123)
+km_2 <- kmeans(dist_E, centers = 2, nstart = 100)
+table(km_2$cluster)
+```
+
+Calculate the Adjusted Rand Index and the silhouette width. 
+
+```{r}
+library(mclust)
+adjustedRandIndex(hclusters_2, km_2$cluster)
+table(hclusters_2, km_2$cluster)
+```
+
+There is a perfect correspondance between k-means and hierarchical clustering, when selecting two groups. This is evidenced by the value of ARI equal to one.
+
+```{r}
+sil <- silhouette(km_2$cluster , dist_E)
+plot(sil, col = my_colors[1:2], border = NA)
+
+fviz_pca_biplot(pca_fiumi, 
+                label = "var", 
+                habillage = km_2$cluster) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+```
+
+The same conclusions made for the two groups in the hierarchical clustering section apply here.
+
+### $k=3$
+
+We now specify three groups in k-means.
+
+```{r}
+set.seed(123)
+km_3 <- kmeans(dist_E, centers = 3, nstart = 100)
+table(km_3$cluster)
+```
+
+Calculate the  Adjusted Rand Index and the silhouette width. 
+
+```{r}
+adjustedRandIndex(km_3$cluster, km_2$cluster)
+table(km_3$cluster, km_2$cluster)
+```
+
+We can see that cluster 1 was split in two, while cluster two remains the same as before.
+
+```{r}
+sil <- silhouette(km_3$cluster , dist_E)
+plot(sil, col = my_colors[1:3], border = NA)
+
+fviz_pca_biplot(pca_fiumi, 
+                label = "var", 
+                habillage = km_3$cluster) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+```
+
+Looking at the silhouette and the biplot, the result does not seem too convincing, as we have a lower average silhouette and an unclear interpretation of the clusters, compared to the previous results.
+
+### $k=4$
+
+Finally, we try with four groups.
+
+```{r}
+set.seed(123)
+km_4 <- kmeans(dist_E, centers = 4, nstart = 100)
+table(km_4$cluster)
+```
+
+Calculate the  Adjusted Rand Index and the silhouette width. 
+
+```{r}
+adjustedRandIndex(km_4$cluster, hclusters_4)
+table(km_4$cluster,  hclusters_4)
+```
+
+We observe a reasonably good correspondence between hierarchical clustering and k-means, with four groups.
+
+```{r}
+sil <- silhouette(km_4$cluster , dist_E)
+plot(sil, col = my_colors, border = NA)
+
+fviz_pca_biplot(pca_fiumi, 
+                label = "var", 
+                habillage = km_4$cluster) +
+  scale_color_manual(values = my_colors)+
+  ggtitle("")
+```
+
+The interpretation of the groups remains similar to what discussed in the hierarchical clustering section.
+
+## Conclusions
+
+Overall, we observe a good level of agreemen between hierarchical clustering and k-means.
+
+There is strong evidence of at least two clusters, and more subtle evidence of four clusters.
+
+The differences among the groups clearly relate to the chemical composition of the water in the rivers and it is reasonable to conclude that the detected groups differ in the sources of pollution in the catchment area of the rivers.
