@@ -1,0 +1,72 @@
+---
+title: "Principal Component Analysis Homework"
+execute:
+  echo: true
+  warning: false
+  message: false
+format:
+  html:
+    embed-resources: true
+---
+
+## Homework
+ Calibration of a near-infrared spectrophometer (NIR)
+
+Load the data `gasoline.rda`.
+```{r}
+library(dplyr)
+## Calibration of a near-infrared spectrophometer (NIR)
+load("data/gasoline.rda")
+glimpse(gasoline)
+```
+
+The data give the octanes of 60 samples of a liquid similar to gasoline and their spectra in the near infrared.  The spectra are represented by the variables called `NIR.xxx nm` where `xxx` indicates the frequency.  There is a total of 401 frequencies, ranging from 900 to 1700~nm.
+
+  1. We could fit a linear regression model of `octane` as the response with all variables `NIR.xxx nm`?  
+
+With only 60 available observations we cannot fit 402 regression coefficients. Generally speaking, the number of observations needs be larger than the number of covariates. In addition, to obtain estimates which are precise enough, the number of observations needs be much larger than the number of parameters to be estimated.
+
+  2. Extract from the NIR spectra a small number of principal components and use these as covariates in the linear regression model. 
+  
+    -  How many principle components that we should keep?
+   
+```{r}
+pca_gas =  prcomp(gasoline$NIR, scale=TRUE)
+print(summary(pca_gas))
+
+library("factoextra")
+fviz_eig(pca_gas, geom = "bar", bar_width = 0.3) + ggtitle("")
+
+# Extract principal component scores
+gasoline$PC <- predict(pca_gas)
+# Fit linear model using the first 5 PCs
+LinearModel.1 <- lm(octane ~ PC[,1:5], data=gasoline)
+
+# Model summary
+summary(LinearModel.1)
+
+```
+
+We select the first 5 principal components with Cumulative Proportion is 0.983.  As you can see, the model is highly accurate in predicting octanes. Infact, the R-squared, and Adjusted R-squared are both over $98\%$. (You may choose a different number but should not larger than 5)
+
+
+  -  What does the result of linear model tell you?
+    
+The fitted model is 
+$$\widehat{\text{octane}} = 87.178+  0.027\times PC1 +  0.069 \times PC2 - 0.289\times PC3 + 0.039 \times PC4  - 0.077\times PC5$$
+Each coefficient represents the expected change in octane for a one-unit increase in that principal component, holding the others constant. They are all statistical significant. It is worth to note that these predictors are principal components not the original variables.
+
+The residuals are centered close to zero with no extremely large residuals, this means the model seems to be good. The Residual standard error is 0.2157 means that the linear model predicts octance with an average error is 0.2157 (unit of octance).
+
+The R-squared is 0.9818 means $98.18\%$ variability of  octane is explain by the model. This result indicates an excellent fit to the data. Furthermore, the Adjusted R-squared is  0.9801 shows that even after accounting for the number of predictors,  the model still explains about $98\%$ of the variability.
+
+The p-value is really small means the model is highly significant.
+
+  -  How to predict the octanes of a new sample?
+  
+To predict the octanes of a new sample, we can implement a two-step procedure.
+
+  1. \`\`Trace'' the new NIR spectrum back to the first 5 components using the ``rotation''.  These are the coefficients represented $a_{ij}$'s in our lecture notes. 
+  
+  2. Include the values of the components into the fitted model.
+

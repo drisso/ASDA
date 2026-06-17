@@ -1,0 +1,98 @@
+---
+title: "Generalized Linear Models Homework"
+execute:
+  echo: true
+  warning: false
+  message: false
+format:
+  html:
+    embed-resources: true
+---
+
+## Homework
+
+\section*{``Women and children first!''}
+
+Titanic data contains information on survival of the Titanic passengers on its first and only (you know why!) crossing of the Atlantic ocean. Apart from their names, look for the following variables:
+
+-   `Survived` (Yes/No): states whether the passenger survived or not;\
+-   `Type` (child/female/male): depends on the age of the passenger (less than 10 years old/female older than 10 years/male older than 10 years);
+-   `Class` (first/second/third): the class in which the passenger travelled.
+
+The file does not include all passengers because age and/or sex was not known for some passengers.
+
+The data were collected by the British Board of Trade which concluded that the old seafaring policy of "Women and children first!" had been followed with no class discrimination.
+
+1.  Fit a logistic regression model for the probability of surviving as a function of `Type` and `Class` of the passenger. 
+$$ 
+      Prob(Survived)=\dfrac{e^\eta}{1+e^\eta} \quad \text{ with } \quad \eta=\beta_0+\beta_1X_1+\beta_2X_2+\beta_3X_3+\beta_4X_4,
+$$ 
+where $X_1$, $X_2$, $X_3$ and $X_4$ amount to 1 if the passenger was a woman, a man, travelled in second class or in third class, respectively.
+    
+```{r}
+library(dplyr)
+load("data/titanic.rda")
+head(titanic)
+glimpse(titanic)
+fit <- glm(Survived ~ Type + Class, family="binomial", data=titanic)
+summary(fit)
+
+```
+
+The estimated probability of surviving based on the regression output is: $$ 
+      Prob(Survived)=\dfrac{e^\eta}{1+e^\eta} \quad \text{ with } \quad \eta=2.392+0.027 X_1-2.983 X_2-1.028 X_3-2.145 X_4,
+    $$
+Answer the following questions:
+
+-   which passenger group had the highest probability of surviving?
+ 
+ Since the baseline group is children in the first class and  all statistical significant effects are negative and the female effect is essentially zero, the highest survival probability is for: children and women in first class. For numerical comparison:
+```{r}
+newdata <- expand.grid(Type  = c("child", "female", "male"),
+                       Class = c("1st", "2nd", "3rd"))
+newdata$Survival_Prob <- predict(fit ,newdata = newdata, type = "response")
+newdata
+```
+ 
+-   which passenger group experienced the highest mortality?
+
+ The lowest survival probability occurs for the group with the most negative linear predictor, i.e., males in the third class with probability 0.06.
+ 
+-   do the parameter estimates support the statement that preference was given to women and children?
+
+Yes, the model supports the idea that women and children were favored, and it does not show a difference between women and children (see estimated coefficients and odd ratios).
+
+-   more to children or more to women?
+
+It does not show a difference between women and children ( $p$ value of female class is 0).
+
+-   do you agree with the conclusions of the \emph{British Board of Trade} that the second and third class passenger were not discriminated in their access to the (few) available lifeboats?
+
+No. Calculate  odd ratios
+```{r}
+exp(coef(fit))  # Exponentiated coefficients ("odds ratios")
+```
+
+From the odd ratios, we see that the second class passengers had about $36\%$ of the survival odds of the first class passengers, while the third class passengers had  around $12\%$ of the survival odds of first class passengers. These results imply that, with the same passenger type (child/female/male), passengers in lower classes had substantially lower survival odds.
+ 
+
+2.  Verify whether \`\`the class of the passenger did not determine her/his survival'', i.e., amounts to testing the following system of hypotheses: $$ H_0: \beta_3=0 \text{ and } \beta_4=0 \quad \text{ against } \quad H_1: \beta_3 \ne 0 \text{ and/or } \beta_4 \ne 0 .$$
+
+```{r}
+fit_1 <- glm(Survived ~ Type, family="binomial", data=titanic)
+summary(fit_1)
+anova(fit,fit_1, test="Chisq")
+```
+
+This result does not support the statement \`\`the class of the passenger did not determine her/his survival". The $p$ value is really small, it means that we reject the null hypothesis, i.e., there is statistical evidence that passenger classes affect survival, even after controlling for passenger types.
+
+3.  Whether the treatment reserved to the second class passengers on board of the Titanic was different from the one reserved to third class passengers, that is, whether $$ H_0: \beta_3-\beta_4=0 \quad \text{ against } \quad H_1: \beta_3-\beta_4 \ne 0. $$
+
+```{r}
+.Hypothesis <- matrix(c(0,0,0,1,-1), 1, 5, byrow=TRUE)
+.RHS <- c(0)
+library(car)
+linearHypothesis(fit, .Hypothesis, rhs=.RHS, test="Chisq")
+```
+
+Since the $p$ value is really small, we reject the null hypothesis, i.e., there is very strong statistical evidence  that the second and third class passengers were treated differently with respect to survival outcomes.
