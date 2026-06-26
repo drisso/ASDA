@@ -35,11 +35,7 @@ The substantive goal of the exam is:
 
 > To evaluate how image-derived nuclear features are associated with malignancy, and whether a lower-dimensional representation of the predictors gives a useful and interpretable classification model.
 
-# Data import
-
-Use the following code to import and label the data. You may adapt it, but your column names and response coding must remain clear.
-
-```{r}
+```{r, include=FALSE, eval=FALSE}
 library(tidyverse)
 
 url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data"
@@ -59,62 +55,48 @@ wdbc <- read_csv(url, col_names = col_names, show_col_types = FALSE) |>
     diagnosis = factor(diagnosis, levels = c("B", "M"),
                        labels = c("benign", "malignant")))
 wdbc
-```
 
-For model comparison, use the following train/test split. Do not change the seed.
-
-```{r}
-set.seed(20260626)
-train_id <- sample(seq_len(nrow(wdbc)), size = floor(0.75 * nrow(wdbc)))
-train <- wdbc[train_id, ]
-test  <- wdbc[-train_id, ]
+write_csv(wdbc, file="wdbc.csv")
 ```
 
 # Tasks
 
-## 1. Data preparation and initial checks (12 points)
+## Data preparation and initial checks (10 points)
 
 1. Import the data and verify the dimensions, variable types, class balance of `diagnosis`, and presence or absence of missing values. Report the results concisely. *(4 pts)*
 2. Explain why `diagnosis` is naturally modeled with a binomial GLM rather than an ordinary linear model. Your explanation must refer to the response variable and to the scale on which the model makes predictions. *(3 pts)*
-3. Identify the 30 quantitative predictors programmatically, without typing all 30 names by hand. Make clear that neither `diagnosis` nor `malignant` is included as a predictor. *(2 pts)*
-4. Create the train/test split given above and report the class balance in both subsets. Comment on whether the split created a serious imbalance problem. *(3 pts)*
+3. Identify the 30 quantitative predictors programmatically, without typing all 30 names by hand. Make clear that neither `diagnosis` nor `malignant` is included as a predictor. *(3 pts)*
 
-## 2. Exploratory analysis with a modeling purpose (18 points)
+## Exploratory analysis with a modeling purpose (20 points)
 
-1. Produce a visualization of the class balance and briefly describe what it implies for evaluating a classifier. *(3 pts)*
-2. Produce at least two exploratory plots that compare predictor distributions between benign and malignant cases. At least one plot must use multiple predictors in the same display. Interpret the plots in terms of likely useful predictors, overlap between groups, and possible outliers. *(6 pts)*
-3. Examine dependence among the quantitative predictors using a correlation plot, heatmap, or equivalent summary. Identify at least one group of strongly correlated variables and explain why this matters for coefficient interpretation in a GLM with original predictors. *(5 pts)*
+1. Produce a visualization of the variable `diangnosis`. Comment on the balance between benign and malignant. *(4 pts)*
+2. Produce at least two exploratory plots that compare the distribution of covariates between benign and malignant cases. Interpret the plots in terms of likely useful predictors, overlap between groups, and possible outliers. *(6 pts)*
+3. Examine dependence among the quantitative predictors using a correlation plot, heatmap, or equivalent summary. Identify whether there are strongly correlated variables and explain why this matters for coefficient interpretation in a GLM. *(6 pts)*
 4. Based on the exploratory analysis, choose a small set of 3 to 6 original predictors for the GLM in Section 3. Justify the choice in terms of biology, exploratory separation, and avoidance of redundant predictors. *(4 pts)*
 
-## 3. Binomial GLM using original predictors (25 points)
+## Binomial GLM (25 points)
 
-Fit the model on the training data only.
+1. Divide the dataset in a train-test split with a 70-30 ratio. Make sure that the code to split the data is reproducible. *(5 pts)*
+2. Fit a binomial GLM for malignancy on the training set, using your selected original predictors. Write the fitted model in words: response, predictors, link function, and interpretation scale. *(4 pts)*
+3. Report a compact coefficient table containing estimates, standard errors, p-values, odds ratios, and 95% confidence intervals for the odds ratios. Interpret two coefficients substantively. The interpretation must be on the odds scale and must specify the direction of association with malignancy. *(7 pts)*
+4. Use an appropriate test to assess one scientifically meaningful predictor or group of predictors. State the null model being compared and interpret the result. *(5 pts)*
+5. Predict malignancy probabilities for the test set. Using threshold 0.5, report a confusion matrix that relates your predictions to the true observed . Interpret the errors in the context of this medical classification problem. *(4 pts)*
 
-1. Fit a binomial GLM for malignancy using your selected original predictors. Write the fitted model in words: response, predictors, link function, and interpretation scale. *(4 pts)*
-2. Report a compact coefficient table containing estimates, standard errors, p-values, odds ratios, and 95% confidence intervals for the odds ratios. Interpret two coefficients substantively. The interpretation must be on the odds scale and must specify the direction of association with malignancy. *(7 pts)*
-3. Use an appropriate likelihood-ratio test, analysis of deviance, or nested model comparison to assess one scientifically meaningful predictor or group of predictors. State the null model being compared and interpret the result. *(5 pts)*
-4. Check at least two aspects of model adequacy or stability. Examples include influential observations, very large standard errors, convergence warnings, residual patterns, multicollinearity, or poor calibration. Explain what you checked and what you conclude. *(5 pts)*
-5. Predict malignancy probabilities for the test set. Using threshold 0.5, report a confusion matrix and at least sensitivity and specificity. Interpret the errors in the context of this medical classification problem. *(4 pts)*
+## Principal Component Analysis (25 points)
 
-## 4. PCA and a GLM on principal components (30 points)
-
-Use PCA as an unsupervised dimension-reduction step before fitting a second binomial GLM.
-
-1. Run PCA on the 30 quantitative predictors from the **training set only**. Center and scale the predictors before PCA. Then project the test set using the training-set PCA rotation. Explain why PCA should be fitted on the training predictors only when evaluating test-set performance. *(5 pts)*
-2. Produce a scree plot or cumulative variance plot. Choose the smallest number of PCs that explains at least 80% of the training-set predictor variance, unless you give a defensible alternative rule. Report the number of PCs chosen. *(5 pts)*
+1. Run PCA on the 30 quantitative predictors from the **training set only**. Center and scale the predictors before PCA. *(7 pts)*
+2. Produce a scree plot or cumulative variance plot. Choose the smallest number of PCs that explains at least 80% of the training-set predictor variance. Report the number of PCs chosen. *(7 pts)*
 3. Interpret PC1 and PC2 using their loadings. Do not list all loadings. Instead, identify the main groups of original variables that drive each component, and explain whether the component appears to represent size, shape/irregularity, texture, or another feature pattern. *(6 pts)*
-4. Plot the training observations in the PC1-PC2 plane, colored by diagnosis. Interpret the plot in terms of separation, overlap, and whether a linear decision boundary in PC space appears plausible. *(4 pts)*
-5. Fit a binomial GLM using the selected PCs as predictors. Report a compact model summary and evaluate it on the test set using the same metrics as in Section 3. *(5 pts)*
-6. Compare the original-predictor GLM and the PC-based GLM. Your comparison must discuss both predictive performance and interpretability. A model with slightly worse prediction may still be preferable if it is substantially more interpretable, or vice versa, but your conclusion must be justified from your results. *(5 pts)*
+4. Plot the training observations in the PC1-PC2 plot, colored by diagnosis. Interpret the plot in terms of separation, overlap, and whether a linear decision boundary in PC space appears plausible. *(5 pts)*
 
-## 5. Synthesis and communication (15 points)
+## Synthesis and communication (20 points)
 
 Write a short final section addressed to a statistically trained collaborator who is not taking this course.
 
-1. State your recommended model and the main empirical reason for the recommendation. *(4 pts)*
-2. Explain one statistical limitation of your analysis and one limitation related to the data or study design. Avoid generic statements; make the limitations specific to this dataset and your workflow. *(4 pts)*
-3. Discuss the choice of classification threshold. Would you keep threshold 0.5 for this application? If not, explain which type of error you would prioritize reducing and why. You do not need to identify an optimal threshold, but your answer must connect the decision to sensitivity and specificity. *(4 pts)*
-4. State one follow-up analysis that would be useful before considering this model for real diagnostic support. *(3 pts)*
+1. State the performance of the model, with particular reference to the test set behavior. *(5 pts)*
+2. Explain one statistical limitation of your analysis and one limitation related to the data or study design. Avoid generic statements; make the limitations specific to this dataset and your workflow. *(5 pts)*
+3. Discuss the choice of classification threshold. Would you keep threshold 0.5 for this application? Explain which type of error you would prioritize reducing and why. You do not need to identify an optimal threshold, but your answer must connect the decision to sensitivity and specificity. *(5 pts)*
+4. State one follow-up analysis that would be useful before considering this model for real diagnostic support. *(5 pts)*
 
 # Marking criteria
 
